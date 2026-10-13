@@ -47,3 +47,6 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Uploaded source archives are not part of the website repository
+attached_assets/*.zip

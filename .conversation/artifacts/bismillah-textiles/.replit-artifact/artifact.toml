@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Bismillah Textiles"
+description = "A polished company website for Bismillah Textiles (PVT) Limited, presenting its textile manufacturing facility, company identity, contact information and location."
+version = "1.0.0"
+id = "artifacts/bismillah-textiles"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21814
+
+[services.development]
+run = "pnpm --filter @workspace/bismillah-textiles run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/bismillah-textiles", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/bismillah-textiles/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21814"
+BASE_PATH = "/"
