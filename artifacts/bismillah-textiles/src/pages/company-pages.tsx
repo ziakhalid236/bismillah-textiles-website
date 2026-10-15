@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { ArrowRight, ArrowUpRight, BedDouble, Hotel, Layers3, Scissors, Shirt } from 'lucide-react';
 import { Link } from 'wouter';
+import { ProductCatalog } from './product-catalog';
 
 const mapsEmbedUrl = 'https://maps.google.com/maps?q=Bismillah+Textiles+%28PVT%29+Limited+Khurrianwala+Faisalabad+Pakistan&output=embed';
 
@@ -160,6 +161,7 @@ export function ProductsPage() {
         <article><Hotel /><span>03 / HOSPITALITY</span><h3>Hospitality</h3><p>Textile products for hospitality customers, supported by our production capabilities.</p></article>
         <article><Shirt /><span>04 / APPAREL</span><h3>Garments and apparel fabrics</h3><p>Apparel fabrics and related products within our broader textile portfolio.</p></article>
       </div></section>
+      <ProductCatalog />
       <section className="page-section product-capability"><div><span className="micro-label">DESIGN TO DELIVERY</span><h2>Connected production,<br /><em>consistent quality.</em></h2></div><p>We bring weaving, processing and stitching together at our own facilities. To discuss a product or sourcing requirement, contact our sales department.</p><a className="button button-red" href="mailto:sales@bismillah.com.pk">Enquire about products <ArrowUpRight size={15} /></a></section>
     </PageFrame>
   );
