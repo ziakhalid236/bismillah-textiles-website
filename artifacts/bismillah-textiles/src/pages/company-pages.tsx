@@ -232,15 +232,15 @@ export function CertificationsPage() {
 }
 
 const newsItems = [
-  { year: '2020', tag: 'RECOGNITION', title: 'Most Sustainable Textiles Manufacturer — Asia', text: 'We received the “Most Sustainable Textiles Manufacturer 2020 — Asia” award from the UK-based Corporate Vision magazine.' },
-  { year: '2025', tag: 'TRADE FAIR', title: 'Our latest textile innovations — Heimtextil 2025', text: 'We presented our latest textile innovations at Heimtextil 2025.' },
-  { year: '2024', tag: 'COMMUNITY', title: 'Planting on Independence Day', text: 'A Green Touch initiative marking Independence Day and reflecting our commitment to sustainability and community wellbeing.' },
+  { year: '2025', tag: 'TRADE FAIR', title: 'Our latest textile innovations — Heimtextil 2025', summary: 'We presented our latest textile innovations at Heimtextil 2025.', details: 'This company-reported update does not list individual products or show an article publication date; no further details are inferred.' },
+  { year: '2024', tag: 'COMMUNITY', title: 'Planting on Independence Day', summary: 'A Green Touch initiative marked Independence Day and reflected our community and sustainability commitments.', details: 'The available company update does not provide participant counts or follow-up outcomes.' },
+  { year: '2020', tag: 'RECOGNITION', title: 'Most Sustainable Textiles Manufacturer — Asia', summary: 'Corporate Vision magazine reported the award in 2020.', details: 'This is a company-reported recognition from UK-based Corporate Vision magazine. Award criteria and independent verification are not presented here.' },
 ];
 
 export function NewsPage() {
   return (
     <PageFrame number="08" title={<>Progress, people<br /><em>and new ideas.</em></>} lead="Updates from Bismillah Textiles, including recognition, industry events and community initiatives." image="/images/factory-courtyard.jpg" imageAlt="Bismillah Textiles site in Faisalabad" caption="NEWS FROM OUR COMPANY">
-      <section className="page-section"><SectionTitle number="01" title="Latest news" intro="Our latest stories and milestones." /><div className="news-grid">{newsItems.map((item, index) => <article className={`news-card news-card-${index + 1}`} key={item.year}><div className="news-card-top"><span>{item.tag}</span><time>{item.year}</time></div><h3>{item.title}</h3><p>{item.text}</p><a href="https://bismillah.com.pk/news/" target="_blank" rel="noreferrer">Read more <ArrowUpRight size={14} /></a></article>)}</div></section>
+      <section className="page-section"><SectionTitle number="01" title="Latest news" intro="Our latest stories and milestones." /><div className="news-grid">{newsItems.map((item, index) => <article className={`news-card news-card-${index + 1}`} key={item.year}><div className="news-card-top"><span>{item.tag}</span><time>{item.year}</time></div><h3>{item.title}</h3><p>{item.summary}</p><details className="news-read-more"><summary>Read more</summary><p>{item.details}</p></details></article>)}</div></section>
       <figure className="feature-photo"><img src="/images/main-gate.jpg" alt="Bismillah Textiles main gate" /><figcaption><span>ROOTED IN FAISALABAD</span><span>LOOKING AHEAD SINCE 1989</span></figcaption></figure>
     </PageFrame>
   );

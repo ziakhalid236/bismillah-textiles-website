@@ -46,6 +46,12 @@
 .mi-bar-track i,.mi-export-track i{display:block;height:100%;border-radius:8px}
 .mi-bar-2024{background:#b7a99a}
 .mi-bar-2025{background:var(--mi-red)}
+.mi-fibre-2024-all{width:94.29%}
+.mi-fibre-2025-all{width:99.29%}
+.mi-fibre-2024-polyester{width:55.5%}
+.mi-fibre-2025-polyester{width:58.93%}
+.mi-fibre-2024-cotton{width:18.14%}
+.mi-fibre-2025-cotton{width:18.36%}
 .mi-bar-line strong{font-size:10px;font-weight:700;text-align:right}
 .mi-chart-foot{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;padding-top:15px;border-top:1px solid var(--mi-line);color:#776c61;font-size:10px;line-height:1.55}
 .mi-source-link{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;color:var(--mi-red);font-size:10px;font-weight:700;text-decoration:none}
@@ -67,6 +73,12 @@
 .mi-export-row>span{font-size:11px;font-weight:600}
 .mi-export-track{height:10px}
 .mi-export-track i{background:var(--mi-red)}
+.mi-export-us{width:95.36%}
+.mi-export-uk{width:55.18%}
+.mi-export-nl{width:39.45%}
+.mi-export-de{width:36.36%}
+.mi-export-it{width:25.18%}
+.mi-export-es{width:23.73%}
 .mi-export-row strong{font-size:10px;text-align:right;white-space:nowrap}
 .mi-trade-note{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:28px;background:#8d111b;color:#fff}
 .mi-trade-number{margin-bottom:2px;font-family:Georgia,serif;font-size:clamp(36px,4vw,52px);letter-spacing:-.06em}
@@ -89,9 +101,6 @@
 .mi-signal-card h3{margin:12px 0 10px;font-size:18px;line-height:1.3;letter-spacing:-.02em}
 .mi-signal-card p{margin:0 0 18px;color:var(--mi-muted);font-size:12px;line-height:1.7}
 .mi-signal-card-dark p{color:#d6ccc2}
-.mi-linkedin-note{display:grid;grid-template-columns:minmax(160px,.55fr) 1fr auto;align-items:center;gap:18px;margin-top:16px;padding:19px 22px;border:1px solid var(--mi-line);background:#f1ece2}
-.mi-linkedin-note p{margin:0;color:#63574e;font-size:11px;line-height:1.7}
-.mi-linkedin-note>a{display:inline-flex;align-items:center;gap:5px;color:var(--mi-red);font-size:10px;font-weight:700;text-decoration:none;white-space:nowrap}
 .mi-sustainability{background:#302522;color:#f8f5ee}
 .mi-section-heading-light>p{color:#d1c7bc}
 .mi-section-heading-light h2 em{color:#d6b77d}
@@ -143,7 +152,6 @@
   .mi-section{padding-top:58px;padding-bottom:58px}
   .mi-signal-grid,.mi-sustain-grid{grid-template-columns:1fr}
   .mi-signal-card,.mi-sustain-card{min-height:0}
-  .mi-linkedin-note{grid-template-columns:1fr;gap:8px}
   .mi-source-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .mi-market-context{grid-template-columns:42px 1fr}
   .mi-market-context>.mi-source-link{grid-column:2}
