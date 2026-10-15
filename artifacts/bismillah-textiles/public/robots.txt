@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://bismillah-textiles-website.vercel.app/sitemap.xml

@@ -664,8 +664,11 @@ h1, h2, h3, h4, p { margin-top: 0; }
 .r-and-d h2 { font: 600 31px 'Manrope', sans-serif; letter-spacing: -.05em; margin: 13px 0 10px; }
 .r-and-d p { max-width: 450px; color: #70645a; font-size: 12px; line-height: 1.8; margin: 0; }
 .belief-list { display: grid; gap: 0; }
-.belief-list span { padding: 12px 0; border-bottom: 1px solid #d5c9b9; color: #6e6154; font-size: 9px; letter-spacing: .14em; }
-.team-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid #d9d0c5; border-bottom: 1px solid #d9d0c5; }
+.belief-list article { padding: 13px 0; border-bottom: 1px solid #d5c9b9; }
+.belief-list article:first-child { padding-top: 0; }
+.belief-list article span { color: #6e6154; font-size: 9px; letter-spacing: .14em; }
+.belief-list article p { margin: 7px 0 0; color: #75695e; font-size: 11px; line-height: 1.75; }
+.team-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid #d9d0c5; border-bottom: 1px solid #d9d0c5; }
 .team-grid article { display: flex; flex-direction: column; gap: 8px; padding: 21px 20px 21px 0; }
 .team-grid article + article { border-left: 1px solid #d9d0c5; padding-left: 22px; }
 .team-grid h3 { font: 600 19px 'Manrope', sans-serif; margin: 0; }
@@ -685,9 +688,13 @@ h1, h2, h3, h4, p { margin-top: 0; }
 .process-photo-grid img { width: 100%; height: 100%; display: block; object-fit: cover; filter: saturate(.75); transition: transform .5s; }
 .process-photo-grid figure:hover img { transform: scale(1.03); }
 .process-photo-grid figcaption { position: absolute; bottom: 0; left: 0; right: 0; padding: 23px 14px 13px; color: #fff5e8; background: linear-gradient(transparent,rgba(34,24,19,.78)); font-size: 8px; letter-spacing: .13em; }
-.partner-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid #d9d0c5; border-left: 1px solid #d9d0c5; }
-.partner-name { display: flex; align-items: center; gap: 12px; min-height: 69px; padding: 14px 16px; border-right: 1px solid #d9d0c5; border-bottom: 1px solid #d9d0c5; font: 600 14px 'Manrope', sans-serif; color: #514740; }
-.partner-name span { color: #a29588; font: 8px 'DM Sans', sans-serif; letter-spacing: .1em; }
+.brand-group + .brand-group { margin-top: 54px; }
+.brand-group > h3 { margin: 0 0 17px; color: #514740; font: 600 22px 'Manrope', sans-serif; letter-spacing: -.04em; }
+.partner-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid #d9d0c5; border-left: 1px solid #d9d0c5; }
+.partner-card { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 13px; min-height: 125px; margin: 0; padding: 16px; border-right: 1px solid #d9d0c5; border-bottom: 1px solid #d9d0c5; background: #fffdf8; }
+.partner-logo-frame { display: flex; width: 100%; height: 54px; align-items: center; justify-content: center; }
+.partner-logo-frame img { display: block; max-width: 100%; max-height: 54px; object-fit: contain; }
+.partner-card figcaption { color: #75695e; font: 500 10px 'DM Sans', sans-serif; text-align: center; }
 .partnership-note, .product-capability { display: grid; grid-template-columns: 1fr .9fr; gap: 7%; align-items: center; padding: 43px 5%; background: #302522; color: #f7f0e7; }
 .partnership-note h2, .product-capability h2 { margin-bottom: 0; }
 .partnership-note h2 em, .product-capability h2 em { color: #d9b776; }
@@ -752,7 +759,10 @@ h1, h2, h3, h4, p { margin-top: 0; }
   .fact-grid { grid-template-columns: repeat(2, 1fr); }
   .fact-card:nth-child(3) { border-left: 0; padding-left: 0; border-top: 1px solid #d9d0c5; }
   .fact-card:nth-child(4) { border-top: 1px solid #d9d0c5; }
-  .partner-grid { grid-template-columns: repeat(3, 1fr); }
+  .partner-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .team-grid { grid-template-columns: repeat(2, 1fr); }
+  .team-grid article:nth-child(3) { border-left: 0; padding-left: 0; border-top: 1px solid #d9d0c5; }
+  .team-grid article:nth-child(4) { border-top: 1px solid #d9d0c5; }
   .news-grid { grid-template-columns: 1fr 1fr; }
   .news-card:last-child { grid-column: 1 / -1; }
   .certification-grid { grid-template-columns: repeat(2, 1fr); }
@@ -780,6 +790,7 @@ h1, h2, h3, h4, p { margin-top: 0; }
   .about-materials-copy h2 { font-size: 34px; }
   .about-materials-figure img { height: 320px; transform: none; box-shadow: 10px 12px 0 rgba(198,166,108,.4); }
   .about-materials-figure figcaption { flex-wrap: wrap; font-size: 7px; }
+  .belief-list article p { font-size: 10px; }
   .ceo-message { margin: 51px 0 0 4%; padding-left: 22px; }
   .ceo-message h2 { font-size: 25px; }
   .fact-card { padding: 17px 12px 17px 0; }
@@ -800,7 +811,12 @@ h1, h2, h3, h4, p { margin-top: 0; }
   .process-photo-grid figure { height: 165px; }
   .process-photo-grid figure:first-child { grid-column: 1 / -1; height: 220px; }
   .partner-grid { grid-template-columns: repeat(2, 1fr); }
-  .partner-name { min-height: 60px; gap: 8px; padding: 11px; font-size: 12px; }
+  .partner-card { min-height: 100px; padding: 12px 8px; gap: 9px; }
+  .partner-logo-frame { height: 43px; }
+  .partner-logo-frame img { max-height: 43px; }
+  .partner-card figcaption { font-size: 9px; }
+  .brand-group + .brand-group { margin-top: 40px; }
+  .brand-group > h3 { font-size: 19px; }
   .partnership-note, .product-capability { grid-template-columns: 1fr; gap: 17px; padding: 29px 7%; }
   .partnership-note .inline-link { grid-column: auto; }
   .product-grid { grid-template-columns: 1fr; }
@@ -823,3 +839,8 @@ h1, h2, h3, h4, p { margin-top: 0; }
   .footer-tagline { text-align: right; line-height: 1.6; }
   .footer > a:not(.footer-brand) { font-size: 7px; }
 }
+
+.not-found-page { display: flex; min-height: 58vh; align-items: center; padding: 70px 7%; background: #f7f3ec; }
+.not-found-page > div { max-width: 560px; }
+.not-found-page h1 { margin: 15px 0; font: 600 clamp(38px, 6vw, 58px)/1.05 'Manrope', sans-serif; letter-spacing: -.06em; }
+.not-found-page p:not(.micro-label) { color: #70645a; font-size: 14px; line-height: 1.75; margin: 0 0 23px; }

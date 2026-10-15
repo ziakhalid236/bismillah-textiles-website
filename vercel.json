@@ -1,10 +1,5 @@
 {
   "buildCommand": "pnpm --filter @workspace/bismillah-textiles run build",
   "outputDirectory": "artifacts/bismillah-textiles/dist/public",
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ]
+  "trailingSlash": true
 }

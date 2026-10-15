@@ -4,7 +4,8 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
-import { ArrowDown, ArrowRight, ArrowUpRight, Clock3, MapPin, Menu, Phone, Star, X } from 'lucide-react';
+import pageMetadata from './page-metadata.json';
+import { ArrowDown, ArrowRight, ArrowUpRight, Mail, MapPin, Menu, Phone, X } from 'lucide-react';
 import {
   AboutPage,
   BrandsPage,
@@ -48,7 +49,7 @@ function Home() {
             <h1>We make the<br /><em>everyday</em> feel<br />exceptional.</h1>
             <p className="hero-lede">Founded in 1989, we bring weaving, processing and stitching together at our home in Faisalabad, Pakistan.</p>
             <div className="hero-actions"><a className="button button-red" href="#work">Explore our work <ArrowDown size={16} /></a><a className="text-link" href={mapsUrl} target="_blank" rel="noreferrer">Visit our facility <ArrowUpRight size={15} /></a></div>
-            <div className="hero-foot"><span className="hero-coordinate">01 KM JARANWALA ROAD · KHURRIANWALA</span><span className="hero-mark">BTL <span>／</span> 01</span></div>
+            <div className="hero-foot"><span className="hero-coordinate">01 KM JARRANWALA ROAD · KHURRIANWALA</span><span className="hero-mark">BTL <span>／</span> 01</span></div>
           </div>
           <div className="hero-visual">
             <img className="hero-image" src="/images/factory-courtyard.jpg" alt="Bismillah Textiles facility in Khurrianwala, Faisalabad" />
@@ -83,19 +84,15 @@ function Home() {
             <figure className="gallery-large"><img src="/images/1791856251182_1791856385300.jpg" alt="Rows of textile machinery on the production floor" /><figcaption><span>01 / PRODUCTION FLOOR</span><span>Textile machinery in operation</span></figcaption></figure>
             <figure className="gallery-small"><img src="/images/1791856226013_1791856385316.jpg" alt="Spools and equipment in the textile facility" /><figcaption><span>02 / THREAD & PREPARATION</span></figcaption></figure>
             <figure className="gallery-small"><img src="/images/1791856048064_1791856385381.jpg" alt="Fabric on a textile machine" /><figcaption><span>03 / ON THE FLOOR</span></figcaption></figure>
-            <figure className="gallery-wide"><img src="/images/main-gate.jpg" alt="The main entrance gate at Bismillah Textiles" /><figcaption><span>04 / THE MAIN GATE</span><span>01 KM Jaranwala Road, Khurrianwala</span></figcaption></figure>
+            <figure className="gallery-wide"><img src="/images/main-gate.jpg" alt="The main entrance gate at Bismillah Textiles" /><figcaption><span>04 / THE MAIN GATE</span><span>01 KM Jarranwala Road, Khurrianwala</span></figcaption></figure>
           </div>
           <div className="facility-bottom"><span>PHOTOGRAPHED AT BISMILLAH TEXTILES</span><Link href="/manufacturing-facilities/">See all facilities <ArrowUpRight size={15} /></Link></div>
         </section>
 
-        <section className="proof section-pad">
-          <div className="section-kicker"><span>03</span><span className="kicker-rule" /> A WORD FROM VISITORS</div>
-          <div className="proof-content"><div className="rating-block"><div className="rating-number">4.1<span>/5</span></div><div className="stars" aria-label="Google rating 4.1 out of 5"><Star /><Star /><Star /><Star /><span className="star-partial" aria-hidden="true"><Star /></span></div><span className="rating-caption">GOOGLE LISTING · 9 REVIEWS</span></div><div className="quote-block"><span className="quote-mark">“</span><blockquote>Visitors highlight the quality of our home textiles and bedsheets.</blockquote><span className="quote-source">CUSTOMER FEEDBACK</span></div><div className="review-cta"><p>Find our location and see the latest listing details.</p><a className="button button-outline" href="https://www.google.com/search?q=Bismillah+Textiles+%28PVT%29+Limited+Khurrianwala" target="_blank" rel="noreferrer">View on Google <ArrowUpRight size={15} /></a></div></div>
-        </section>
 
         <section className="visit" id="visit">
-          <div className="visit-info"><div className="section-kicker light-kicker"><span>04</span><span className="kicker-rule" /> FIND THE MILL</div><h2>Come see where<br /><em>the work happens.</em></h2><p className="visit-intro">Visit Bismillah Textiles in Khurrianwala. Call ahead or open directions to find your way to the facility.</p>
-            <div className="visit-details"><div className="detail-row"><MapPin /><div><span className="detail-label">ADDRESS</span><span>01 KM Jaranwala Road</span><span>Khurrianwala, Faisalabad, Pakistan</span></div></div><div className="detail-row"><Phone /><div><span className="detail-label">PHONE</span><a href="tel:+92412428888">+92 41 242 8888</a></div></div><div className="detail-row"><Clock3 /><div><span className="detail-label">GENERAL ENQUIRIES</span><a href="mailto:info@bismillah.com.pk">info@bismillah.com.pk</a></div></div></div>
+          <div className="visit-info"><div className="section-kicker light-kicker"><span>03</span><span className="kicker-rule" /> FIND THE MILL</div><h2>Come see where<br /><em>the work happens.</em></h2><p className="visit-intro">Visit Bismillah Textiles in Khurrianwala. Call ahead or open directions to find your way to the facility.</p>
+            <div className="visit-details"><div className="detail-row"><MapPin /><div><span className="detail-label">ADDRESS</span><span>01 KM Jarranwala Road</span><span>Khurrianwala, Faisalabad, Pakistan</span></div></div><div className="detail-row"><Phone /><div><span className="detail-label">PHONE</span><a href="tel:+92412428888">+92 41 242 8888</a></div></div><div className="detail-row"><Mail /><div><span className="detail-label">GENERAL ENQUIRIES</span><a href="mailto:info@bismillah.com.pk">info@bismillah.com.pk</a></div></div></div>
             <div className="visit-actions"><a className="button button-cream" href={mapsUrl} target="_blank" rel="noreferrer">Get directions <ArrowUpRight size={16} /></a><a className="phone-link" href="tel:+92412428888"><Phone size={15} /> Call +92 41 242 8888</a></div>
           </div>
             <div className="map-wrap"><MapEmbed /><a className="map-overlay-link" href={mapsUrl} target="_blank" rel="noreferrer"><MapPin size={16} /> OPEN IN GOOGLE MAPS <ArrowUpRight size={14} /></a></div>
@@ -115,13 +112,12 @@ function SiteFrame() {
   const [location] = useLocation();
 
   useEffect(() => {
-    const current = sitePages.find((page) => page.path === location);
-    document.title = location === '/'
-      ? 'Bismillah Textiles (PVT) Limited | Faisalabad, Pakistan'
-      : `${current?.label ?? 'Bismillah Textiles'} | Bismillah Textiles (PVT) Limited`;
-    const description = 'Founded in 1989, Bismillah Textiles is a vertically integrated home textile manufacturer in Faisalabad, Pakistan.';
+    const currentMeta = pageMetadata.pages[location as keyof typeof pageMetadata.pages] ?? pageMetadata.pages['/404/'];
+    const isNotFound = currentMeta === pageMetadata.pages['/404/'];
+    const canonicalUrl = pageMetadata.siteOrigin + (isNotFound ? '/404/' : location);
+    document.title = currentMeta.title;
     const ensureMeta = (name: string, content: string, property = false) => {
-      const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
+      const selector = property ? 'meta[property="' + name + '"]' : 'meta[name="' + name + '"]';
       let tag = document.head.querySelector(selector) as HTMLMetaElement | null;
       if (!tag) {
         tag = document.createElement('meta');
@@ -130,10 +126,23 @@ function SiteFrame() {
       }
       tag.content = content;
     };
-    ensureMeta('description', description);
-    ensureMeta('og:title', 'Bismillah Textiles (PVT) Limited', true);
-    ensureMeta('og:description', description, true);
-    ensureMeta('og:image', 'https://bismillah-textiles.pages.bu.app/share.png', true);
+    ensureMeta('description', currentMeta.description);
+    ensureMeta('robots', isNotFound ? 'noindex, follow' : 'index, follow');
+    ensureMeta('og:title', currentMeta.title, true);
+    ensureMeta('og:description', currentMeta.description, true);
+    ensureMeta('og:image', pageMetadata.siteOrigin + '/share.png', true);
+    ensureMeta('og:url', canonicalUrl, true);
+    ensureMeta('twitter:card', 'summary_large_image');
+    ensureMeta('twitter:title', currentMeta.title);
+    ensureMeta('twitter:description', currentMeta.description);
+    ensureMeta('twitter:image', pageMetadata.siteOrigin + '/share.png');
+    let canonical = document.head.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.rel = 'canonical';
+      document.head.appendChild(canonical);
+    }
+    canonical.href = canonicalUrl;
     setMenuOpen(false);
     window.scrollTo({
       top: 0,
@@ -170,7 +179,6 @@ function SiteFrame() {
         <Link href="/" className="footer-brand">BISMILLAH<span>TEXTILES (PRIVATE) LIMITED</span></Link>
         <span className="footer-tagline">TEXTILES, MADE IN KHURRIANWALA.</span>
         <nav className="footer-nav" aria-label="Footer navigation">{sitePages.slice(1).map((page) => <Link href={page.path} key={page.path}>{page.label}</Link>)}</nav>
-        <a className="footer-social" href="https://www.linkedin.com/company/bismillah-textiles/" target="_blank" rel="noreferrer" aria-label="Bismillah Textiles on LinkedIn">LINKEDIN <ArrowUpRight size={13} /></a>
         <a href="tel:+92412428888">PHONE +92 41 242 8888 <ArrowUpRight size={13} /></a>
         <span className="copyright">© BISMILLAH TEXTILES (PVT) LIMITED</span>
       </footer>
