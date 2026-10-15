@@ -13,13 +13,14 @@ if (Number.isNaN(port) || port <= 0) {
 }
 
 const basePath = process.env.BASE_PATH ?? '/';
+const allowedHosts = ['.replit.dev', '.replit.app', '.repl.co'];
 
 export default defineConfig({
   base: basePath,
   plugins: [
     react(),
     tailwindcss(),
-    runtimeErrorOverlay(),
+    ...(process.env.NODE_ENV !== 'production' ? [runtimeErrorOverlay()] : []),
     ...(process.env.NODE_ENV !== 'production' &&
     process.env.REPL_ID !== undefined
       ? [
@@ -55,7 +56,7 @@ export default defineConfig({
     port,
     strictPort: true,
     host: '0.0.0.0',
-    allowedHosts: true,
+    allowedHosts,
     fs: {
       strict: true,
     },
@@ -63,6 +64,6 @@ export default defineConfig({
   preview: {
     port,
     host: '0.0.0.0',
-    allowedHosts: true,
+    allowedHosts,
   },
 });
