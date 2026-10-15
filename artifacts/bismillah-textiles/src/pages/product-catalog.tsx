@@ -102,7 +102,7 @@ function imageUrl(key: PhotoKey, width = 960) {
   return `https://images.unsplash.com/photo-${photo.id}?auto=format&fit=crop&w=${width}&h=${height}&q=78`;
 }
 
-export function ProductsPage() {
+export function ProductCatalog() {
   const [activeFilter, setActiveFilter] = useState<Filter>("All");
   const [selected, setSelected] = useState<Product | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
