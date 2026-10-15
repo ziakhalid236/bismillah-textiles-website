@@ -1,1 +1,38 @@
-.footer-social{display:flex;flex-wrap:wrap;gap:8px}.footer-social a{display:inline-flex;min-height:38px;align-items:center;gap:9px;padding:5px 10px;border:1px solid rgba(93,72,58,.28);border-radius:2px;color:#4a3932;text-decoration:none;transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease}.footer-social a::before{display:inline-grid;width:23px;height:23px;place-items:center;border-radius:50%;background:#95121c;color:#fff;font-family:Arial,sans-serif;font-size:15px;font-weight:700;line-height:1}.footer-social a:first-child::before{content:"f";padding-top:3px}.footer-social a:nth-child(2)::before{content:"in";font-size:9px}.footer-social a:hover{transform:translateY(-2px);border-color:#95121c;background:#eee5da;color:#95121c}.footer-social a:focus-visible{outline:3px solid #bc914e;outline-offset:3px}@media(max-width:680px){.footer-social{gap:7px}.footer-social a{min-height:42px;padding-inline:10px}}
+.footer-social{display:flex;flex-wrap:wrap;gap:8px}
+.footer-social a{display:inline-flex;min-height:42px;align-items:center;gap:9px;padding:6px 12px;border:1px solid rgba(245,241,232,.38);border-radius:3px;color:#f5f1e8;font-size:12px;font-weight:700;letter-spacing:.1em;text-decoration:none;transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease}
+.footer-social a::before{display:inline-grid;width:25px;height:25px;place-items:center;border-radius:7px;background:#95121c;color:#fff;font-family:Arial,sans-serif;font-size:15px;font-weight:700;line-height:1}
+.footer-social a:first-child::before{content:"f";padding-top:3px}
+.footer-social a:nth-child(2)::before{content:"in";font-size:9px}
+.footer-social a:hover{transform:translateY(-2px);border-color:#bc914e;background:rgba(255,255,255,.08);color:#fff}
+.footer-social a:focus-visible{outline:3px solid #bc914e;outline-offset:3px}
+
+@media(max-width:760px){
+  .main-header{z-index:80}
+  .nav-links.is-open{top:calc(100% + 10px);left:16px;right:16px;bottom:auto;width:auto;height:auto;max-height:min(calc(100dvh - 125px),620px);overflow-y:auto;padding:20px;gap:16px;background:#f8f5ee;border:1px solid rgba(72,56,44,.16);border-radius:16px;box-shadow:0 22px 48px rgba(48,37,34,.2);z-index:90}
+  .nav-links.is-open::before{content:"EXPLORE  /  BISMILLAH TEXTILES";display:block;padding-bottom:12px;border-bottom:1px solid rgba(93,72,58,.2);color:#8d111b;font-size:9px;font-weight:700;letter-spacing:.2em}
+  .nav-menu-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;counter-reset:nav-item}
+  .nav-menu-grid>a{display:grid;grid-template-columns:22px minmax(0,1fr) 8px;align-items:center;gap:8px;min-height:58px;padding:11px 10px;border:1px solid rgba(93,72,58,.17);border-radius:10px;background:#fbfaf7;color:#403530;font-size:13px;font-weight:600;line-height:1.35;transition:background .18s ease,border-color .18s ease,color .18s ease}
+  .nav-menu-grid>a::before{counter-increment:nav-item;content:counter(nav-item,decimal-leading-zero);color:#8d111b;font-size:9px;font-weight:700;letter-spacing:.04em}
+  .nav-menu-grid>a::after{content:"";width:6px;height:6px;border-top:1px solid currentColor;border-right:1px solid currentColor;transform:rotate(45deg);opacity:.48}
+  .nav-menu-grid>a[aria-current=page]{border-color:#8d111b;background:#8d111b;color:#fff}
+  .nav-menu-grid>a[aria-current=page]::before{color:rgba(255,255,255,.72)}
+  .nav-links.is-open .nav-contact{display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 16px;border-radius:10px;background:#302522;color:#fff;font-size:12px;font-weight:700;letter-spacing:.08em}
+  .mobile-menu{display:grid;place-items:center;border:1px solid rgba(93,72,58,.2);border-radius:50%;background:#fbfaf7;transition:background .18s ease,color .18s ease,border-color .18s ease}
+  .mobile-menu[aria-expanded=true]{border-color:#8d111b;background:#8d111b;color:#fff}
+  .nav-menu-grid>a:focus-visible,.nav-contact:focus-visible,.mobile-menu:focus-visible{outline:3px solid #bc914e;outline-offset:3px}
+}
+
+@media(max-width:380px){
+  .nav-links.is-open{left:12px;right:12px;max-height:calc(100dvh - 120px);padding:16px;gap:12px}
+  .nav-menu-grid{grid-template-columns:1fr;gap:6px}
+  .nav-menu-grid>a{grid-template-columns:24px minmax(0,1fr) 8px;min-height:44px;padding:8px 10px}
+}
+
+@media(max-width:680px){
+  .footer-social{gap:8px}
+  .footer-social a{flex:1 1 140px;justify-content:center;min-height:44px;padding-inline:12px;gap:8px;font-size:12px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .footer-social a,.nav-menu-grid>a,.mobile-menu{transition:none}
+}
