@@ -1,0 +1,45 @@
+{
+  "siteOrigin": "https://bismillah-textiles-website.vercel.app",
+  "pages": {
+    "/": {
+      "title": "Bismillah Textiles (PVT) Limited | Faisalabad, Pakistan",
+      "description": "Founded in 1989, Bismillah Textiles weaves, processes and stitches home textiles in Faisalabad, Pakistan. Its customers include brands and retailers across six continents."
+    },
+    "/about-us/": {
+      "title": "About Us | Bismillah Textiles (PVT) Limited",
+      "description": "Learn about Bismillah Textiles, founded in 1989 in Faisalabad, its people, values and integrated textile manufacturing."
+    },
+    "/manufacturing-facilities/": {
+      "title": "Manufacturing Facilities | Bismillah Textiles",
+      "description": "Explore Bismillah Textiles’ weaving, yarn dyeing, processing, cut-and-sew, embroidery, wadding and quilting operations in Faisalabad."
+    },
+    "/brands-retailers/": {
+      "title": "Brands and Retailers | Bismillah Textiles",
+      "description": "See the brands manufactured and retailers listed on the original Bismillah Textiles company website."
+    },
+    "/products/": {
+      "title": "Products | Bismillah Textiles",
+      "description": "Home textiles, fabric, hospitality and garments and apparel fabrics from Bismillah Textiles’ integrated manufacturing operations."
+    },
+    "/careers/": {
+      "title": "Careers | Bismillah Textiles",
+      "description": "Career development, learning and job enquiries at Bismillah Textiles in Faisalabad, Pakistan."
+    },
+    "/contact-us/": {
+      "title": "Contact Us | Bismillah Textiles",
+      "description": "Contact Bismillah Textiles in Khurrianwala, Faisalabad for textile sales, general enquiries and careers."
+    },
+    "/certifications/": {
+      "title": "Quality and Certifications | Bismillah Textiles",
+      "description": "Certifications, reports and quality systems listed on the Bismillah Textiles company website."
+    },
+    "/news/": {
+      "title": "News | Bismillah Textiles",
+      "description": "News and updates published by Bismillah Textiles, including Heimtextil 2025, company recognition and community initiatives."
+    },
+    "/404/": {
+      "title": "Page Not Found | Bismillah Textiles",
+      "description": "The requested page could not be found on the Bismillah Textiles website."
+    }
+  }
+}
