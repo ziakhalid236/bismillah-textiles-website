@@ -49,7 +49,7 @@ function Home() {
             <h1>We make the<br /><em>everyday</em> feel<br />exceptional.</h1>
             <p className="hero-lede">Founded in 1989, we bring weaving, processing and stitching together at our home in Faisalabad, Pakistan.</p>
             <div className="hero-actions"><a className="button button-red" href="#work">Explore our work <ArrowDown size={16} /></a><a className="text-link" href={mapsUrl} target="_blank" rel="noreferrer">Visit our facility <ArrowUpRight size={15} /></a></div>
-            <div className="hero-foot"><span className="hero-coordinate">01 KM JARRANWALA ROAD · KHURRIANWALA</span><span className="hero-mark">BTL <span>／</span> 01</span></div>
+            <div className="hero-foot"><span className="hero-coordinate">01 KM JARANWALA ROAD · KHURRIANWALA</span><span className="hero-mark">BTL <span>／</span> 01</span></div>
           </div>
           <div className="hero-visual">
             <img className="hero-image" src="/images/factory-courtyard.jpg" alt="Bismillah Textiles facility in Khurrianwala, Faisalabad" />
@@ -84,7 +84,7 @@ function Home() {
             <figure className="gallery-large"><img src="/images/1791856251182_1791856385300.jpg" alt="Rows of textile machinery on the production floor" /><figcaption><span>01 / PRODUCTION FLOOR</span><span>Textile machinery in operation</span></figcaption></figure>
             <figure className="gallery-small"><img src="/images/1791856226013_1791856385316.jpg" alt="Spools and equipment in the textile facility" /><figcaption><span>02 / THREAD & PREPARATION</span></figcaption></figure>
             <figure className="gallery-small"><img src="/images/1791856048064_1791856385381.jpg" alt="Fabric on a textile machine" /><figcaption><span>03 / ON THE FLOOR</span></figcaption></figure>
-            <figure className="gallery-wide"><img src="/images/main-gate.jpg" alt="The main entrance gate at Bismillah Textiles" /><figcaption><span>04 / THE MAIN GATE</span><span>01 KM Jarranwala Road, Khurrianwala</span></figcaption></figure>
+            <figure className="gallery-wide"><img src="/images/main-gate.jpg" alt="The main entrance gate at Bismillah Textiles" /><figcaption><span>04 / THE MAIN GATE</span><span>01 KM Jaranwala Road, Khurrianwala</span></figcaption></figure>
           </div>
           <div className="facility-bottom"><span>PHOTOGRAPHED AT BISMILLAH TEXTILES</span><Link href="/manufacturing-facilities/">See all facilities <ArrowUpRight size={15} /></Link></div>
         </section>
@@ -92,7 +92,7 @@ function Home() {
 
         <section className="visit" id="visit">
           <div className="visit-info"><div className="section-kicker light-kicker"><span>03</span><span className="kicker-rule" /> FIND THE MILL</div><h2>Come see where<br /><em>the work happens.</em></h2><p className="visit-intro">Visit Bismillah Textiles in Khurrianwala. Call ahead or open directions to find your way to the facility.</p>
-            <div className="visit-details"><div className="detail-row"><MapPin /><div><span className="detail-label">ADDRESS</span><span>01 KM Jarranwala Road</span><span>Khurrianwala, Faisalabad, Pakistan</span></div></div><div className="detail-row"><Phone /><div><span className="detail-label">PHONE</span><a href="tel:+92412428888">+92 41 242 8888</a></div></div><div className="detail-row"><Mail /><div><span className="detail-label">GENERAL ENQUIRIES</span><a href="mailto:info@bismillah.com.pk">info@bismillah.com.pk</a></div></div></div>
+            <div className="visit-details"><div className="detail-row"><MapPin /><div><span className="detail-label">ADDRESS</span><span>01 KM Jaranwala Road</span><span>Khurrianwala, Faisalabad, Pakistan</span></div></div><div className="detail-row"><Phone /><div><span className="detail-label">PHONE</span><a href="tel:+92412428888">+92 41 242 8888</a></div></div><div className="detail-row"><Mail /><div><span className="detail-label">GENERAL ENQUIRIES</span><a href="mailto:info@bismillah.com.pk">info@bismillah.com.pk</a></div></div></div>
             <div className="visit-actions"><a className="button button-cream" href={mapsUrl} target="_blank" rel="noreferrer">Get directions <ArrowUpRight size={16} /></a><a className="phone-link" href="tel:+92412428888"><Phone size={15} /> Call +92 41 242 8888</a></div>
           </div>
             <div className="map-wrap"><MapEmbed /><a className="map-overlay-link" href={mapsUrl} target="_blank" rel="noreferrer"><MapPin size={16} /> OPEN IN GOOGLE MAPS <ArrowUpRight size={14} /></a></div>

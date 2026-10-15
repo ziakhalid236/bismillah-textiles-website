@@ -86,7 +86,7 @@ export function FacilitiesPage() {
   return (
     <PageFrame number="02" title={<>One connected<br /><em>way of making.</em></>} lead="We weave, process and stitch in-house at our modern manufacturing facilities in Faisalabad, Pakistan." image="/images/1791856251182_1791856385300.jpg" imageAlt="Weaving machinery on the Bismillah Textiles production floor" caption="FROM YARN TO FINISHED FABRIC">
       <section className="page-section"><SectionTitle number="01" title="Manufacturing facilities" intro="An integrated set of operations connects each stage of textile production." /><div className="facility-cards">{facilityDetails.map((item) => <article className="facility-card" key={item.name}><span className="micro-label">{item.number} / PROCESS</span><h3>{item.name}</h3><strong>{item.capacity}</strong><p>{item.detail}</p></article>)}</div></section>
-      <figure className="feature-photo"><img src="/images/main-gate.jpg" alt="Main gate at the Bismillah Textiles facility" /><figcaption><span>THE MAIN GATE</span><span>01 KM JARRANWALA ROAD · KHURRIANWALA</span></figcaption></figure>
+      <figure className="feature-photo"><img src="/images/main-gate.jpg" alt="Main gate at the Bismillah Textiles facility" /><figcaption><span>THE MAIN GATE</span><span>01 KM JARANWALA ROAD · KHURRIANWALA</span></figcaption></figure>
       <section className="page-section"><SectionTitle number="02" title="A real view of our work" intro="Explore selected views of the campus and production floor behind our day-to-day manufacturing." /><div className="process-photo-grid"><figure><img src="/images/1791855918484_1791856385398.jpg" alt="Fabric inspection area inside the textile facility" /><figcaption>FABRIC INSPECTION</figcaption></figure><figure><img src="/images/1791856226013_1791856385316.jpg" alt="Yarn preparation machinery inside the mill" /><figcaption>YARN PREPARATION</figcaption></figure><figure><img src="/images/1791856048064_1791856385381.jpg" alt="Textile machinery inside the production hall" /><figcaption>PRODUCTION FLOOR</figcaption></figure></div></section>
     </PageFrame>
   );
@@ -145,8 +145,8 @@ function PartnerGroup({ title, partners }: { title: string; partners: Partner[] 
 export function BrandsPage() {
   return (
     <PageFrame number="03" title={<>Made here.<br /><em>Known worldwide.</em></>} lead="Since 1989, Bismillah Textiles has supplied products to textile brands and retailers around the world." image="/images/factory-courtyard.jpg" imageAlt="Bismillah Textiles campus and production buildings" caption="PARTNERSHIPS ACROSS SIX CONTINENTS">
-      <section className="page-section"><SectionTitle number="01" title="Brands and retailers" intro="These names and logos appear on the original Bismillah Textiles website." /><PartnerGroup title="Brands Manufactured" partners={manufacturedBrands} /><PartnerGroup title="Retailers" partners={retailPartners} /></section>
-      <section className="page-section partnership-note"><div><span className="micro-label">BUILT ON LONG-TERM PARTNERSHIPS</span><h2>Quality work.<br /><em>Trusted relationships.</em></h2></div><p>The original company website states that Bismillah Textiles has supplied products to major textile retailers around the world since 1989.</p><a className="inline-link" href="mailto:sales@bismillah.com.pk">Contact sales <ArrowUpRight size={15} /></a></section>
+      <section className="page-section"><SectionTitle number="01" title="Brands and retailers" intro="Brands we manufacture for and retailers we proudly serve." /><PartnerGroup title="Brands Manufactured" partners={manufacturedBrands} /><PartnerGroup title="Retailers" partners={retailPartners} /></section>
+      <section className="page-section partnership-note"><div><span className="micro-label">BUILT ON LONG-TERM PARTNERSHIPS</span><h2>Quality work.<br /><em>Trusted relationships.</em></h2></div><p>Since 1989, we have supplied products to major textile retailers around the world.</p><a className="inline-link" href="mailto:sales@bismillah.com.pk">Contact sales <ArrowUpRight size={15} /></a></section>
     </PageFrame>
   );
 }
@@ -154,11 +154,11 @@ export function BrandsPage() {
 export function ProductsPage() {
   return (
     <PageFrame number="04" title={<>Textiles for<br /><em>everyday living.</em></>} lead="Our vertically integrated facilities produce and export home textiles for established brands and retailers around the world." image="/images/1791855918484_1791856385398.jpg" imageAlt="Fabric being inspected inside the Bismillah Textiles facility" caption="MADE WITH CARE IN FAISALABAD">
-      <section className="page-section"><SectionTitle number="01" title="Our product areas" intro="The live company website highlights four broad product categories." /><div className="product-grid">
-        <article><BedDouble /><span>01 / HOME</span><h3>Home textiles</h3><p>Textile products made for the home, produced through integrated in-house processes.</p></article>
+      <section className="page-section"><SectionTitle number="01" title="Our product areas" intro="Our product range spans four broad categories." /><div className="product-grid">
+        <article><BedDouble /><span>01 / HOME</span><h3>Home textiles</h3><p>Textile products made for the home, produced through our integrated in-house processes.</p></article>
         <article><Layers3 /><span>02 / FABRIC</span><h3>Fabric</h3><p>Woven, dyed, printed and finished fabrics developed across a range of constructions.</p></article>
-        <article><Hotel /><span>03 / HOSPITALITY</span><h3>Hospitality</h3><p>Textile products for hospitality customers, supported by the company’s production capabilities.</p></article>
-        <article><Shirt /><span>04 / APPAREL</span><h3>Garments and apparel fabrics</h3><p>Apparel fabrics and related products within the company’s broader textile portfolio.</p></article>
+        <article><Hotel /><span>03 / HOSPITALITY</span><h3>Hospitality</h3><p>Textile products for hospitality customers, supported by our production capabilities.</p></article>
+        <article><Shirt /><span>04 / APPAREL</span><h3>Garments and apparel fabrics</h3><p>Apparel fabrics and related products within our broader textile portfolio.</p></article>
       </div></section>
       <section className="page-section product-capability"><div><span className="micro-label">DESIGN TO DELIVERY</span><h2>Connected production,<br /><em>consistent quality.</em></h2></div><p>We bring weaving, processing and stitching together at our own facilities. To discuss a product or sourcing requirement, contact our sales department.</p><a className="button button-red" href="mailto:sales@bismillah.com.pk">Enquire about products <ArrowUpRight size={15} /></a></section>
     </PageFrame>
@@ -167,28 +167,28 @@ export function ProductsPage() {
 
 export function CareersPage() {
   return (
-    <PageFrame number="05" title={<>Build your future<br /><em>with our team.</em></>} lead="Bismillah Textiles describes opportunities for learning, development and career progression at its textile operations in Pakistan." image="/images/1791855918484_1791856385398.jpg" imageAlt="Team members at work in the fabric inspection area" caption="PEOPLE MAKE THE WORK">
-      <section className="page-story-grid careers-grid"><div><SectionTitle number="01" title="Career development" intro="The company describes a learning culture that recognizes employee learning, development and grooming." /><p>Bismillah Textiles says it identifies learning and development needs in relation to company goals, job requirements and long-term development. Its career information says it looks for innovative, creative thinkers and self-starters with an entrepreneurial mindset.</p></div><div className="career-callout"><Scissors /><span className="micro-label">CAREER OPPORTUNITIES</span><h2>Bring your skills<br />to the work.</h2><p>For career enquiries, contact the careers team by email.</p><a className="button button-red" href="mailto:jobs@bismillah.com.pk">Email careers <ArrowUpRight size={15} /></a></div></section>
+    <PageFrame number="05" title={<>Build your future<br /><em>with our team.</em></>} lead="We offer opportunities for learning, development and career progression across our textile operations in Pakistan." image="/images/1791855918484_1791856385398.jpg" imageAlt="Team members at work in the fabric inspection area" caption="PEOPLE MAKE THE WORK">
+      <section className="page-story-grid careers-grid"><div><SectionTitle number="01" title="Career development" intro="We value a learning culture that supports employee development and growth." /><p>We identify learning and development needs in relation to our company goals, job requirements and long-term development. We look for innovative, creative thinkers and self-starters with an entrepreneurial mindset.</p></div><div className="career-callout"><Scissors /><span className="micro-label">CAREER OPPORTUNITIES</span><h2>Bring your skills<br />to the work.</h2><p>For career enquiries, contact the careers team by email.</p><a className="button button-red" href="mailto:jobs@bismillah.com.pk">Email careers <ArrowUpRight size={15} /></a></div></section>
       <section className="page-section"><SectionTitle number="02" title="A workplace to grow" /><FactGrid items={[
-        { number: '01', title: 'Learning', text: 'The company recognizes learning, development and employee grooming.' },
+        { number: '01', title: 'Learning', text: 'We recognize learning, development and employee grooming.' },
         { number: '02', title: 'Opportunity', text: 'Employees are encouraged to develop and use their professional knowledge and skills.' },
-        { number: '03', title: 'Progression', text: 'The company describes a focus on career development and advancement.' },
+        { number: '03', title: 'Progression', text: 'We focus on career development and advancement.' },
       ]} /></section>
     </PageFrame>
   );
 }
 
 export function ContactPage() {
-  const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=Bismillah+Textiles+01+KM+Jarranwala+Road+Khurrianwala+Faisalabad+Pakistan';
+  const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=Bismillah+Textiles+01+KM+Jaranwala+Road+Khurrianwala+Faisalabad+Pakistan';
   return (
-    <PageFrame number="06" title={<>Find us in<br /><em>Khurrianwala.</em></>} lead="Contact Bismillah Textiles or visit its manufacturing campus at 01 KM Jarranwala Road, Khurrianwala, Faisalabad." image="/images/main-gate.jpg" imageAlt="Main entrance gate of Bismillah Textiles" caption="WELCOME TO OUR FACILITY" showCta={false}>
+    <PageFrame number="06" title={<>Find us in<br /><em>Khurrianwala.</em></>} lead="Contact Bismillah Textiles or visit our manufacturing campus at 01 KM Jaranwala Road, Khurrianwala, Faisalabad." image="/images/main-gate.jpg" imageAlt="Main entrance gate of Bismillah Textiles" caption="WELCOME TO OUR FACILITY" showCta={false}>
       <section className="page-section"><SectionTitle number="01" title="Get in touch" intro="Contact the appropriate team for textile enquiries, general questions or careers." /><div className="contact-grid">
-        <article className="contact-card"><span className="micro-label">VISIT US</span><h3>Company address</h3><p>01 KM Jarranwala Road<br />Khurrianwala, Faisalabad<br />Pakistan</p><a className="inline-link" href={mapsUrl} target="_blank" rel="noreferrer">Open directions <ArrowUpRight size={15} /></a></article>
+        <article className="contact-card"><span className="micro-label">VISIT US</span><h3>Company address</h3><p>01 KM Jaranwala Road<br />Khurrianwala, Faisalabad<br />Pakistan</p><a className="inline-link" href={mapsUrl} target="_blank" rel="noreferrer">Open directions <ArrowUpRight size={15} /></a></article>
         <article className="contact-card"><span className="micro-label">PROSPECTIVE TEXTILE BUYERS</span><h3>Javed Maqbool</h3><p>GM Marketing<br />+92 41 242 8888 Ext. 102</p><a href="tel:+92412428888;ext=102">Call the textile sales contact</a><a href="mailto:javed@bismillah.com.pk">javed@bismillah.com.pk</a><a href="mailto:sales@bismillah.com.pk">sales@bismillah.com.pk</a></article>
         <article className="contact-card"><span className="micro-label">GENERAL ENQUIRIES</span><h3>Say hello</h3><a href="tel:+92412428888">+92 41 242 8888</a><a href="mailto:info@bismillah.com.pk">info@bismillah.com.pk</a></article>
         <article className="contact-card"><span className="micro-label">CAREERS</span><h3>Join the team</h3><a href="mailto:jobs@bismillah.com.pk">jobs@bismillah.com.pk</a></article>
       </div></section>
-      <figure className="contact-map"><MapEmbed /><figcaption><span>01 KM JARRANWALA ROAD · KHURRIANWALA, FAISALABAD</span><a href={mapsUrl} target="_blank" rel="noreferrer">Open directions <ArrowUpRight size={14} /></a></figcaption></figure>
+      <figure className="contact-map"><MapEmbed /><figcaption><span>01 KM JARANWALA ROAD · KHURRIANWALA, FAISALABAD</span><a href={mapsUrl} target="_blank" rel="noreferrer">Open directions <ArrowUpRight size={14} /></a></figcaption></figure>
     </PageFrame>
   );
 }
@@ -222,23 +222,23 @@ const certifications = [
 
 export function CertificationsPage() {
   return (
-    <PageFrame number="07" title={<>Quality is an<br /><em>evolving process.</em></>} lead="The company’s quality policy combines in-house process controls, experienced technicians and current production technology." image="/images/1791856048064_1791856385381.jpg" imageAlt="Textile machinery used in the production process" caption="QUALITY THROUGH EACH STAGE">
-      <section className="page-story-grid"><div><SectionTitle number="01" title="Our quality policy" /><p>“Quality is an evolving process, not a fixed standard.” The company describes an extensive system of in-house quality and process control, alongside environmental, social and security requirements in its management systems.</p><p>Its policy also highlights the use of modern machinery, dyes and chemicals, supported by experienced technicians in the quality-control department.</p></div><div className="quality-note"><span className="micro-label">QUALITY / PROCESS / RESPONSIBILITY</span><h2>Built into<br /><em>the process.</em></h2><p>Quality checks and controls are applied across production, not only to the finished product.</p></div></section>
-      <section className="page-section"><SectionTitle number="02" title="Certifications listed by the company" intro="These are the certifications and reports named on the current company website." /><div className="certification-grid">{certifications.map((item, index) => <div className="certification-item" key={item}><span>{String(index + 1).padStart(2, '0')}</span><strong>{item}</strong></div>)}</div><p className="small-print">These names are transcribed from the original company website. Confirm current certification status, scope and validity dates directly with Bismillah Textiles.</p></section>
+    <PageFrame number="07" title={<>Quality is an<br /><em>evolving process.</em></>} lead="Our quality policy combines in-house process controls, experienced technicians and current production technology." image="/images/1791856048064_1791856385381.jpg" imageAlt="Textile machinery used in the production process" caption="QUALITY THROUGH EACH STAGE">
+      <section className="page-story-grid"><div><SectionTitle number="01" title="Our quality policy" /><p>“Quality is an evolving process, not a fixed standard.” We operate an extensive system of in-house quality and process control, alongside environmental, social and security requirements in our management systems.</p><p>Our policy also emphasizes modern machinery, dyes and chemicals, supported by experienced technicians in our quality-control department.</p></div><div className="quality-note"><span className="micro-label">QUALITY / PROCESS / RESPONSIBILITY</span><h2>Built into<br /><em>the process.</em></h2><p>Quality checks and controls are applied across production, not only to the finished product.</p></div></section>
+      <section className="page-section"><SectionTitle number="02" title="Our certifications" intro="Certifications and reports we hold or participate in." /><div className="certification-grid">{certifications.map((item, index) => <div className="certification-item" key={item}><span>{String(index + 1).padStart(2, '0')}</span><strong>{item}</strong></div>)}</div><p className="small-print">Certificate scope and validity dates are available on request. Please contact our sales team.</p></section>
     </PageFrame>
   );
 }
 
 const newsItems = [
-  { year: '2020', tag: 'RECOGNITION', title: 'Most Sustainable Textiles Manufacturer — Asia', text: 'Bismillah Textiles announced that it received the “Most Sustainable Textiles Manufacturer 2020 — Asia” award from the UK-based Corporate Vision magazine.' },
-  { year: '2025', tag: 'TRADE FAIR', title: 'Our latest textile innovations — Heimtextil 2025', text: 'The company’s news page highlights its latest textile innovations presented at Heimtextil 2025.' },
-  { year: '2024', tag: 'COMMUNITY', title: 'Planting on Independence Day', text: 'A Green Touch initiative marking Independence Day and reflecting the company’s stated commitment to sustainability and community wellbeing.' },
+  { year: '2020', tag: 'RECOGNITION', title: 'Most Sustainable Textiles Manufacturer — Asia', text: 'We received the “Most Sustainable Textiles Manufacturer 2020 — Asia” award from the UK-based Corporate Vision magazine.' },
+  { year: '2025', tag: 'TRADE FAIR', title: 'Our latest textile innovations — Heimtextil 2025', text: 'We presented our latest textile innovations at Heimtextil 2025.' },
+  { year: '2024', tag: 'COMMUNITY', title: 'Planting on Independence Day', text: 'A Green Touch initiative marking Independence Day and reflecting our commitment to sustainability and community wellbeing.' },
 ];
 
 export function NewsPage() {
   return (
     <PageFrame number="08" title={<>Progress, people<br /><em>and new ideas.</em></>} lead="Updates from Bismillah Textiles, including recognition, industry events and community initiatives." image="/images/factory-courtyard.jpg" imageAlt="Bismillah Textiles site in Faisalabad" caption="NEWS FROM OUR COMPANY">
-      <section className="page-section"><SectionTitle number="01" title="Latest news" intro="Stories and milestones published on the company’s live website." /><div className="news-grid">{newsItems.map((item, index) => <article className={`news-card news-card-${index + 1}`} key={item.year}><div className="news-card-top"><span>{item.tag}</span><time>{item.year}</time></div><h3>{item.title}</h3><p>{item.text}</p><a href="https://bismillah.com.pk/news/" target="_blank" rel="noreferrer">View company news <ArrowUpRight size={14} /></a></article>)}</div></section>
+      <section className="page-section"><SectionTitle number="01" title="Latest news" intro="Our latest stories and milestones." /><div className="news-grid">{newsItems.map((item, index) => <article className={`news-card news-card-${index + 1}`} key={item.year}><div className="news-card-top"><span>{item.tag}</span><time>{item.year}</time></div><h3>{item.title}</h3><p>{item.text}</p><a href="https://bismillah.com.pk/news/" target="_blank" rel="noreferrer">Read more <ArrowUpRight size={14} /></a></article>)}</div></section>
       <figure className="feature-photo"><img src="/images/main-gate.jpg" alt="Bismillah Textiles main gate" /><figcaption><span>ROOTED IN FAISALABAD</span><span>LOOKING AHEAD SINCE 1989</span></figcaption></figure>
     </PageFrame>
   );
