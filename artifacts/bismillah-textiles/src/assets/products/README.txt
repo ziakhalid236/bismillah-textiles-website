@@ -1,8 +1,8 @@
 PRODUCT PHOTOS
 Put a photo here named after the product id, for example:
-  sheet-sets.jpg   comforter-sets.jpg   bed-in-a-bag.jpg   quilted-wadding.jpg
-  curtains.jpg     kitchen-curtains.jpg shower-curtains.jpg table-linen.jpg
-  embroidered-decor.jpg
+  sheet-sets.jpg   duvet-sets.jpg   comforter-sets.jpg   bed-in-a-bag.jpg   quilted-wadding.jpg
+  mattress-covers.jpg   cushions-bolsters.jpg   curtains.jpg   kitchen-curtains.jpg
+  shower-curtains.jpg   table-linen.jpg   place-mats.jpg   embroidered-decor.jpg
   jacquard.jpg matelasse.jpg dobby.jpg plain-weave.jpg yarn-dyed.jpg printed-fabric.jpg
   dyed-bleached.jpg upholstery.jpg
   hotel-bed-linen.jpg hotel-curtains.jpg hotel-quilted.jpg

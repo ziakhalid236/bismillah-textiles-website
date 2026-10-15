@@ -179,6 +179,10 @@ function SiteFrame() {
         <Link href="/" className="footer-brand">BISMILLAH<span>TEXTILES (PRIVATE) LIMITED</span></Link>
         <span className="footer-tagline">TEXTILES, MADE IN KHURRIANWALA.</span>
         <nav className="footer-nav" aria-label="Footer navigation">{sitePages.slice(1).map((page) => <Link href={page.path} key={page.path}>{page.label}</Link>)}</nav>
+        <nav className="footer-social" aria-label="Social media">
+          <a href="https://www.facebook.com/BismillahTextilesOfficial/" target="_blank" rel="noopener noreferrer">FACEBOOK <ArrowUpRight size={12} /></a>
+          <a href="https://pk.linkedin.com/company/bismillah-textiles" target="_blank" rel="noopener noreferrer">LINKEDIN <ArrowUpRight size={12} /></a>
+        </nav>
         <a href="tel:+92412428888">PHONE +92 41 242 8888 <ArrowUpRight size={13} /></a>
         <span className="copyright">© BISMILLAH TEXTILES (PVT) LIMITED</span>
       </footer>

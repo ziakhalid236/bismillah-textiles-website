@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { ArrowUpRight, Copy, Mail, Phone, Star, X } from 'lucide-react';
 
 /**
  * PRODUCT CATALOG
@@ -32,7 +32,7 @@ type SwatchKind =
   | 'yarndye' | 'print' | 'quilt' | 'curtain' | 'table' | 'embroidery' | 'upholstery'
   | 'bag' | 'satin' | 'shower';
 
-type Product = {
+export type Product = {
   id: string;
   category: CategoryId;
   name: string;
@@ -40,6 +40,8 @@ type Product = {
   specs: string[];
   swatch: SwatchKind;
   colors: [string, string, string];
+  /** Only fill this with REAL review data, e.g. rating: { score: 4.6, count: 38 }. Nothing is shown if omitted. */
+  rating?: { score: number; count: number };
 };
 
 export const categories: { id: CategoryId; label: string }[] = [
@@ -61,8 +63,20 @@ const products: Product[] = [
     summary: 'Complete bedding packs, supplied filled or unfilled depending on the programme.',
     specs: ['Filled', 'Unfilled', 'Retail-ready'] },
   { id: 'quilted-wadding', category: 'home', name: 'Quilted & wadded bedding', swatch: 'matelasse', colors: ['#efe8dc', '#b9ab98', '#302522'],
-    summary: 'Quilted products made on computerized single-needle and multi-needle continuous quilting machines.',
+    summary: 'Quilts and quilted products made on computerized single-needle and multi-needle continuous quilting machines.',
     specs: ['Computerized quilting', 'In-house wadding'] },
+  { id: 'duvet-sets', category: 'home', name: 'Duvet sets', swatch: 'stripe', colors: ['#f4ecde', '#52665e', '#302522'],
+    summary: 'Duvet covers and matching pillowcases, cut and stitched in-house from our own woven fabric.',
+    specs: ['Woven', 'Printed', 'Coordinated sets'] },
+  { id: 'mattress-covers', category: 'home', name: 'Mattress covers', swatch: 'quilt', colors: ['#f7f0e7', '#b9ab98', '#302522'],
+    summary: 'Fitted and quilted mattress covers for home and retail programmes.',
+    specs: ['Quilted', 'Fitted styles'] },
+  { id: 'cushions-bolsters', category: 'home', name: 'Cushions, bolsters & neck rolls', swatch: 'pintuck', colors: ['#efe8dc', '#8d111b', '#302522'],
+    summary: 'Decorative cushions, bolsters and neck rolls made to match bedding and furnishing ranges.',
+    specs: ['Filled', 'Decorative'] },
+  { id: 'place-mats', category: 'home', name: 'Place mats', swatch: 'table', colors: ['#f4ecde', '#52665e', '#c6a66c'],
+    summary: 'Fabric place mats and table accessories in woven and printed designs.',
+    specs: ['Woven', 'Printed'] },
   { id: 'curtains', category: 'home', name: 'Curtains', swatch: 'curtain', colors: ['#52665e', '#e9e1d5', '#302522'],
     summary: 'Window curtains and panels made from our woven, dyed and printed fabrics.',
     specs: ['Woven', 'Printed', 'Embroidered'] },
@@ -179,8 +193,148 @@ function ProductMedia({ product }: { product: Product }) {
   return <Swatch kind={product.swatch} colors={product.colors} uid={product.id} />;
 }
 
+/* ---------- Product details (shown in the product window) ---------- */
+// [label, value]. Only facts published by the company are listed here; edit freely.
+const WEAVES = '120 – 600 thread count; jacquard, matelassé, dobby, plain and other weaves';
+const productProps: Record<string, [string, string][]> = {
+  'sheet-sets': [['Styles', 'Hemstitch, pintuck, piping, embroidery'], ['Fabric', WEAVES], ['Made in', 'In-house cut and sew (18 stitching units)']],
+  'comforter-sets': [['Construction', 'Quilted and filled'], ['Includes', 'Comforter with coordinating pillow shams'], ['Made in', 'In-house quilting and wadding lines']],
+  'bed-in-a-bag': [['Versions', 'Filled and unfilled'], ['Fabric', WEAVES], ['Made in', 'In-house cut and sew']],
+  'quilted-wadding': [['Quilting', '18 single-needle computerized quilters plus 2 multi-needle continuous machines'], ['Capacity', '500,000 metres quilted per month'], ['Wadding', 'Over 175,000 kg per month']],
+  'duvet-sets': [['Includes', 'Duvet cover with matching pillowcases'], ['Fabric', WEAVES], ['Made in', 'In-house cut and sew']],
+  'mattress-covers': [['Construction', 'Quilted and fitted styles'], ['Made in', 'In-house quilting and cut and sew']],
+  'cushions-bolsters': [['Products', 'Cushions, bolsters and neck rolls'], ['Made in', 'In-house cut and sew']],
+  'place-mats': [['Designs', 'Woven and printed'], ['Fabric', 'Our own woven and printed fabrics']],
+  'curtains': [['Fabric', 'Our own woven, dyed and printed fabrics'], ['Finishing', 'Printed, woven or embroidered options'], ['Made in', 'In-house cut and sew']],
+  'kitchen-curtains': [['Styles', 'Tiers and valances'], ['Fabric', 'Our own woven and printed fabrics']],
+  'shower-curtains': [['Material', 'Fabric'], ['Designs', 'Printed and woven']],
+  'table-linen': [['Designs', 'Woven and printed'], ['Fabric', 'Our own woven and printed fabrics']],
+  'embroidered-decor': [['Machines', 'High-speed multi-needle embroidery'], ['Embroidery size', 'Up to 400 × 1,200 mm']],
+  'jacquard': [['Weaving', '136 air-jet looms; capacity over 1 million metres per month'], ['Thread count', '120 – 600']],
+  'matelasse': [['Weaving', '136 air-jet looms (shared across fabrics)'], ['Thread count', '120 – 600'], ['Use', 'Bedding and decorative products']],
+  'dobby': [['Weaving', '136 air-jet looms (shared across fabrics)'], ['Thread count', '120 – 600']],
+  'plain-weave': [['Weaving', '136 air-jet looms (shared across fabrics)'], ['Thread count', '120 – 600']],
+  'yarn-dyed': [['Yarn dyeing', 'In-house cone dyeing'], ['Capacity', '180,000 kg per month']],
+  'printed-fabric': [['Printing', '3 rotary printing machines'], ['Processing capacity', 'Over 4 million metres per month (all processing)']],
+  'dyed-bleached': [['Bleaching', '2 continuous bleaching ranges'], ['Dyeing', '2 continuous dyeing ranges'], ['Processing capacity', 'Over 4 million metres per month']],
+  'upholstery': [['Fabric', 'Woven decorative and furnishing fabrics'], ['Weaving', 'Air-jet looms']],
+  'hotel-bed-linen': [['Made in', 'In-house weaving and cut-and-sew'], ['Fabric', WEAVES]],
+  'hotel-curtains': [['Made in', 'In-house cut and sew'], ['Fabric', 'Our own woven, dyed and printed fabrics']],
+  'hotel-quilted': [['Construction', 'Quilted and filled'], ['Made in', 'In-house quilting and wadding lines']],
+  'apparel-plain': [['Weaving', 'Air-jet looms'], ['Processing', 'In-house dyeing and finishing']],
+  'apparel-print': [['Printing', 'Rotary printing'], ['Processing', 'In-house']],
+  'apparel-yarn': [['Yarn dyeing', 'In-house cone dyeing']],
+  'garments': [['Stitching', '18 stitching units'], ['Availability', 'On request']],
+};
+const onRequest = ['Composition and construction', 'Widths / sizes', 'Colours and designs', 'Packing and labelling', 'Samples and lead time', 'Certificates (see the Certifications page)'];
+
+/* ---------- Enquiry ---------- */
+const SALES_EMAIL = 'sales@bismillah.com.pk';
+const SALES_PHONE = '+92 41 242 8888';
+const SALES_TEL = 'tel:+92412428888';
+// Optional: put the company WhatsApp number here in international format without + or spaces,
+// e.g. '923001234567'. Leave empty to hide the WhatsApp button.
+const WHATSAPP_NUMBER = '';
+
+export type EnquiryForm = { name: string; company: string; contact: string; quantity: string; message: string };
+
+export function buildEnquiry(productName: string, f: EnquiryForm) {
+  const subject = 'Enquiry: ' + productName;
+  const lines: string[] = ['Hello Bismillah Textiles sales team,', '', 'I would like more information about: ' + productName, ''];
+  if (f.quantity.trim()) lines.push('Quantity / programme: ' + f.quantity.trim());
+  if (f.message.trim()) lines.push('Details: ' + f.message.trim());
+  lines.push('', 'Name: ' + (f.name.trim() || '-'), 'Company: ' + (f.company.trim() || '-'), 'Email / phone: ' + (f.contact.trim() || '-'));
+  const body = lines.join('\n');
+  const q = (v: string) => encodeURIComponent(v);
+  return {
+    subject,
+    body,
+    gmail: 'https://mail.google.com/mail/?view=cm&fs=1&to=' + SALES_EMAIL + '&su=' + q(subject) + '&body=' + q(body),
+    outlook: 'https://outlook.live.com/mail/0/deeplink/compose?to=' + SALES_EMAIL + '&subject=' + q(subject) + '&body=' + q(body),
+    mailto: 'mailto:' + SALES_EMAIL + '?subject=' + q(subject) + '&body=' + q(body),
+    whatsapp: WHATSAPP_NUMBER ? 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + q(subject + '\n\n' + body) : '',
+  };
+}
+
+function Stars({ score, count }: { score: number; count: number }) {
+  const full = Math.round(score);
+  return (
+    <span className="catalog-stars" aria-label={score.toFixed(1) + ' out of 5 from ' + count + ' reviews'}>
+      {[1, 2, 3, 4, 5].map((n) => <Star key={n} size={13} className={n <= full ? 'is-on' : ''} />)}
+      <em>{score.toFixed(1)} ({count})</em>
+    </span>
+  );
+}
+
+export function ProductDialog({ product, onClose }: { product: Product; onClose: () => void }) {
+  const [form, setForm] = useState<EnquiryForm>({ name: '', company: '', contact: '', quantity: '', message: '' });
+  const [copied, setCopied] = useState(false);
+  const links = buildEnquiry(product.name, form);
+  const set = (k: keyof EnquiryForm) => (e: { target: { value: string } }) => setForm({ ...form, [k]: e.target.value });
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
+  }, [onClose]);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText('To: ' + SALES_EMAIL + '\nSubject: ' + links.subject + '\n\n' + links.body);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      window.prompt('Copy this message and send it to ' + SALES_EMAIL, links.body);
+    }
+  };
+  const props = productProps[product.id] ?? [];
+  const catLabel = categories.find((c) => c.id === product.category)?.label ?? '';
+
+  return (
+    <div className="pd-backdrop" onClick={onClose}>
+      <div className="pd-dialog" role="dialog" aria-modal="true" aria-label={product.name} onClick={(e) => e.stopPropagation()}>
+        <button type="button" className="pd-close" onClick={onClose} aria-label="Close"><X size={18} /></button>
+        <div className="pd-media"><ProductMedia product={product} /></div>
+        <div className="pd-info">
+          <span className="micro-label">{catLabel.toUpperCase()}</span>
+          <h3>{product.name}</h3>
+          {product.rating && <Stars score={product.rating.score} count={product.rating.count} />}
+          <p className="pd-summary">{product.summary}</p>
+          <ul className="catalog-specs">{product.specs.map((x) => <li key={x}>{x}</li>)}</ul>
+          {props.length > 0 && (
+            <dl className="pd-props">{props.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+          )}
+          <div className="pd-request"><strong>Available on request</strong><span>{onRequest.join(' · ')}</span></div>
+        </div>
+        <div className="pd-form">
+          <h4>Enquire about this product</h4>
+          <p>Fill in your details, then choose how you would like to send the message to our sales team.</p>
+          <div className="pd-fields">
+            <label>Your name<input value={form.name} onChange={set('name')} autoComplete="name" /></label>
+            <label>Company<input value={form.company} onChange={set('company')} autoComplete="organization" /></label>
+            <label>Email or phone<input value={form.contact} onChange={set('contact')} autoComplete="email" /></label>
+            <label>Quantity / programme<input value={form.quantity} onChange={set('quantity')} placeholder="e.g. 20,000 sets per month" /></label>
+            <label className="pd-wide">Message<textarea rows={3} value={form.message} onChange={set('message')} placeholder="Sizes, thread count, colours, delivery…" /></label>
+          </div>
+          <div className="pd-actions">
+            <a className="button button-red" href={links.gmail} target="_blank" rel="noreferrer"><Mail size={15} /> Send with Gmail</a>
+            <a className="button button-outline" href={links.outlook} target="_blank" rel="noreferrer">Outlook</a>
+            <a className="button button-outline" href={links.mailto}>Email app</a>
+            {links.whatsapp && <a className="button button-outline" href={links.whatsapp} target="_blank" rel="noreferrer">WhatsApp</a>}
+            <button type="button" className="button button-outline" onClick={copy}><Copy size={14} /> {copied ? 'Copied' : 'Copy message'}</button>
+          </div>
+          <p className="pd-alt">Or write to <a href={'mailto:' + SALES_EMAIL}>{SALES_EMAIL}</a> / call <a href={SALES_TEL}>{SALES_PHONE}</a> <Phone size={12} /></p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function ProductCatalog() {
   const [active, setActive] = useState<CategoryId | 'all'>('all');
+  const [selected, setSelected] = useState<Product | null>(null);
   const visible = useMemo(() => (active === 'all' ? products : products.filter((p) => p.category === active)), [active]);
   const countFor = (id: CategoryId) => products.filter((p) => p.category === id).length;
 
@@ -209,11 +363,13 @@ export function ProductCatalog() {
               <h3>{p.name}</h3>
               <p>{p.summary}</p>
               <ul className="catalog-specs">{p.specs.map((s) => <li key={s}>{s}</li>)}</ul>
-              <a className="inline-link" href={'mailto:sales@bismillah.com.pk?subject=' + encodeURIComponent('Enquiry: ' + p.name)}>Enquire about this product <ArrowUpRight size={14} /></a>
+              {p.rating && <Stars score={p.rating.score} count={p.rating.count} />}
+              <button type="button" className="inline-link catalog-more" onClick={() => setSelected(p)}>View details &amp; enquire <ArrowUpRight size={14} /></button>
             </div>
           </article>
         ))}
       </div>
+      {selected && <ProductDialog product={selected} onClose={() => setSelected(null)} />}
     </section>
   );
 }
