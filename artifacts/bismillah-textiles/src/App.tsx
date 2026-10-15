@@ -157,7 +157,7 @@ function SiteFrame() {
         <Link href="/" className="brand" aria-label="Bismillah Textiles home"><img src="/images/BTL-New-Logo-01_1791856385213.png" alt="Bismillah Textiles (Private) Limited" /></Link>
         <nav className={menuOpen ? 'nav-links is-open' : 'nav-links'} aria-label="Main navigation">
           <div className="nav-menu-grid">{sitePages.map((page) => <Link href={page.path} key={page.path} onClick={() => setMenuOpen(false)} aria-current={location === page.path ? 'page' : undefined}>{page.label}</Link>)}</div>
-          <a className="nav-contact" href="tel:+92412428888" onClick={() => setMenuOpen(false)}><Phone size={15} /> Call the mill</a>
+          <a className="nav-contact" href="tel:+92412428888" onClick={() => setMenuOpen(false)}><Phone size={15} /> Talk to our team</a>
         </nav>
         <button className="mobile-menu" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</button>
       </header>
