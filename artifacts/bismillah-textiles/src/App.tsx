@@ -17,6 +17,7 @@ import {
   NewsPage,
   ProductsPage,
 } from '@/pages/company-pages';
+import { MarketInsightsPage } from '@/pages/market-insights';
 import {
   Link,
   Route,
@@ -37,6 +38,7 @@ const sitePages = [
   { label: 'Contact Us', path: '/contact-us/' },
   { label: 'Certifications', path: '/certifications/' },
   { label: 'News', path: '/news/' },
+  { label: 'Markets & Industry Insights', path: '/markets-industry-insights/' },
 ];
 
 function Home() {
@@ -172,6 +174,7 @@ function SiteFrame() {
           <Route path="/contact-us/" component={ContactPage} />
           <Route path="/certifications/" component={CertificationsPage} />
           <Route path="/news/" component={NewsPage} />
+          <Route path="/markets-industry-insights/" component={MarketInsightsPage} />
           <Route component={NotFound} />
         </Switch>
       </main>
