@@ -23,6 +23,7 @@ for (const [route, page] of Object.entries(metadata.pages)) {
   const titleEnd = html.indexOf('</title>', titleStart) + '</title>'.length;
   html = html.slice(0, titleStart) + '<title>' + escapeAttribute(page.title) + '</title>' + html.slice(titleEnd);
   html = replaceTag(html, '<meta name="description"', '<meta name="description" content="' + escapeAttribute(page.description) + '" />');
+  html = replaceTag(html, '<meta name="robots"', '<meta name="robots" content="' + escapeAttribute(page.robots ?? 'index, follow') + '" />');
   html = replaceTag(html, '<meta property="og:title"', '<meta property="og:title" content="' + escapeAttribute(page.title) + '" />');
   html = replaceTag(html, '<meta property="og:description"', '<meta property="og:description" content="' + escapeAttribute(page.description) + '" />');
   html = replaceTag(html, '<meta property="og:url"', '<meta property="og:url" content="' + escapeAttribute(canonical) + '" />');

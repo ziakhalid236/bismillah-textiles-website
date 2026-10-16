@@ -41,6 +41,11 @@
       "title": "Markets & Industry Insights | Bismillah Textiles",
       "description": "Evidence-led home textile market signals, Pakistan trade data, sustainability standards, trends and industry events, with dates and source limitations."
     },
+    "/admin/": {
+      "title": "Admin Preview | Bismillah Textiles",
+      "description": "Private preview workspace for managing Bismillah Textiles products, categories and site content.",
+      "robots": "noindex, nofollow"
+    },
     "/404/": {
       "title": "Page Not Found | Bismillah Textiles",
       "description": "The requested page could not be found on the Bismillah Textiles website."
