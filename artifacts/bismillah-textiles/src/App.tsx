@@ -4,6 +4,7 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
+import AdminPanel from '@/pages/admin-panel';
 import pageMetadata from './page-metadata.json';
 import { ArrowDown, ArrowRight, ArrowUpRight, Mail, MapPin, Menu, Phone, X } from 'lucide-react';
 import {
@@ -105,7 +106,10 @@ function Home() {
 
 function Router() {
   return (
-    <RoutedErrorBoundary><SiteFrame /></RoutedErrorBoundary>
+    <Switch>
+      <Route path="/admin" component={AdminPanel} />
+      <Route component={() => <RoutedErrorBoundary><SiteFrame /></RoutedErrorBoundary>} />
+    </Switch>
   );
 }
 
