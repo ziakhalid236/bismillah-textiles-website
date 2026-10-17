@@ -47,7 +47,7 @@ type Product = {
   photo: PhotoKey;
 };
 
-const products: Product[] = [
+const defaultProducts: Product[] = [
   { id: "sheet-sets", number: "01", group: "HOME", category: "Home textiles", title: "Sheet sets", description: "Flat sheets, fitted sheets and pillowcases, cut and stitched in-house from our own woven fabric.", features: ["Hemstitch", "Pintuck", "Piping", "Embroidery"], photo: "sheets" },
   { id: "comforter-sets", number: "02", group: "HOME", category: "Home textiles", title: "Comforter sets", description: "Coordinated comforter and pillow sham sets, supported by in-house quilting and wadding.", features: ["Quilted", "Filled", "Coordinated sets"], photo: "comforter" },
   { id: "bed-in-a-bag", number: "03", group: "HOME", category: "Home textiles", title: "Bed-in-a-bag", description: "Complete bedding packs, supplied filled or unfilled depending on the programme.", features: ["Filled", "Unfilled", "Retail-ready"], photo: "bedPack" },
@@ -96,6 +96,35 @@ const filters = ["All", ...categoryCopy.map((item) => item.title)] as const;
 
 type Filter = (typeof filters)[number];
 
+type ManagedProduct = {
+  id: string;
+  name: string;
+  sku: string;
+  category: string;
+  description: string;
+};
+
+function managedProductToCatalog(product: ManagedProduct, index: number): Product | null {
+  const category = categoryCopy.find((item) => item.title === product.category)?.title;
+  if (!category) return null;
+  const photoByCategory: Record<Category, PhotoKey> = {
+    "Home textiles": "sheets",
+    Fabric: "jacquard",
+    Hospitality: "hotelBed",
+    "Garments & apparel fabrics": "apparelPrint",
+  };
+  return {
+    id: product.id,
+    number: String(index + 1).padStart(2, "0"),
+    group: category === "Home textiles" ? "HOME" : category === "Garments & apparel fabrics" ? "APPAREL" : category.toUpperCase(),
+    category,
+    title: product.name,
+    description: product.description,
+    features: [product.sku, "Published catalog item"],
+    photo: photoByCategory[category],
+  };
+}
+
 function imageUrl(key: PhotoKey, width = 960) {
   const photo = photos[key];
   const height = Math.round(width * 0.75);
@@ -105,9 +134,22 @@ function imageUrl(key: PhotoKey, width = 960) {
 export function ProductCatalog() {
   const [activeFilter, setActiveFilter] = useState<Filter>("All");
   const [selected, setSelected] = useState<Product | null>(null);
+  const [catalogProducts, setCatalogProducts] = useState<Product[]>(defaultProducts);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
-  const visibleProducts = activeFilter === "All" ? products : products.filter((product) => product.category === activeFilter);
+  const visibleProducts = activeFilter === "All" ? catalogProducts : catalogProducts.filter((product) => product.category === activeFilter);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/public/products", { headers: { Accept: "application/json" }, cache: "no-store" })
+      .then((response) => response.ok ? response.json() as Promise<ManagedProduct[]> : Promise.reject(new Error("Published catalog unavailable")))
+      .then((managedProducts) => {
+        const mapped = managedProducts.map(managedProductToCatalog).filter((product): product is Product => product !== null);
+        if (active && mapped.length > 0) setCatalogProducts(mapped);
+      })
+      .catch(() => undefined);
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     if (!selected) return;
@@ -164,7 +206,7 @@ export function ProductCatalog() {
               <span className="catalog-area-number">{area.number} / {area.title === "Garments & apparel fabrics" ? "APPAREL" : area.title.toUpperCase()}</span>
               <h3>{area.title}</h3>
               <p>{area.description}</p>
-              <span className="catalog-area-count">{products.filter((product) => product.category === area.title).length} products</span>
+              <span className="catalog-area-count">{catalogProducts.filter((product) => product.category === area.title).length} products</span>
             </article>
           ))}
         </div>
@@ -177,17 +219,17 @@ export function ProductCatalog() {
             <h2 id="products-title">What we make</h2>
             <p>Browse by category. For constructions, thread counts, sizes or custom programmes, contact our sales team.</p>
           </div>
-          <span className="catalog-total">{products.length} product lines</span>
+            <span className="catalog-total">{catalogProducts.length} product lines</span>
         </div>
 
         <div className="catalog-filter-row" role="group" aria-label="Filter products by category">
           <div className="catalog-filter-scroll">
             {filters.map((filter) => {
-              const count = filter === "All" ? products.length : products.filter((product) => product.category === filter).length;
+              const count = filter === "All" ? catalogProducts.length : catalogProducts.filter((product) => product.category === filter).length;
               return <button key={filter} type="button" className={activeFilter === filter ? "catalog-filter is-active" : "catalog-filter"} aria-pressed={activeFilter === filter} onClick={() => setActiveFilter(filter)}>{filter}<span>{count}</span></button>;
             })}
           </div>
-          <p className="catalog-results" aria-live="polite">Showing {visibleProducts.length} of {products.length}</p>
+          <p className="catalog-results" aria-live="polite">Showing {visibleProducts.length} of {catalogProducts.length}</p>
         </div>
 
         <div className="catalog-product-grid">
