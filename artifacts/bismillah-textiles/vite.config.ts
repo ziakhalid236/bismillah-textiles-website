@@ -13,7 +13,15 @@ if (Number.isNaN(port) || port <= 0) {
 }
 
 const basePath = process.env.BASE_PATH ?? '/';
-const allowedHosts = ['.replit.dev', '.replit.app', '.repl.co'];
+const codespacesHost = process.env.CODESPACE_NAME && process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN
+  ? `${process.env.CODESPACE_NAME}-${port}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`
+  : undefined;
+const allowedHosts = [
+  '.replit.dev',
+  '.replit.app',
+  '.repl.co',
+  ...(codespacesHost ? [codespacesHost] : []),
+];
 
 export default defineConfig({
   base: basePath,
