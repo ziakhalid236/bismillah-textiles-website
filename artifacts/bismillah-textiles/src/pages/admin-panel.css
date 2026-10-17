@@ -1440,6 +1440,52 @@
   padding: 0 17px;
 }
 
+.admin-gate-form {
+  display: grid;
+  width: min(100%, 385px);
+  gap: 12px;
+  text-align: left;
+}
+
+.admin-gate-form label {
+  display: grid;
+  gap: 6px;
+  color: #55564d;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.admin-gate-form input {
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid #d9dbd0;
+  border-radius: 2px;
+  background: #fff;
+  color: #292821;
+  font: inherit;
+}
+
+.admin-gate-form input:focus-visible {
+  outline: 2px solid #a3262e;
+  outline-offset: 2px;
+}
+
+.admin-api-alert,
+.admin-loading {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border: 1px solid #e4c4c2;
+  background: #fff7f6;
+  color: #8b282d;
+  font-size: 12px;
+}
+
+.admin-loading {
+  border-color: #e4e5dc;
+  background: #fff;
+  color: #77776c;
+}
+
 .admin-demo-note {
   display: flex;
   max-width: 390px;

@@ -153,11 +153,23 @@ router.post("/auth/login", requireAdminOrigin, async (request, response) => {
 
 router.post("/auth/logout", requireAdminOrigin, requireAdminSession, async (request, response) => {
   const token = request.cookies?.[ADMIN_SESSION_COOKIE];
-  if (typeof token === "string") {
-    await db.delete(adminSessionsTable).where(eq(adminSessionsTable.tokenHash, hashSessionToken(token)));
+  try {
+    if (typeof token === "string") {
+      await db.delete(adminSessionsTable).where(eq(adminSessionsTable.tokenHash, hashSessionToken(token)));
+    }
+    clearSessionCookie(response);
+    response.status(204).end();
+  } catch {
+    response.status(503).json({ message: "Unable to end the admin session." });
   }
-  clearSessionCookie(response);
-  response.status(204).end();
+});
+
+router.use((request, response, next): void => {
+  if (["POST", "PUT", "PATCH", "DELETE"].includes(request.method)) {
+    requireAdminOrigin(request, response, next);
+    return;
+  }
+  next();
 });
 
 router.use(requireAdminSession);

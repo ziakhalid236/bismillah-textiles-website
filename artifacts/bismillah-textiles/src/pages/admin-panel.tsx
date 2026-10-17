@@ -53,28 +53,36 @@ type ContentPage = {
   updated: string;
 };
 
-const initialProducts: Product[] = [
-  { id: 'p-01', name: 'Sheet sets', sku: 'BTL-HM-001', category: 'Home textiles', status: 'Published', description: 'Flat sheets, fitted sheets and pillowcases, cut and stitched in-house from our own woven fabric.', updated: 'Today, 10:42 AM' },
-  { id: 'p-02', name: 'Comforter sets', sku: 'BTL-HM-002', category: 'Home textiles', status: 'Published', description: 'Coordinated comforter and pillow sham sets, supported by in-house quilting and wadding.', updated: 'Yesterday' },
-  { id: 'p-03', name: 'Jacquard fabric', sku: 'BTL-FB-001', category: 'Fabric', status: 'Published', description: 'Figured woven fabric produced on the company’s air-jet looms.', updated: 'Oct 14, 2026' },
-  { id: 'p-04', name: 'Hospitality bed linen', sku: 'BTL-HT-001', category: 'Hospitality', status: 'Published', description: 'Plain and striped bed linen for hospitality customers, made on weaving and stitching lines.', updated: 'Oct 12, 2026' },
-  { id: 'p-05', name: 'Printed apparel fabric', sku: 'BTL-AP-002', category: 'Garments & apparel fabrics', status: 'Draft', description: 'Printed fabrics suited to apparel programmes.', updated: 'Oct 11, 2026' },
-  { id: 'p-06', name: 'Quilted bedding', sku: 'BTL-HM-004', category: 'Home textiles', status: 'Draft', description: 'Quilts and quilted products made on computerized quilting lines.', updated: 'Oct 9, 2026' },
-];
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '');
 
-const initialCategories: Category[] = [
-  { id: 'c-01', name: 'Home textiles', description: 'Bedding, window, bath and table products.', active: true },
-  { id: 'c-02', name: 'Fabric', description: 'Woven, dyed, printed and finished fabrics.', active: true },
-  { id: 'c-03', name: 'Hospitality', description: 'Bed linen, drapes and quilted products for hospitality.', active: true },
-  { id: 'c-04', name: 'Garments & apparel fabrics', description: 'Apparel fabrics and cut-and-sew capability.', active: true },
-];
+class AdminApiError extends Error {
+  constructor(message: string, readonly status: number) {
+    super(message);
+  }
+}
 
-const initialPages: ContentPage[] = [
-  { id: 'home', title: 'Home page', path: '/', summary: 'Company introduction and manufacturing overview.', body: 'Founded in 1989, Bismillah Textiles brings weaving, processing and stitching together at our home in Faisalabad, Pakistan. We serve brands and retailers across six continents.', status: 'Published', updated: 'Today, 9:18 AM' },
-  { id: 'about', title: 'About us', path: '/about-us/', summary: 'Company story, values and leadership.', body: 'A family business built on quality, professional service and long-standing relationships. Our teams bring each stage of textile manufacturing together under one roof.', status: 'Published', updated: 'Oct 15, 2026' },
-  { id: 'facilities', title: 'Manufacturing facilities', path: '/manufacturing-facilities/', summary: 'Weaving, processing, stitching and finishing.', body: 'Explore the integrated operations, equipment and people behind our textile manufacturing in Khurrianwala.', status: 'Published', updated: 'Oct 14, 2026' },
-  { id: 'news', title: 'News', path: '/news/', summary: 'Company updates and industry events.', body: 'Share a company update, event announcement or community initiative with our customers and partners.', status: 'Draft', updated: 'Oct 10, 2026' },
-];
+async function adminRequest<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const headers = new Headers(options.headers);
+  if (options.body) headers.set('Content-Type', 'application/json');
+  const response = await fetch(`${API_BASE_URL}/api/admin${path}`, {
+    ...options,
+    headers,
+    credentials: 'include',
+    cache: 'no-store',
+  });
+  const payload = await response.json().catch(() => null) as { message?: string } | null;
+  if (!response.ok) {
+    throw new AdminApiError(payload?.message ?? `Admin request failed (${response.status}).`, response.status);
+  }
+  return payload as T;
+}
+
+function formatUpdated(value: string): string {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? value
+    : date.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+}
 
 const navItems: { id: Section; label: string; icon: typeof LayoutDashboard }[] = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
@@ -84,54 +92,80 @@ const navItems: { id: Section; label: string; icon: typeof LayoutDashboard }[] =
 ];
 
 const sectionTitles: Record<Section, { title: string; eyebrow: string; description: string }> = {
-  overview: { title: 'Good morning, Ayesha', eyebrow: 'Workspace overview', description: 'A clear view of the content shaping your public profile.' },
+  overview: { title: 'Workspace overview', eyebrow: 'Admin workspace', description: 'A clear view of products, categories and managed page content.' },
   products: { title: 'Products', eyebrow: 'Catalog management', description: 'Manage the product lines shown to brands and retail partners.' },
   categories: { title: 'Categories', eyebrow: 'Catalog structure', description: 'Organize product lines into clear, buyer-friendly ranges.' },
   content: { title: 'Site content', eyebrow: 'Page editor', description: 'Update the words and key details across your company profile.' },
 };
-
-function readLocal<T>(key: string, fallback: T): T {
-  try {
-    const saved = window.localStorage.getItem(key);
-    return saved ? (JSON.parse(saved) as T) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function writeLocal<T>(key: string, value: T) {
-  try {
-    window.localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // The demo remains usable when browser storage is unavailable.
-  }
-}
 
 function StatusBadge({ status }: { status: Status }) {
   return <span className={`admin-status admin-status--${status.toLowerCase()}`}><span />{status}</span>;
 }
 
 function AdminPanel() {
-  const [authenticated, setAuthenticated] = useState(() => {
-    try {
-      return window.sessionStorage.getItem('btl-admin-demo-session') === 'active';
-    } catch {
-      return false;
-    }
-  });
+  const [authenticated, setAuthenticated] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [username, setUsername] = useState('');
+  const [adminUsername, setAdminUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [authError, setAuthError] = useState('');
+  const [apiError, setApiError] = useState('');
+  const [loadingData, setLoadingData] = useState(false);
   const [section, setSection] = useState<Section>('overview');
-  const [products, setProducts] = useState(() => readLocal('btl-admin-products', initialProducts));
-  const [categories, setCategories] = useState(() => readLocal('btl-admin-categories', initialCategories));
-  const [pages, setPages] = useState(() => readLocal('btl-admin-pages', initialPages));
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [pages, setPages] = useState<ContentPage[]>([]);
   const [productDialog, setProductDialog] = useState<{ product?: Product } | null>(null);
   const [categoryDialog, setCategoryDialog] = useState<{ category?: Category } | null>(null);
   const [selectedPageId, setSelectedPageId] = useState('home');
   const [productSearch, setProductSearch] = useState('');
   const [productStatus, setProductStatus] = useState('All statuses');
 
-  useEffect(() => writeLocal('btl-admin-products', products), [products]);
-  useEffect(() => writeLocal('btl-admin-categories', categories), [categories]);
-  useEffect(() => writeLocal('btl-admin-pages', pages), [pages]);
+  async function loadData() {
+    setLoadingData(true);
+    setApiError('');
+    try {
+      const [nextProducts, nextCategories, nextPages] = await Promise.all([
+        adminRequest<Product[]>('/products'),
+        adminRequest<Category[]>('/categories'),
+        adminRequest<ContentPage[]>('/pages'),
+      ]);
+      setProducts(nextProducts);
+      setCategories(nextCategories);
+      setPages(nextPages);
+      if (nextPages.length && !nextPages.some((page) => page.id === selectedPageId)) {
+        setSelectedPageId(nextPages[0].id);
+      }
+    } catch (error) {
+      setApiError(error instanceof Error ? error.message : 'Unable to load admin data.');
+    } finally {
+      setLoadingData(false);
+    }
+  }
+
+  useEffect(() => {
+    let active = true;
+    adminRequest<{ username: string }>('/auth/session')
+      .then(({ username: currentUsername }) => {
+        if (active) {
+          setAdminUsername(currentUsername);
+          setAuthenticated(true);
+        }
+      })
+      .catch((error: unknown) => {
+        if (active && !(error instanceof AdminApiError && error.status === 401)) {
+          setApiError(error instanceof Error ? error.message : 'Admin API is unavailable.');
+        }
+      })
+      .finally(() => {
+        if (active) setAuthChecked(true);
+      });
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    if (authenticated) void loadData();
+  }, [authenticated]);
 
   const pageInfo = sectionTitles[section];
   const publishedCount = products.filter((product) => product.status === 'Published').length;
@@ -143,51 +177,86 @@ function AdminPanel() {
     return matchesSearch && matchesStatus;
   });
 
-  function enterDemo() {
+  async function signIn(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setAuthError('');
     try {
-      window.sessionStorage.setItem('btl-admin-demo-session', 'active');
-    } catch {
-      // Keep the demo gate in component state if session storage is blocked.
+      const session = await adminRequest<{ username: string }>('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ username, password }),
+      });
+      setAdminUsername(session.username);
+      setPassword('');
+      setAuthenticated(true);
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : 'Sign-in failed.');
     }
-    setAuthenticated(true);
   }
 
-  function signOut() {
+  async function signOut() {
     try {
-      window.sessionStorage.removeItem('btl-admin-demo-session');
-    } catch {
-      // Component state still clears when storage is blocked.
+      await adminRequest('/auth/logout', { method: 'POST' });
+    } catch (error) {
+      setApiError(error instanceof Error ? error.message : 'Sign-out failed.');
     }
     setAuthenticated(false);
   }
 
-  function saveProduct(product: Product) {
-    setProducts((current) => {
-      const exists = current.some((item) => item.id === product.id);
-      return exists ? current.map((item) => item.id === product.id ? product : item) : [product, ...current];
-    });
-    setProductDialog(null);
-  }
-
-  function saveCategory(category: Category) {
-    const previous = categories.find((item) => item.id === category.id);
-    if (previous && previous.name !== category.name) {
-      setProducts((current) => current.map((product) => product.category === previous.name ? { ...product, category: category.name } : product));
+  async function saveProduct(product: Product) {
+    const exists = products.some((item) => item.id === product.id);
+    try {
+      const saved = await adminRequest<Product>(exists ? `/products/${encodeURIComponent(product.id)}` : '/products', {
+        method: exists ? 'PUT' : 'POST',
+        body: JSON.stringify(product),
+      });
+      setProducts((current) => exists
+        ? current.map((item) => item.id === saved.id ? saved : item)
+        : [saved, ...current]);
+      setProductDialog(null);
+      setApiError('');
+    } catch (error) {
+      setApiError(error instanceof Error ? error.message : 'Unable to save product.');
     }
-    setCategories((current) => {
-      const exists = current.some((item) => item.id === category.id);
-      return exists ? current.map((item) => item.id === category.id ? category : item) : [...current, category];
-    });
-    setCategoryDialog(null);
   }
 
-  function updatePage(updated: ContentPage) {
-    setPages((current) => current.map((page) => page.id === updated.id ? updated : page));
+  async function saveCategory(category: Category) {
+    const exists = categories.some((item) => item.id === category.id);
+    try {
+      const saved = await adminRequest<Category>(exists ? `/categories/${encodeURIComponent(category.id)}` : '/categories', {
+        method: exists ? 'PUT' : 'POST',
+        body: JSON.stringify(category),
+      });
+      setCategories((current) => exists
+        ? current.map((item) => item.id === saved.id ? saved : item)
+        : [...current, saved]);
+      await loadData();
+      setCategoryDialog(null);
+      setApiError('');
+    } catch (error) {
+      setApiError(error instanceof Error ? error.message : 'Unable to save category.');
+    }
   }
 
-  function addPage() {
+  async function updatePage(updated: ContentPage) {
+    const exists = pages.some((page) => page.id === updated.id);
+    try {
+      const saved = await adminRequest<ContentPage>(exists ? `/pages/${encodeURIComponent(updated.id)}` : '/pages', {
+        method: exists ? 'PUT' : 'POST',
+        body: JSON.stringify(updated),
+      });
+      setPages((current) => exists
+        ? current.map((page) => page.id === saved.id ? saved : page)
+        : [...current, saved]);
+      setSelectedPageId(saved.id);
+      setApiError('');
+    } catch (error) {
+      setApiError(error instanceof Error ? error.message : 'Unable to save page.');
+    }
+  }
+
+  async function addPage() {
     const page: ContentPage = {
-      id: `page-${Date.now()}`,
+      id: crypto.randomUUID(),
       title: 'New page',
       path: '/new-page/',
       summary: 'Add a short summary for this page.',
@@ -195,25 +264,24 @@ function AdminPanel() {
       status: 'Draft',
       updated: 'Just now',
     };
-    setPages((current) => [...current, page]);
-    setSelectedPageId(page.id);
-  }
-
-  function resetDemoData() {
-    setProducts(initialProducts);
-    setCategories(initialCategories);
-    setPages(initialPages);
+    await updatePage(page);
   }
 
   if (!authenticated) {
+    if (!authChecked) return <main className="admin-gate"><p className="admin-eyebrow">Bismillah Textiles / Workspace</p><h1>Checking session</h1><p className="admin-gate-copy">Connecting securely to the admin service.</p></main>;
     return (
       <main className="admin-gate">
         <div className="admin-gate-mark"><span>BT</span><i /></div>
         <p className="admin-eyebrow">Bismillah Textiles / Workspace</p>
-        <h1>Admin preview</h1>
-        <p className="admin-gate-copy">Enter the local demo workspace to review product, category and site-content management.</p>
-        <button className="admin-button admin-button--primary admin-gate-button" type="button" onClick={enterDemo}>Enter demo workspace <ArrowUpRight size={16} /></button>
-        <div className="admin-demo-note"><ShieldCheck size={16} /><span>Demo-only access gate. No real account or production data is connected.</span></div>
+        <h1>Admin sign in</h1>
+        <p className="admin-gate-copy">Sign in to manage Bismillah Textiles products and site content.</p>
+        <form className="admin-gate-form" onSubmit={signIn}>
+          <label>Username<input autoComplete="username" value={username} onChange={(event) => setUsername(event.target.value)} required /></label>
+          <label>Password<input type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} required /></label>
+          {authError && <p className="admin-form-error" role="alert">{authError}</p>}
+          <button className="admin-button admin-button--primary admin-gate-button" type="submit">Sign in securely <ArrowUpRight size={16} /></button>
+        </form>
+        {apiError && <div className="admin-demo-note" role="alert"><ShieldCheck size={16} /><span>{apiError}</span></div>}
         <a className="admin-back-link" href="/">Return to public website <ArrowUpRight size={14} /></a>
       </main>
     );
@@ -236,9 +304,9 @@ function AdminPanel() {
           ))}
         </nav>
         <div className="admin-sidebar-bottom">
-          <div className="admin-demo-status"><span className="admin-demo-dot" /><span><strong>Local demo</strong><small>Changes saved in this browser</small></span></div>
+          <div className="admin-demo-status"><span className="admin-demo-dot" /><span><strong>Connected admin</strong><small>Changes saved to database</small></span></div>
           <a href="/" className="admin-nav-item"><Globe2 size={18} strokeWidth={1.8} /><span>View public site</span><ArrowUpRight size={14} /></a>
-          <button className="admin-nav-item admin-signout" type="button" onClick={signOut}><LogOut size={18} strokeWidth={1.8} /><span>Exit demo</span></button>
+          <button className="admin-nav-item admin-signout" type="button" onClick={signOut}><LogOut size={18} strokeWidth={1.8} /><span>Sign out</span></button>
         </div>
       </aside>
 
@@ -246,10 +314,10 @@ function AdminPanel() {
         <header className="admin-topbar">
           <div className="admin-breadcrumb"><span>Workspace</span><span>/</span><strong>{pageInfo.title}</strong></div>
           <div className="admin-top-actions">
-            <span className="admin-preview-chip"><span /> DEMO DATA</span>
+            <span className="admin-preview-chip"><span /> DATABASE</span>
             <a className="admin-icon-button" href="/" aria-label="Preview public website" title="Preview public website"><Eye size={18} /></a>
             <button className="admin-icon-button admin-notification-button" type="button" aria-label="Notifications"><Bell size={18} /><i /></button>
-            <button className="admin-profile-button" type="button" aria-label="Demo editor profile"><span>AS</span><ChevronDown size={14} /></button>
+            <button className="admin-profile-button" type="button" aria-label={`Signed in as ${adminUsername}`}><span>{adminUsername.slice(0, 2).toUpperCase()}</span><ChevronDown size={14} /></button>
           </div>
         </header>
 
@@ -264,7 +332,10 @@ function AdminPanel() {
             </div>
           </div>
 
-          {section === 'overview' && <Overview products={products} pages={pages} publishedCount={publishedCount} draftCount={draftCount} onNavigate={setSection} onEditHome={() => { setSelectedPageId('home'); setSection('content'); }} />}
+          {apiError && <div className="admin-api-alert" role="alert">{apiError}</div>}
+          {loadingData && <div className="admin-loading" role="status">Loading saved admin data…</div>}
+
+          {!loadingData && section === 'overview' && <Overview products={products} pages={pages} publishedCount={publishedCount} draftCount={draftCount} onNavigate={setSection} onEditHome={() => { setSelectedPageId(pages[0]?.id ?? ''); setSection('content'); }} />}
           {section === 'products' && (
             <ProductsView
               products={filteredProducts}
@@ -277,10 +348,13 @@ function AdminPanel() {
               onAdd={() => setProductDialog({})}
             />
           )}
-          {section === 'categories' && <CategoriesView categories={categories} products={products} onEdit={(category) => setCategoryDialog({ category })} onToggle={(id) => setCategories((current) => current.map((category) => category.id === id ? { ...category, active: !category.active } : category))} />}
+          {section === 'categories' && <CategoriesView categories={categories} products={products} onEdit={(category) => setCategoryDialog({ category })} onToggle={(id) => {
+            const category = categories.find((item) => item.id === id);
+            if (category) void saveCategory({ ...category, active: !category.active });
+          }} />}
           {section === 'content' && selectedPage && <ContentView pages={pages} selected={selectedPage} onSelect={setSelectedPageId} onUpdate={updatePage} />}
 
-          <footer className="admin-page-footer"><span>Local preview workspace</span><button type="button" onClick={resetDemoData}>Reset demo data</button><span>Changes are not sent to a server.</span></footer>
+          <footer className="admin-page-footer"><span>Secure admin workspace</span><span>Changes are saved to the connected database.</span></footer>
         </main>
       </div>
 
@@ -298,13 +372,18 @@ function Overview({ products, pages, publishedCount, draftCount, onNavigate, onE
   onNavigate: (section: Section) => void;
   onEditHome: () => void;
 }) {
+  const recentRecords = [
+    ...products.map((product) => ({ id: product.id, title: product.name, kind: 'Product', updated: product.updated })),
+    ...pages.map((page) => ({ id: page.id, title: page.title, kind: 'Page', updated: page.updated })),
+  ].sort((left, right) => Date.parse(right.updated) - Date.parse(left.updated)).slice(0, 3);
+
   return (
     <div className="admin-overview">
       <section className="admin-stat-grid" aria-label="Workspace summary">
         <article className="admin-stat"><span className="admin-stat-icon admin-stat-icon--red"><Package size={18} /></span><span className="admin-stat-label">Total products</span><strong>{products.length}</strong><span className="admin-stat-foot">Across active product ranges</span></article>
-        <article className="admin-stat"><span className="admin-stat-icon admin-stat-icon--green"><Globe2 size={18} /></span><span className="admin-stat-label">Published</span><strong>{publishedCount}</strong><span className="admin-stat-foot">Visible on the public site</span></article>
+        <article className="admin-stat"><span className="admin-stat-icon admin-stat-icon--green"><Globe2 size={18} /></span><span className="admin-stat-label">Published status</span><strong>{publishedCount}</strong><span className="admin-stat-foot">Marked published in admin data</span></article>
         <article className="admin-stat"><span className="admin-stat-icon admin-stat-icon--gold"><FileText size={18} /></span><span className="admin-stat-label">Drafts to review</span><strong>{draftCount + pages.filter((page) => page.status === 'Draft').length}</strong><span className="admin-stat-foot">Products and page content</span></article>
-        <article className="admin-stat"><span className="admin-stat-icon admin-stat-icon--ink"><Users size={18} /></span><span className="admin-stat-label">Content editors</span><strong>03</strong><span className="admin-stat-foot">Demo workspace team</span></article>
+        <article className="admin-stat"><span className="admin-stat-icon admin-stat-icon--ink"><Users size={18} /></span><span className="admin-stat-label">Admin accounts</span><strong>01</strong><span className="admin-stat-foot">Environment-configured account</span></article>
       </section>
 
       <section className="admin-overview-grid">
@@ -325,13 +404,13 @@ function Overview({ products, pages, publishedCount, draftCount, onNavigate, onE
 
       <section className="admin-bottom-grid">
         <article className="admin-panel admin-publish-panel">
-          <div className="admin-panel-heading"><div><h2>Publishing status</h2><p>What visitors can currently see</p></div><span className="admin-live-mark"><i /> PUBLIC SITE</span></div>
+          <div className="admin-panel-heading"><div><h2>Publishing status</h2><p>Publication state stored by admin</p></div><span className="admin-live-mark"><i /> DATABASE</span></div>
           <div className="admin-publish-metrics"><div><strong>{publishedCount}</strong><span>published products</span></div><div><strong>{pages.filter((page) => page.status === 'Published').length}</strong><span>published pages</span></div><div><strong>{draftCount}</strong><span>product drafts</span></div></div>
           <button className="admin-public-link" type="button" onClick={() => window.open('/', '_blank', 'noopener,noreferrer')}>Open public website <ArrowUpRight size={15} /></button>
         </article>
         <article className="admin-panel admin-activity-panel">
           <div className="admin-panel-heading"><div><h2>Activity</h2><p>Recent workspace updates</p></div><Activity size={18} className="admin-muted-icon" /></div>
-          <div className="admin-activity-list"><div><span className="admin-activity-dot admin-activity-dot--green" /><p><strong>Sheet sets</strong> published to the catalog<small><Clock3 size={12} /> Today, 10:42 AM</small></p></div><div><span className="admin-activity-dot admin-activity-dot--gold" /><p><strong>Printed apparel fabric</strong> saved as a draft<small><Clock3 size={12} /> Yesterday, 3:16 PM</small></p></div><div><span className="admin-activity-dot admin-activity-dot--red" /><p><strong>Home page</strong> copy updated<small><Clock3 size={12} /> Oct 15, 2026</small></p></div></div>
+          <div className="admin-activity-list">{recentRecords.map((record, index) => <div key={record.id}><span className={`admin-activity-dot ${index === 0 ? 'admin-activity-dot--green' : index === 1 ? 'admin-activity-dot--gold' : 'admin-activity-dot--red'}`} /><p><strong>{record.title}</strong> {record.kind.toLowerCase()} record<small><Clock3 size={12} /> {formatUpdated(record.updated)}</small></p></div>)}</div>
         </article>
       </section>
     </div>
@@ -359,7 +438,7 @@ function ProductsView({ products, total, search, status, onSearch, onStatus, onE
         {products.map((product, index) => <tr key={product.id}><td><div className="admin-product-cell"><span className={`admin-mini-thumb admin-mini-thumb--${index % 3}`}><Package size={17} /></span><span><strong>{product.name}</strong><small>{product.description}</small></span></div></td><td>{product.category}</td><td className="admin-sku">{product.sku}</td><td><StatusBadge status={product.status} /></td><td className="admin-date">{product.updated}</td><td><button className="admin-row-action" type="button" onClick={() => onEdit(product)} aria-label={`Edit ${product.name}`}><Pencil size={15} /></button></td></tr>)}
         {products.length === 0 && <tr><td colSpan={6}><div className="admin-empty"><Package size={22} /><strong>No matching products</strong><span>Try another search or add a product.</span><button type="button" className="admin-text-link" onClick={onAdd}><Plus size={14} /> Add product</button></div></td></tr>}
       </tbody></table></div>
-      <div className="admin-table-footer"><span>Showing {products.length} products</span><span>Demo catalog · browser-local</span></div>
+      <div className="admin-table-footer"><span>Showing {products.length} products</span><span>Saved in the connected database</span></div>
     </section>
   );
 }
@@ -385,10 +464,17 @@ function ContentView({ pages, selected, onSelect, onUpdate }: {
   pages: ContentPage[];
   selected: ContentPage;
   onSelect: (id: string) => void;
-  onUpdate: (page: ContentPage) => void;
+  onUpdate: (page: ContentPage) => Promise<void>;
 }) {
-  function save(status: Status) {
-    onUpdate({ ...selected, status, updated: 'Just now' });
+  const [draft, setDraft] = useState(selected);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => setDraft(selected), [selected.id, selected.updated]);
+
+  async function save(status: Status) {
+    setSaving(true);
+    await onUpdate({ ...draft, status, updated: new Date().toISOString() });
+    setSaving(false);
   }
 
   return (
@@ -401,12 +487,12 @@ function ContentView({ pages, selected, onSelect, onUpdate }: {
       <section className="admin-panel admin-editor-panel">
         <div className="admin-editor-toolbar"><div><span className="admin-editor-label">EDITING PAGE</span><span className="admin-editor-path">{selected.path}</span></div><StatusBadge status={selected.status} /></div>
         <div className="admin-editor-fields">
-          <label>Page title<input value={selected.title} onChange={(event) => onUpdate({ ...selected, title: event.target.value })} /></label>
-          <label>Short summary<input value={selected.summary} onChange={(event) => onUpdate({ ...selected, summary: event.target.value })} /></label>
-          <label>Page copy<textarea rows={9} value={selected.body} onChange={(event) => onUpdate({ ...selected, body: event.target.value })} /></label>
+          <label>Page title<input value={draft.title} onChange={(event) => setDraft({ ...draft, title: event.target.value })} /></label>
+          <label>Short summary<input value={draft.summary} onChange={(event) => setDraft({ ...draft, summary: event.target.value })} /></label>
+          <label>Page copy<textarea rows={9} value={draft.body} onChange={(event) => setDraft({ ...draft, body: event.target.value })} /></label>
         </div>
-        <div className="admin-editor-preview"><div><span className="admin-editor-label"><Eye size={13} /> PUBLIC PREVIEW</span><strong>{selected.title || 'Untitled page'}</strong><p>{selected.body || 'Your page content preview will appear here.'}</p></div><span className="admin-preview-stamp">BTL / WEB</span></div>
-        <div className="admin-editor-footer"><span><Clock3 size={13} /> Last saved {selected.updated}</span><div><button className="admin-button admin-button--secondary" type="button" onClick={() => save('Draft')}>Save draft</button><button className="admin-button admin-button--primary" type="button" onClick={() => save('Published')}><Check size={15} /> Publish changes</button></div></div>
+        <div className="admin-editor-preview"><div><span className="admin-editor-label"><Eye size={13} /> PUBLIC PREVIEW</span><strong>{draft.title || 'Untitled page'}</strong><p>{draft.body || 'Your page content preview will appear here.'}</p></div><span className="admin-preview-stamp">BTL / WEB</span></div>
+        <div className="admin-editor-footer"><span><Clock3 size={13} /> Last saved {selected.updated}</span><div><button className="admin-button admin-button--secondary" type="button" disabled={saving} onClick={() => void save('Draft')}>Save draft</button><button className="admin-button admin-button--primary" type="button" disabled={saving} onClick={() => void save('Published')}><Check size={15} /> Publish changes</button></div></div>
       </section>
     </div>
   );
