@@ -17,6 +17,7 @@ async function buildAll() {
   await esbuild({
       entryPoints: {
         index: path.resolve(artifactDir, "src/index.ts"),
+        vercel: path.resolve(artifactDir, "src/app.ts"),
         "seed-admin": path.resolve(artifactDir, "src/seed-admin.ts"),
       },
     platform: "node",

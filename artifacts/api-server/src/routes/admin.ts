@@ -19,7 +19,7 @@ import {
   requireAdminOrigin,
   requireAdminSession,
   setSessionCookie,
-} from "../lib/admin-auth";
+} from "../lib/admin-auth.js";
 
 const router: IRouter = Router();
 const statusSchema = z.enum(["Published", "Draft"]);
