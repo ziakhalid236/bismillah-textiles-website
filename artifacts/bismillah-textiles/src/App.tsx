@@ -42,6 +42,23 @@ const sitePages = [
   { label: 'Markets & Industry Insights', path: '/markets-industry-insights/' },
 ];
 
+const homepageProductSpotlight = [
+  { number: '01', group: 'HOME TEXTILES', title: 'Sheet sets', detail: 'Flat sheets, fitted sheets and pillowcases, made from our own woven fabric.', image: '/images/products/sheet-sets.jpg' },
+  { number: '02', group: 'FABRIC', title: 'Printed fabric', detail: 'Customer-defined printed constructions developed through our integrated processing house.', image: '/images/products/printed-fabric.jpg' },
+  { number: '03', group: 'HOSPITALITY', title: 'Hospitality bed linen', detail: 'Crisp plain and striped bed linen for hospitality programmes and repeatable quality.', image: '/images/products/hospitality-bed-linen.jpg' },
+];
+
+const homepagePageTeasers = [
+  { number: '01', label: 'ABOUT US', title: 'A family business, built to last.', detail: 'Meet the leadership, values and philosophy behind Bismillah Textiles.', href: '/about-us/' },
+  { number: '02', label: 'MANUFACTURING', title: 'One connected way of making.', detail: 'See how weaving, dyeing, processing and stitching work together in-house.', href: '/manufacturing-facilities/' },
+  { number: '03', label: 'BRANDS & RETAILERS', title: 'Made here. Known worldwide.', detail: 'Explore the long-term brand and retail partnerships around our work.', href: '/brands-retailers/' },
+  { number: '04', label: 'CAREERS', title: 'Build your future with our team.', detail: 'Learning, opportunity and progression across a growing textile operation.', href: '/careers/' },
+  { number: '05', label: 'CONTACT', title: 'Find us in Khurrianwala.', detail: 'Reach the sales, general enquiries or careers team and plan a visit.', href: '/contact-us/' },
+  { number: '06', label: 'CERTIFICATIONS', title: 'Quality is an evolving process.', detail: 'See the systems, standards and certificates that support our process.', href: '/certifications/' },
+  { number: '07', label: 'NEWS', title: 'Progress, people and new ideas.', detail: 'Catch up on company updates, community initiatives and recognition.', href: '/news/' },
+  { number: '08', label: 'MARKET INSIGHTS', title: 'Signals to watch. Claims kept in view.', detail: 'Read the latest textile market context with sources and limits made visible.', href: '/markets-industry-insights/' },
+];
+
 function Home() {
   const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=Bismillah+Textiles+1+KM+Jaranwala+Road+Khurrianwala+Faisalabad+Pakistan';
   return (
@@ -79,6 +96,23 @@ function Home() {
             <div className="leader-card-copy"><span className="micro-label">A FAMILY BUSINESS / OUR LEADERSHIP</span><h3>Meet the people behind our work.</h3><p>Explore the story, values and leadership profile of Bismillah Textiles.</p><span className="leader-card-link">Meet our team <ArrowRight size={16} /></span></div>
             <span className="leader-card-index">BTL / 03</span>
           </Link>
+
+          <section className="home-discovery" aria-labelledby="home-discovery-title">
+            <div className="home-discovery-heading">
+              <div><div className="section-kicker"><span>04</span><span className="kicker-rule" /> EXPLORE THE RANGE</div><h2 id="home-discovery-title">A closer look at<br /><em>what we make.</em></h2></div>
+              <p>From everyday bedding to hospitality programmes and market context, start with the part of Bismillah Textiles that matters to you.</p>
+            </div>
+            <div className="home-product-spotlight">
+              {homepageProductSpotlight.map((product) => <article className="home-product-card" key={product.title}>
+                <Link className="home-product-card-image" href="/products/" aria-label={`Explore ${product.title}`}><img src={product.image} alt={`${product.title} product render`} loading="lazy" /><span>VIEW PRODUCT RANGE <ArrowUpRight size={14} /></span></Link>
+                <div className="home-product-card-copy"><span className="micro-label">{product.number} / {product.group}</span><h3>{product.title}</h3><p>{product.detail}</p><Link className="inline-link" href="/products/">View all products <ArrowRight size={15} /></Link></div>
+              </article>)}
+            </div>
+            <div className="home-directory" aria-label="Explore all company pages">
+              <div className="home-directory-intro"><span className="micro-label">THE BTL DIRECTORY</span><h3>Every page has a reason to visit.</h3><p>Follow the story from our people and process to the products, partnerships and signals shaping the industry.</p></div>
+              <div className="home-directory-grid">{homepagePageTeasers.map((page) => <Link className="home-directory-card" href={page.href} key={page.href}><span className="home-directory-number">{page.number}</span><span className="micro-label">{page.label}</span><h4>{page.title}</h4><p>{page.detail}</p><span className="home-directory-link">Explore page <ArrowRight size={15} /></span></Link>)}</div>
+            </div>
+          </section>
         </section>
 
         <section className="facility" id="facility">

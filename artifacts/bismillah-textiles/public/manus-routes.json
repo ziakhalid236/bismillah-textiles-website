@@ -1,0 +1,14 @@
+{
+  "routes": [
+    { "path": "/", "title": "Bismillah Textiles" },
+    { "path": "/about-us/", "title": "About Us | Bismillah Textiles" },
+    { "path": "/manufacturing-facilities/", "title": "Manufacturing Facilities | Bismillah Textiles" },
+    { "path": "/brands-retailers/", "title": "Brands and Retailers | Bismillah Textiles" },
+    { "path": "/products/", "title": "Products | Bismillah Textiles" },
+    { "path": "/careers/", "title": "Careers | Bismillah Textiles" },
+    { "path": "/contact-us/", "title": "Contact Us | Bismillah Textiles" },
+    { "path": "/certifications/", "title": "Certifications | Bismillah Textiles" },
+    { "path": "/news/", "title": "News | Bismillah Textiles" },
+    { "path": "/markets-industry-insights/", "title": "Markets & Industry Insights | Bismillah Textiles" }
+  ]
+}
