@@ -26,7 +26,9 @@ The admin API accepts browser requests only from exact origins in `ADMIN_APP_ORI
 
 ## Production deployment
 
-Deploy the API as a separate Node service with PostgreSQL. Configure `DATABASE_URL`, `PORT`, `ADMIN_USERNAME`, `ADMIN_PASSWORD_HASH`, and `ADMIN_APP_ORIGINS` in the API host's secret/environment settings. Set `TRUST_PROXY_HOPS` only to the exact number of trusted reverse proxies in front of the API (otherwise leave it at `0`). Use an HTTPS site origin and HTTPS API origin. Configure `VITE_API_BASE_URL` to the API origin when building the static site, for example `https://api.example.com` (no trailing slash), then deploy the website to Vercel. Add that exact API origin to the website's Content-Security-Policy `connect-src` directive in `vercel.json`.
+The repository includes a Vercel function at `api/[...path].ts` that serves the Express API on the same origin as the static website. In Vercel, configure `DATABASE_URL`, `ADMIN_USERNAME`, `ADMIN_PASSWORD_HASH`, and `ADMIN_APP_ORIGINS` as Production environment variables. Set `ADMIN_APP_ORIGINS` to the exact website origin, for example `https://bismillah-textiles-website.vercel.app`. Configure the production `DATABASE_URL` locally, run `pnpm --filter @workspace/db push` once to create tables, then seed with `pnpm --filter @workspace/api-server db:seed-admin`. Redeploy the website after the Vercel variables are saved. Keep `VITE_API_BASE_URL` unset so browser requests use same-origin `/api` routes. Do not commit database URLs, password hashes, or plaintext passwords.
+
+If you instead host the API separately, configure `VITE_API_BASE_URL` to its HTTPS origin and add that origin to the website's Content-Security-Policy `connect-src` directive in `vercel.json`.
 
 The API accepts browser requests only from exact origins in `ADMIN_APP_ORIGINS`, requires an allowed `Origin` on sign-in and state-changing auth requests, limits sign-in attempts, and stores only a hash of each random session token in PostgreSQL. Production cookies are `HttpOnly`, `Secure`, and `SameSite=None` for a separately hosted API; HTTPS is mandatory.
 

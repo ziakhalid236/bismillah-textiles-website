@@ -72,7 +72,10 @@ async function adminRequest<T>(path: string, options: RequestInit = {}): Promise
   });
   const payload = await response.json().catch(() => null) as { message?: string } | null;
   if (!response.ok) {
-    throw new AdminApiError(payload?.message ?? `Admin request failed (${response.status}).`, response.status);
+    const message = payload?.message ?? (response.status === 404
+      ? 'Admin service is not connected to this website yet.'
+      : `Admin request failed (${response.status}).`);
+    throw new AdminApiError(message, response.status);
   }
   return payload as T;
 }

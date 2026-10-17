@@ -11,6 +11,9 @@ out-tsc
 # dependencies
 node_modules
 
+# Local admin/database credentials
+.env.admin.local
+
 # IDEs and editors
 /.idea
 .project
