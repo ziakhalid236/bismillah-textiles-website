@@ -45,6 +45,7 @@ type Product = {
   description: string;
   features: string[];
   photo: PhotoKey;
+  imageSrc?: string;
 };
 
 const defaultProducts: Product[] = [
@@ -77,6 +78,37 @@ const defaultProducts: Product[] = [
   { id: "yarn-dyed-apparel", number: "27", group: "APPAREL", category: "Garments & apparel fabrics", title: "Apparel fabrics - yarn-dyed", description: "Yarn-dyed checks and stripes for garment programmes.", features: ["Yarn-dyed"], photo: "apparelStripe" },
   { id: "cut-sew-garments", number: "28", group: "APPAREL", category: "Garments & apparel fabrics", title: "Cut-and-sew garments", description: "Cut-and-sew capability from the company’s stitching units, available on request.", features: ["18 stitching units"], photo: "sewing" },
 ];
+
+const productAssetPaths: Record<string, string> = {
+  "sheet-sets": "/images/products/sheet-sets.jpg",
+  "comforter-sets": "/images/products/comforter-sets.jpg",
+  "bed-in-a-bag": "/images/products/bed-in-a-bag.jpg",
+  "quilted-bedding": "/images/products/quilted-wadded-bedding.jpg",
+  "duvet-sets": "/images/products/duvet-sets.jpg",
+  "mattress-covers": "/images/products/mattress-covers.jpg",
+  "cushions-bolsters": "/images/products/cushions-bolsters-neck-rolls.jpg",
+  "place-mats": "/images/products/place-mats.jpg",
+  curtains: "/images/products/curtains.jpg",
+  "kitchen-curtains": "/images/products/kitchen-curtains.jpg",
+  "shower-curtains": "/images/products/shower-curtains.jpg",
+  "table-cloths": "/images/products/table-cloths.jpg",
+  "embroidered-accessories": "/images/products/embroidered-decorative-accessories.jpg",
+  "jacquard-fabric": "/images/products/jacquard-fabric.jpg",
+  matelasse: "/images/products/matelasse.jpg",
+  "dobby-fabric": "/images/products/dobby-fabric.jpg",
+  "plain-weave": "/images/products/plain-weave.jpg",
+  "yarn-dyed-fabric": "/images/products/yarn-dyed-fabric.jpg",
+  "printed-fabric": "/images/products/printed-fabric.jpg",
+  "dyed-bleached-fabric": "/images/products/dyed-bleached-fabric.jpg",
+  "upholstery-fabric": "/images/products/upholstery-decorative-fabric.jpg",
+  "hospitality-bed-linen": "/images/products/hospitality-bed-linen.jpg",
+  "hospitality-curtains": "/images/products/hospitality-curtains-drapes.jpg",
+  "hotel-quilts": "/images/products/quilted-bedding-for-hotels.jpg",
+  "woven-apparel-fabric": "/images/products/apparel-fabrics-woven.jpg",
+  "printed-apparel-fabric": "/images/products/apparel-fabrics-printed.jpg",
+  "yarn-dyed-apparel": "/images/products/apparel-fabrics-yarn-dyed.jpg",
+  "cut-sew-garments": "/images/products/cut-and-sew-garments.jpg",
+};
 
 const categoryCopy: { title: Category; number: string; description: string }[] = [
   { title: "Home textiles", number: "01", description: "Bedding, window, bath and table products made through integrated in-house processes." },
@@ -122,6 +154,7 @@ function managedProductToCatalog(product: ManagedProduct, index: number): Produc
     description: product.description,
     features: [product.sku, "Published catalog item"],
     photo: photoByCategory[category],
+    imageSrc: productAssetPaths[product.id],
   };
 }
 
@@ -131,6 +164,16 @@ function imageUrl(key: PhotoKey, width = 960) {
   return `https://images.unsplash.com/photo-${photo.id}?auto=format&fit=crop&w=${width}&h=${height}&q=78`;
 }
 
+function productImageSource(product: Product, width = 960) {
+  return productAssetPaths[product.id] ?? imageUrl(product.photo, width);
+}
+
+function productImageAlt(product: Product) {
+  return productAssetPaths[product.id]
+    ? `${product.title} product render`
+    : `Representative ${product.title.toLowerCase()} photograph`;
+}
+
 export function ProductCatalog() {
   const [activeFilter, setActiveFilter] = useState<Filter>("All");
   const [selected, setSelected] = useState<Product | null>(null);
@@ -138,6 +181,7 @@ export function ProductCatalog() {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const visibleProducts = activeFilter === "All" ? catalogProducts : catalogProducts.filter((product) => product.category === activeFilter);
+  const tickerProducts = catalogProducts.map((product) => product.title);
 
   useEffect(() => {
     let active = true;
@@ -194,6 +238,15 @@ export function ProductCatalog() {
         </figure>
       </section>
 
+      <div className="catalog-live-ticker" aria-label="Live product range">
+        <span className="catalog-live-label"><i aria-hidden="true" /> Live product range</span>
+        <div className="catalog-ticker-viewport">
+          <div className="catalog-ticker-track">
+            {[...tickerProducts, ...tickerProducts].map((title, index) => <span key={`${title}-${index}`}><b aria-hidden="true">＋</b>{title}</span>)}
+          </div>
+        </div>
+      </div>
+
       <section className="catalog-section catalog-areas" aria-labelledby="areas-title">
         <div className="catalog-section-heading">
           <p className="catalog-kicker"><span /> Company profile</p>
@@ -235,11 +288,13 @@ export function ProductCatalog() {
         <div className="catalog-product-grid">
           {visibleProducts.map((product) => {
             const photo = photos[product.photo];
+            const localImage = productImageSource(product);
+            const localSrcSet = productAssetPaths[product.id] ? undefined : `${imageUrl(product.photo, 560)} 560w, ${imageUrl(product.photo, 960)} 960w, ${imageUrl(product.photo, 1400)} 1400w`;
             return (
               <article className="catalog-product-card" key={product.id}>
                 <button className="catalog-card-image" type="button" onClick={() => setSelected(product)} aria-label={`View details for ${product.title}`}>
-                  <img src={imageUrl(product.photo, 960)} srcSet={`${imageUrl(product.photo, 560)} 560w, ${imageUrl(product.photo, 960)} 960w, ${imageUrl(product.photo, 1400)} 1400w`} sizes="(max-width: 620px) calc(100vw - 40px), (max-width: 980px) 46vw, 30vw" alt={`Illustrative ${product.title.toLowerCase()} photo: ${photo.alt}`} width="960" height="720" loading="lazy" decoding="async" />
-                  <span className="catalog-photo-label">Representative image</span>
+                  <img src={localImage} srcSet={localSrcSet} sizes="(max-width: 620px) calc(100vw - 40px), (max-width: 980px) 46vw, 30vw" alt={productAssetPaths[product.id] ? productImageAlt(product) : `${productImageAlt(product)}: ${photo.alt}`} width="960" height="720" loading="lazy" decoding="async" />
+                  <span className="catalog-photo-label">{productAssetPaths[product.id] ? "BTL product render" : "Representative image"}</span>
                 </button>
                 <div className="catalog-card-copy">
                   <p className="catalog-product-index">{product.number} / {product.group}</p>
@@ -278,13 +333,13 @@ export function ProductCatalog() {
         </div>
         <a className="catalog-primary-link" href="mailto:sales@bismillah.com.pk?subject=Product%20enquiry">Enquire about products <ArrowUpRight aria-hidden="true" size={17} /></a>
       </section>
-      <p className="catalog-image-disclaimer">Product photographs are illustrative, sourced from Unsplash and are not verified Bismillah Textiles product samples. <a href="https://unsplash.com/license" target="_blank" rel="noopener noreferrer">Unsplash License</a>.</p>
+      <p className="catalog-image-disclaimer">Product cards use owned 3D-style catalog renders matched to each product line. Final composition, construction, dimensions and colours are confirmed for each customer programme.</p>
 
       {selected && (
         <div className="catalog-modal-backdrop" onClick={(event) => { if (event.target === event.currentTarget) setSelected(null); }}>
           <div className="catalog-modal" role="dialog" aria-modal="true" aria-labelledby="catalog-modal-title" ref={dialogRef}>
             <button ref={closeButtonRef} type="button" className="catalog-modal-close" onClick={() => setSelected(null)} aria-label="Close product details"><X aria-hidden="true" size={20} /><span>Close</span></button>
-            <div className="catalog-modal-image"><img src={imageUrl(selected.photo, 1400)} alt={`Illustrative ${selected.title.toLowerCase()} photo: ${photos[selected.photo].alt}`} width="1400" height="1050" decoding="async" /></div>
+            <div className="catalog-modal-image"><img src={productImageSource(selected, 1400)} alt={productImageAlt(selected)} width="1400" height="1050" decoding="async" /></div>
             <div className="catalog-modal-content">
               <p className="catalog-product-index">{selected.number} / {selected.category}</p>
               <h2 id="catalog-modal-title">{selected.title}</h2>
@@ -296,7 +351,7 @@ export function ProductCatalog() {
                 <a className="catalog-primary-link" href={`mailto:sales@bismillah.com.pk?subject=${encodeURIComponent(`Product enquiry: ${selected.title}`)}&body=${encodeURIComponent(`Hello Bismillah Textiles,\n\nPlease share the product-specific specifications and programme options for ${selected.title}.\n\nThank you.`)}`}>Request specifications <ArrowUpRight aria-hidden="true" size={16} /></a>
                 <a className="catalog-phone-link" href="tel:+92412428888">Call +92 41 242 8888</a>
               </div>
-              <p className="catalog-modal-credit">Representative Unsplash photo; not a verified BTL product sample. <a href="https://unsplash.com/license" target="_blank" rel="noopener noreferrer">License details</a>.</p>
+              <p className="catalog-modal-credit">Visual shown is a product-specific BTL catalog render. Request specifications for the exact customer programme.</p>
             </div>
           </div>
         </div>
