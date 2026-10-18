@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bismillah-textiles-admin-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-18",
+  "workers_dev": true,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "bismillah-textiles-admin",
+      "database_id": "35678b0b-fe18-4f63-a726-8db08d5c8690"
+    }
+  ],
+  "vars": {
+    "ALLOWED_ORIGINS": "https://bismillah-textiles-website.vercel.app"
+  }
+}
