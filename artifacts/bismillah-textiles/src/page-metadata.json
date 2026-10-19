@@ -1,5 +1,5 @@
 {
-  "siteOrigin": "https://bismillah-textiles-website.vercel.app",
+  "siteOrigin": "https://bismillah.com.pk",
   "pages": {
     "/": {
       "title": "Bismillah Textiles (PVT) Limited | Faisalabad, Pakistan",
@@ -40,6 +40,10 @@
     "/markets-industry-insights/": {
       "title": "Markets & Industry Insights | Bismillah Textiles",
       "description": "Evidence-led home textile market signals, Pakistan trade data, sustainability standards, trends and industry events, with dates and source limitations."
+    },
+    "/international-news/": {
+      "title": "International Textile News | Bismillah Textiles",
+      "description": "A curated international textile briefing covering materials, standards, trade, design and company-relevant industry signals."
     },
     "/admin/": {
       "title": "Admin Preview | Bismillah Textiles",

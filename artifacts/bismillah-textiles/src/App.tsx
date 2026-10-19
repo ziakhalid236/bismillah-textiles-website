@@ -19,6 +19,7 @@ import {
   ProductsPage,
 } from '@/pages/company-pages';
 import { MarketInsightsPage } from '@/pages/market-insights';
+import { InternationalNewsPage } from '@/pages/international-news';
 import {
   Link,
   Route,
@@ -40,6 +41,7 @@ const sitePages = [
   { label: 'Certifications', path: '/certifications/' },
   { label: 'News', path: '/news/' },
   { label: 'Markets & Industry Insights', path: '/markets-industry-insights/' },
+  { label: 'International News', path: '/international-news/' },
 ];
 
 const homepageProductSpotlight = [
@@ -87,6 +89,27 @@ const homepagePageTeasers = [
   { number: '06', label: 'CERTIFICATIONS', title: 'Quality is an evolving process.', detail: 'See the systems, standards and certificates that support our process.', image: '/images/1791856048064_1791856385381.jpg', imageAlt: 'Textile production equipment used in quality-controlled manufacturing', href: '/certifications/' },
   { number: '07', label: 'NEWS', title: 'Progress, people and new ideas.', detail: 'Catch up on company updates, community initiatives and recognition.', image: '/images/factory-courtyard.jpg', imageAlt: 'Bismillah Textiles facility in Faisalabad', href: '/news/' },
   { number: '08', label: 'MARKET INSIGHTS', title: 'Signals to watch. Claims kept in view.', detail: 'Read the latest textile market context with sources and limits made visible.', image: '/images/1791855918484_1791856385398.jpg', imageAlt: 'Fabric inspection inside the Bismillah Textiles facility', href: '/markets-industry-insights/' },
+  { number: '09', label: 'INTERNATIONAL NEWS', title: 'The global signals worth keeping in view.', detail: 'Follow international developments in materials, standards, trade and textile design.', image: '/images/1791856251182_1791856385300.jpg', imageAlt: 'Textile machinery on the Bismillah Textiles production floor', href: '/international-news/' },
+];
+
+const homepageBrandPartners = [
+  { name: 'Disney', image: '/images/brands/disney.png' },
+  { name: 'Nautica', image: '/images/brands/nautica.png' },
+  { name: 'Next', image: '/images/brands/next-manufactured.png' },
+  { name: 'DKNY', image: '/images/brands/dkny.png' },
+  { name: 'Walmart', image: '/images/brands/walmart.png' },
+  { name: 'Carrefour', image: '/images/brands/carrefour.png' },
+  { name: 'Target', image: '/images/brands/target.png' },
+  { name: 'Macy’s', image: '/images/brands/macys.png' },
+];
+
+const homepageCertificationHighlights = [
+  { name: 'SA 8000:2014', image: '/images/certifications/sa8000.png', href: 'https://bismillah.com.pk/wp-content/uploads/certificates/SA%208000%20Certificate.pdf' },
+  { name: 'ISO 9001:2015', image: '/images/certifications/iso9001.png', href: 'https://bismillah.com.pk/wp-content/uploads/2022/05/ISO-90001-2015-QMS.pdf' },
+  { name: 'ISO 14001:2015', image: '/images/certifications/iso14001.png', href: 'https://bismillah.com.pk/wp-content/uploads/2022/05/ISO-14001-2015-EMS.pdf' },
+  { name: 'OEKO-TEX', image: '/images/certifications/oeko-tex.png', href: 'https://bismillah.com.pk/wp-content/uploads/Oeko-Tex-Fabric.pdf' },
+  { name: 'GOTS', image: '/images/certifications/gots.png', href: 'https://bismillah.com.pk/wp-content/uploads/gots/GOTS.pdf' },
+  { name: 'ZDHC', image: '/images/certifications/zdhc.png', href: 'https://bismillah.com.pk/wp-content/uploads/ZDHC-Report.pdf' },
 ];
 
 function Home() {
@@ -140,6 +163,16 @@ function Home() {
               <div className="home-directory-intro"><span className="micro-label">THE BTL DIRECTORY</span><h3>Every page has a reason to visit.</h3><p>Follow the story from our people and process to the products, partnerships and signals shaping the industry.</p></div>
               <div className="home-directory-grid">{homepagePageTeasers.map((page) => <Link className="home-directory-card" href={page.href} key={page.href}><span className="home-directory-card-copy"><span className="micro-label">{page.label}</span><h4>{page.title}</h4><p>{page.detail}</p><span className="home-directory-link">Explore page <ArrowRight size={15} /></span></span><span className="home-directory-number">{page.number}</span><span className="home-directory-card-media"><img src={page.image} alt={page.imageAlt} loading="lazy" /></span></Link>)}</div>
             </div>
+            <section className="home-brand-showcase" aria-labelledby="home-brand-title">
+              <div className="home-brand-heading"><div><div className="section-kicker"><span>05</span><span className="kicker-rule" /> SELECTED PARTNERS</div><h2 id="home-brand-title">Made for names<br /><em>people know.</em></h2></div><p>We manufacture for established brands and retailers across international markets. Partner names are shown as a company-published selection.</p></div>
+              <div className="home-brand-logo-grid">{homepageBrandPartners.map((partner) => <div className="home-brand-logo" key={partner.name}><img src={partner.image} alt={`${partner.name} logo`} loading="lazy" /></div>)}</div>
+              <Link className="inline-link" href="/brands-retailers/">See all brands and retailers <ArrowRight size={15} /></Link>
+            </section>
+            <section className="home-certification-showcase" aria-labelledby="home-certification-title">
+              <div className="home-certification-heading"><div><div className="section-kicker"><span>06</span><span className="kicker-rule" /> QUALITY SYSTEMS</div><h2 id="home-certification-title">Proof behind<br /><em>the process.</em></h2></div><p>Selected certificate previews sourced from the official Bismillah Textiles certifications list. Open each card for the source document.</p></div>
+              <div className="home-certification-grid">{homepageCertificationHighlights.map((certificate) => <a className="home-certification-card" href={certificate.href} target="_blank" rel="noopener noreferrer" key={certificate.name}><img src={certificate.image} alt={`${certificate.name} certificate preview`} loading="lazy" /><span>{certificate.name} <ArrowUpRight size={14} /></span></a>)}</div>
+              <Link className="inline-link" href="/certifications/">View certifications <ArrowRight size={15} /></Link>
+            </section>
           </section>
         </section>
 
@@ -241,6 +274,7 @@ function SiteFrame() {
           <Route path="/certifications/" component={CertificationsPage} />
           <Route path="/news/" component={NewsPage} />
           <Route path="/markets-industry-insights/" component={MarketInsightsPage} />
+          <Route path="/international-news/" component={InternationalNewsPage} />
           <Route component={NotFound} />
         </Switch>
       </main>
