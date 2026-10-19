@@ -70,7 +70,7 @@ function pageFromRow(row) {
 }
 
 async function body(request) {
-  try { return await request.json(); } catch { return null; }
+  try { return await request.json(); } catch (parseError) { return null; }
 }
 
 function validStatus(value) { return value === 'Published' || value === 'Draft'; }
@@ -90,7 +90,7 @@ async function verifyPassword(password, encoded) {
     const actual = new Uint8Array(await crypto.subtle.deriveBits({ name: 'PBKDF2', salt, iterations, hash: 'SHA-256' }, key, expected.length * 8));
     if (actual.length !== expected.length) return false;
     return actual.every((byte, index) => byte === expected[index]);
-  } catch { return false; }
+  } catch (verificationError) { return false; }
 }
 
 async function session(request, env) {
@@ -159,7 +159,7 @@ async function adminRoute(request, env, path) {
   if (path === '/api/admin/products' && request.method === 'POST') {
     if (!input || !text(input.id, 80) || !text(input.name, 160) || !text(input.sku, 80) || !text(input.category, 120) || !validStatus(input.status) || typeof input.description !== 'string' || input.description.length > 4000) return error('Product data is invalid.', 400, request, env);
     const now = new Date().toISOString();
-    try { await env.DB.prepare('INSERT INTO products (id,name,sku,category,status,description,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?)').bind(input.id.trim(), input.name.trim(), input.sku.trim(), input.category.trim(), input.status, input.description, now, now).run(); } catch { return error('A record with that SKU already exists.', 409, request, env); }
+    try { await env.DB.prepare('INSERT INTO products (id,name,sku,category,status,description,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?)').bind(input.id.trim(), input.name.trim(), input.sku.trim(), input.category.trim(), input.status, input.description, now, now).run(); } catch (insertError) { return error('A record with that SKU already exists.', 409, request, env); }
     const row = await env.DB.prepare('SELECT * FROM products WHERE id = ?').bind(input.id.trim()).first();
     return json(productFromRow(row), 201, request, env);
   }
@@ -168,7 +168,7 @@ async function adminRoute(request, env, path) {
     if (!input || !text(input.name, 160) || !text(input.sku, 80) || !text(input.category, 120) || !validStatus(input.status) || typeof input.description !== 'string' || input.description.length > 4000) return error('Product data is invalid.', 400, request, env);
     const id = decodeURIComponent(productMatch[1]);
     const now = new Date().toISOString();
-    try { const result = await env.DB.prepare('UPDATE products SET name=?,sku=?,category=?,status=?,description=?,updated_at=? WHERE id=?').bind(input.name.trim(), input.sku.trim(), input.category.trim(), input.status, input.description, now, id).run(); if (!result.meta.changes) return error('Product not found.', 404, request, env); } catch { return error('A record with that SKU already exists.', 409, request, env); }
+    try { const result = await env.DB.prepare('UPDATE products SET name=?,sku=?,category=?,status=?,description=?,updated_at=? WHERE id=?').bind(input.name.trim(), input.sku.trim(), input.category.trim(), input.status, input.description, now, id).run(); if (!result.meta.changes) return error('Product not found.', 404, request, env); } catch (updateError) { return error('A record with that SKU already exists.', 409, request, env); }
     return json(productFromRow(await env.DB.prepare('SELECT * FROM products WHERE id = ?').bind(id).first()), 200, request, env);
   }
 
@@ -179,7 +179,7 @@ async function adminRoute(request, env, path) {
   if (path === '/api/admin/categories' && request.method === 'POST') {
     if (!input || !text(input.id, 80) || !text(input.name, 120) || typeof input.description !== 'string' || input.description.length > 2000 || typeof input.active !== 'boolean') return error('Category data is invalid.', 400, request, env);
     const now = new Date().toISOString();
-    try { await env.DB.prepare('INSERT INTO categories (id,name,description,active,created_at,updated_at) VALUES (?,?,?,?,?,?)').bind(input.id.trim(), input.name.trim(), input.description, input.active ? 1 : 0, now, now).run(); } catch { return error('A category with that name already exists.', 409, request, env); }
+    try { await env.DB.prepare('INSERT INTO categories (id,name,description,active,created_at,updated_at) VALUES (?,?,?,?,?,?)').bind(input.id.trim(), input.name.trim(), input.description, input.active ? 1 : 0, now, now).run(); } catch (insertError) { return error('A category with that name already exists.', 409, request, env); }
     return json(categoryFromRow(await env.DB.prepare('SELECT * FROM categories WHERE id = ?').bind(input.id.trim()).first()), 201, request, env);
   }
   const categoryMatch = path.match(/^\/api\/admin\/categories\/([^/]+)$/);
@@ -189,7 +189,7 @@ async function adminRoute(request, env, path) {
     const previous = await env.DB.prepare('SELECT * FROM categories WHERE id = ?').bind(id).first();
     if (!previous) return error('Category not found.', 404, request, env);
     const now = new Date().toISOString();
-    try { await env.DB.batch([env.DB.prepare('UPDATE categories SET name=?,description=?,active=?,updated_at=? WHERE id=?').bind(input.name.trim(), input.description, input.active ? 1 : 0, now, id), env.DB.prepare('UPDATE products SET category=?,updated_at=? WHERE category=?').bind(input.name.trim(), now, previous.name)]); } catch { return error('A category with that name already exists.', 409, request, env); }
+    try { await env.DB.batch([env.DB.prepare('UPDATE categories SET name=?,description=?,active=?,updated_at=? WHERE id=?').bind(input.name.trim(), input.description, input.active ? 1 : 0, now, id), env.DB.prepare('UPDATE products SET category=?,updated_at=? WHERE category=?').bind(input.name.trim(), now, previous.name)]); } catch (updateError) { return error('A category with that name already exists.', 409, request, env); }
     return json(categoryFromRow(await env.DB.prepare('SELECT * FROM categories WHERE id = ?').bind(id).first()), 200, request, env);
   }
 
@@ -200,7 +200,7 @@ async function adminRoute(request, env, path) {
   if (path === '/api/admin/pages' && request.method === 'POST') {
     if (!input || !text(input.id, 80) || !text(input.title, 160) || !validPath(input.path) || typeof input.summary !== 'string' || input.summary.length > 1000 || typeof input.body !== 'string' || input.body.length > 20000 || !validStatus(input.status)) return error('Page data is invalid.', 400, request, env);
     const now = new Date().toISOString();
-    try { await env.DB.prepare('INSERT INTO site_pages (id,title,path,summary,body,status,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?)').bind(input.id.trim(), input.title.trim(), input.path, input.summary, input.body, input.status, now, now).run(); } catch { return error('A page with that path already exists.', 409, request, env); }
+    try { await env.DB.prepare('INSERT INTO site_pages (id,title,path,summary,body,status,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?)').bind(input.id.trim(), input.title.trim(), input.path, input.summary, input.body, input.status, now, now).run(); } catch (insertError) { return error('A page with that path already exists.', 409, request, env); }
     return json(pageFromRow(await env.DB.prepare('SELECT * FROM site_pages WHERE id = ?').bind(input.id.trim()).first()), 201, request, env);
   }
   const pageMatch = path.match(/^\/api\/admin\/pages\/([^/]+)$/);
@@ -208,7 +208,7 @@ async function adminRoute(request, env, path) {
     if (!input || !text(input.title, 160) || !validPath(input.path) || typeof input.summary !== 'string' || input.summary.length > 1000 || typeof input.body !== 'string' || input.body.length > 20000 || !validStatus(input.status)) return error('Page data is invalid.', 400, request, env);
     const id = decodeURIComponent(pageMatch[1]);
     const now = new Date().toISOString();
-    try { const result = await env.DB.prepare('UPDATE site_pages SET title=?,path=?,summary=?,body=?,status=?,updated_at=? WHERE id=?').bind(input.title.trim(), input.path, input.summary, input.body, input.status, now, id).run(); if (!result.meta.changes) return error('Page not found.', 404, request, env); } catch { return error('A page with that path already exists.', 409, request, env); }
+    try { const result = await env.DB.prepare('UPDATE site_pages SET title=?,path=?,summary=?,body=?,status=?,updated_at=? WHERE id=?').bind(input.title.trim(), input.path, input.summary, input.body, input.status, now, id).run(); if (!result.meta.changes) return error('Page not found.', 404, request, env); } catch (updateError) { return error('A page with that path already exists.', 409, request, env); }
     return json(pageFromRow(await env.DB.prepare('SELECT * FROM site_pages WHERE id = ?').bind(id).first()), 200, request, env);
   }
   return error('Not found.', 404, request, env);
