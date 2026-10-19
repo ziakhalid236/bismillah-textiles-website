@@ -5,7 +5,7 @@ Cloudflare Worker API for the Vercel-hosted Bismillah Textiles frontend.
 ## Bindings
 
 - `DB`: Cloudflare D1 database `bismillah-textiles-admin`
-- `MEDIA`: reserved for the R2 media bucket after R2 is enabled in the Cloudflare Dashboard
+- `MEDIA`: R2 bucket `bismillah-textiles-media`
 
 ## Required Worker secrets
 
@@ -35,4 +35,4 @@ The Worker allows the Vercel production origin through `ALLOWED_ORIGINS` and use
 - `POST /api/admin/auth/logout`
 - Admin CRUD for `/api/admin/products`, `/categories`, and `/pages`
 
-R2 upload support is intentionally separate because this Cloudflare account currently reports R2 as not enabled. Once enabled, add an R2 bucket binding named `MEDIA` and add authenticated upload/delete routes rather than exposing the bucket publicly.
+The R2 bucket is now enabled and configured as `MEDIA`. Upload/delete routes should remain authenticated; do not expose the bucket publicly.

@@ -11,6 +11,12 @@
       "database_id": "35678b0b-fe18-4f63-a726-8db08d5c8690"
     }
   ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "bismillah-textiles-media"
+    }
+  ],
   "vars": {
     "ALLOWED_ORIGINS": "https://bismillah-textiles-website.vercel.app"
   }
