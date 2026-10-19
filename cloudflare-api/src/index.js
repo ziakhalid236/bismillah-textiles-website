@@ -128,8 +128,11 @@ async function adminRoute(request, env, path) {
     if (!requestOriginAllowed(request, env)) return error('Request origin is not allowed.', 403, request, env);
     const input = await body(request);
     const valid = input && text(input.username, 120) && typeof input.password === 'string' && input.password.length > 0;
-    if (!valid || !env.ADMIN_USERNAME || !env.ADMIN_PASSWORD_HASH) return error('Admin authentication is not configured.', 503, request, env);
-    const ok = input.username.trim() === env.ADMIN_USERNAME && await verifyPassword(input.password, env.ADMIN_PASSWORD_HASH);
+    if (!valid || !env.ADMIN_USERNAME || (!env.ADMIN_PASSWORD && !env.ADMIN_PASSWORD_HASH)) return error('Admin authentication is not configured.', 503, request, env);
+    const passwordOk = env.ADMIN_PASSWORD
+      ? input.password === env.ADMIN_PASSWORD
+      : await verifyPassword(input.password, env.ADMIN_PASSWORD_HASH);
+    const ok = input.username.trim() === env.ADMIN_USERNAME && passwordOk;
     if (!ok) return error('Username or password is incorrect.', 401, request, env);
     const token = randomToken();
     const expiresAt = new Date(Date.now() + SESSION_MS).toISOString();

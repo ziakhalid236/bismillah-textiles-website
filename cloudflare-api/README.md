@@ -13,14 +13,10 @@ The API intentionally does not ship with a default admin password. Configure the
 
 ```bash
 wrangler secret put ADMIN_USERNAME
-wrangler secret put ADMIN_PASSWORD_HASH
+wrangler secret put ADMIN_PASSWORD
 ```
 
-`ADMIN_PASSWORD_HASH` format:
-
-```text
-pbkdf2-sha256$600000$<base64url-salt>$<base64url-derived-key>
-```
+`ADMIN_PASSWORD` is stored as a Cloudflare Secret and is never committed to GitHub.
 
 The Worker allows the Vercel production origin through `ALLOWED_ORIGINS` and uses secure, HttpOnly, cross-site cookies for the admin session.
 

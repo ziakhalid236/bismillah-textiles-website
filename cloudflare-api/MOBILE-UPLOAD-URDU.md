@@ -48,9 +48,9 @@ Variables میں یہ non-secret variable add کریں:
 Secrets کے طور پر یہ دو values add کریں:
 
 - `ADMIN_USERNAME`: اپنا admin username
-- `ADMIN_PASSWORD_HASH`: password کا PBKDF2 hash
+- `ADMIN_PASSWORD`: اپنا نیا مضبوط admin password
 
-اہم: اپنا password GitHub، chat یا عام variable میں نہ رکھیں۔ صرف Cloudflare Secret کے طور پر save کریں۔ اس package میں کوئی default password شامل نہیں ہے۔
+اہم: `ADMIN_PASSWORD_HASH` استعمال کرنے کی ضرورت نہیں ہے۔ اپنا password GitHub، chat یا عام variable میں نہ رکھیں؛ صرف Cloudflare Secret کے طور پر save کریں۔ اس package میں کوئی default password شامل نہیں ہے۔
 
 ## Deploy کے بعد test
 
