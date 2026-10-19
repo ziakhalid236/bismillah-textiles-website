@@ -69,3 +69,24 @@
 @media(max-width:850px){.home-discovery{margin-top:72px;padding-top:60px}.home-discovery-heading{align-items:flex-start;flex-direction:column;gap:18px}.home-discovery-heading>p{max-width:470px;margin:0}.home-directory{grid-template-columns:1fr;gap:28px}.home-directory-intro{padding-right:0}.home-directory-grid{gap:8px}.home-product-card{width:clamp(240px,62vw,300px)}.home-product-track{animation-duration:34s}}
 @media(max-width:640px){.home-discovery{margin-top:58px;padding-top:48px}.home-product-card-copy p{min-height:0}.home-product-marquee-note{font-size:8px;letter-spacing:.1em}.home-directory-grid{grid-template-columns:1fr}.home-directory-card{min-height:160px}.home-directory-card h4{font-size:19px}}
 @media(prefers-reduced-motion:reduce){.home-product-track{animation:none;transform:none;flex-wrap:wrap;width:100%;justify-content:center;gap:14px}.home-product-marquee{overflow:visible;-webkit-mask-image:none;mask-image:none}.home-product-marquee-wrap{width:auto;margin-left:0}.home-product-card-cta{opacity:1;transform:none}}
+
+/* Image-led company directory: a calm editorial stack inspired by the approved mobile reference */
+.home-directory{display:block}
+.home-directory-intro{max-width:720px;padding:0;margin-bottom:28px}
+.home-directory-intro h3{font-size:clamp(32px,4vw,54px);line-height:1.02;margin-top:18px}
+.home-directory-intro p{max-width:590px;font-size:13px;line-height:1.8}
+.home-directory-grid{display:grid;grid-template-columns:1fr;gap:16px}
+.home-directory-card{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(220px,.8fr);min-height:238px;position:relative;isolation:isolate;overflow:hidden;padding:0;border:1px solid #ded4c7;border-radius:18px;background:#f8f4ed;box-shadow:0 10px 24px rgba(62,47,38,.06);transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease}
+.home-directory-card:hover{transform:translateY(-4px);border-color:#b99b73;background:#fbf8f3;box-shadow:0 20px 38px rgba(62,47,38,.12)}
+.home-directory-card-copy{display:flex;flex-direction:column;align-items:flex-start;min-width:0;padding:30px 38px 28px}
+.home-directory-card-copy h4{max-width:440px;margin:18px 0 10px;font:600 clamp(25px,3vw,39px)/1.05 'Manrope',sans-serif;letter-spacing:-.06em}
+.home-directory-card-copy p{max-width:470px;margin:0;color:#75695e;font-size:13px;line-height:1.75}
+.home-directory-card-copy .home-directory-link{margin-top:auto;padding-top:24px;font-size:12px;letter-spacing:.02em}
+.home-directory-card-media{position:relative;display:block;min-height:238px;overflow:hidden;background:#d9cfc1}
+.home-directory-card-media::before{content:"";position:absolute;z-index:1;inset:0;background:linear-gradient(90deg,#f8f4ed 0%,rgba(248,244,237,.3) 18%,rgba(248,244,237,0) 54%)}
+.home-directory-card-media::after{content:"";position:absolute;z-index:1;inset:0;background:linear-gradient(180deg,rgba(34,25,20,0) 45%,rgba(34,25,20,.18))}
+.home-directory-card-media img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.82);transition:transform .65s cubic-bezier(.2,.7,.2,1),filter .35s ease}
+.home-directory-card:hover .home-directory-card-media img{transform:scale(1.06);filter:saturate(1.02)}
+.home-directory-number{z-index:2;top:25px;right:26px;color:#5f534a;font-size:10px;letter-spacing:.14em}
+.home-directory-card:focus-visible{outline:3px solid #bc914e;outline-offset:4px}
+@media(max-width:640px){.home-directory-grid{gap:12px}.home-directory-card{grid-template-columns:minmax(0,1.15fr) minmax(125px,.85fr);min-height:210px;border-radius:14px}.home-directory-card-copy{padding:22px 20px 20px}.home-directory-card-copy h4{font-size:23px;margin-top:13px}.home-directory-card-copy p{font-size:11px;line-height:1.6}.home-directory-card-copy .home-directory-link{padding-top:16px;font-size:10px}.home-directory-card-media{min-height:210px}.home-directory-number{top:18px;right:17px;font-size:9px}}

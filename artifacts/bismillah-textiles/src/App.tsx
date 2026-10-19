@@ -79,14 +79,14 @@ function ProductMarquee() {
 }
 
 const homepagePageTeasers = [
-  { number: '01', label: 'ABOUT US', title: 'A family business, built to last.', detail: 'Meet the leadership, values and philosophy behind Bismillah Textiles.', href: '/about-us/' },
-  { number: '02', label: 'MANUFACTURING', title: 'One connected way of making.', detail: 'See how weaving, dyeing, processing and stitching work together in-house.', href: '/manufacturing-facilities/' },
-  { number: '03', label: 'BRANDS & RETAILERS', title: 'Made here. Known worldwide.', detail: 'Explore the long-term brand and retail partnerships around our work.', href: '/brands-retailers/' },
-  { number: '04', label: 'CAREERS', title: 'Build your future with our team.', detail: 'Learning, opportunity and progression across a growing textile operation.', href: '/careers/' },
-  { number: '05', label: 'CONTACT', title: 'Find us in Khurrianwala.', detail: 'Reach the sales, general enquiries or careers team and plan a visit.', href: '/contact-us/' },
-  { number: '06', label: 'CERTIFICATIONS', title: 'Quality is an evolving process.', detail: 'See the systems, standards and certificates that support our process.', href: '/certifications/' },
-  { number: '07', label: 'NEWS', title: 'Progress, people and new ideas.', detail: 'Catch up on company updates, community initiatives and recognition.', href: '/news/' },
-  { number: '08', label: 'MARKET INSIGHTS', title: 'Signals to watch. Claims kept in view.', detail: 'Read the latest textile market context with sources and limits made visible.', href: '/markets-industry-insights/' },
+  { number: '01', label: 'ABOUT US', title: 'A family business, built to last.', detail: 'Meet the leadership, values and philosophy behind Bismillah Textiles.', image: '/images/about-factory-team.jpg', imageAlt: 'Bismillah Textiles team inside the manufacturing facility', href: '/about-us/' },
+  { number: '02', label: 'MANUFACTURING', title: 'One connected way of making.', detail: 'See how weaving, dyeing, processing and stitching work together in-house.', image: '/images/1791856251182_1791856385300.jpg', imageAlt: 'Textile machinery on the Bismillah Textiles production floor', href: '/manufacturing-facilities/' },
+  { number: '03', label: 'BRANDS & RETAILERS', title: 'Made here. Known worldwide.', detail: 'Explore the long-term brand and retail partnerships around our work.', image: '/images/brands/next-retailer.jpg', imageAlt: 'Textile retail display representing Bismillah Textiles partnerships', href: '/brands-retailers/' },
+  { number: '04', label: 'CAREERS', title: 'Build your future with our team.', detail: 'Learning, opportunity and progression across a growing textile operation.', image: '/images/about-factory-team.jpg', imageAlt: 'People working together at Bismillah Textiles', href: '/careers/' },
+  { number: '05', label: 'CONTACT', title: 'Find us in Khurrianwala.', detail: 'Reach the sales, general enquiries or careers team and plan a visit.', image: '/images/main-gate.jpg', imageAlt: 'Main entrance gate at Bismillah Textiles', href: '/contact-us/' },
+  { number: '06', label: 'CERTIFICATIONS', title: 'Quality is an evolving process.', detail: 'See the systems, standards and certificates that support our process.', image: '/images/1791856048064_1791856385381.jpg', imageAlt: 'Textile production equipment used in quality-controlled manufacturing', href: '/certifications/' },
+  { number: '07', label: 'NEWS', title: 'Progress, people and new ideas.', detail: 'Catch up on company updates, community initiatives and recognition.', image: '/images/factory-courtyard.jpg', imageAlt: 'Bismillah Textiles facility in Faisalabad', href: '/news/' },
+  { number: '08', label: 'MARKET INSIGHTS', title: 'Signals to watch. Claims kept in view.', detail: 'Read the latest textile market context with sources and limits made visible.', image: '/images/1791855918484_1791856385398.jpg', imageAlt: 'Fabric inspection inside the Bismillah Textiles facility', href: '/markets-industry-insights/' },
 ];
 
 function Home() {
@@ -138,7 +138,7 @@ function Home() {
             </div>
             <div className="home-directory" aria-label="Explore all company pages">
               <div className="home-directory-intro"><span className="micro-label">THE BTL DIRECTORY</span><h3>Every page has a reason to visit.</h3><p>Follow the story from our people and process to the products, partnerships and signals shaping the industry.</p></div>
-              <div className="home-directory-grid">{homepagePageTeasers.map((page) => <Link className="home-directory-card" href={page.href} key={page.href}><span className="home-directory-number">{page.number}</span><span className="micro-label">{page.label}</span><h4>{page.title}</h4><p>{page.detail}</p><span className="home-directory-link">Explore page <ArrowRight size={15} /></span></Link>)}</div>
+              <div className="home-directory-grid">{homepagePageTeasers.map((page) => <Link className="home-directory-card" href={page.href} key={page.href}><span className="home-directory-card-copy"><span className="micro-label">{page.label}</span><h4>{page.title}</h4><p>{page.detail}</p><span className="home-directory-link">Explore page <ArrowRight size={15} /></span></span><span className="home-directory-number">{page.number}</span><span className="home-directory-card-media"><img src={page.image} alt={page.imageAlt} loading="lazy" /></span></Link>)}</div>
             </div>
           </section>
         </section>
