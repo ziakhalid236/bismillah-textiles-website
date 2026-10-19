@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
@@ -6,7 +6,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import AdminPanel from '@/pages/admin-panel';
 import pageMetadata from './page-metadata.json';
-import { ArrowDown, ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Mail, MapPin, Menu, Phone, X } from 'lucide-react';
+import { ArrowDown, ArrowRight, ArrowUpRight, Mail, MapPin, Menu, Phone, X } from 'lucide-react';
 import {
   AboutPage,
   BrandsPage,
@@ -52,25 +52,15 @@ const homepageProductSpotlight = [
 ];
 
 function ProductMarquee() {
-  const railRef = useRef<HTMLDivElement>(null);
-  const moveRail = (direction: 'left' | 'right') => {
-    railRef.current?.scrollBy({ left: direction === 'right' ? 360 : -360, behavior: 'smooth' });
-  };
   return (
-    <div className="home-product-rail" role="group" aria-label="Product range">
-      <div className="home-product-rail-toolbar">
-        <p><span className="micro-label">PRODUCT RANGE</span><span>Drag or use the arrows to explore</span></p>
-        <div className="home-product-rail-controls">
-          <button type="button" onClick={() => moveRail('left')} aria-label="Show previous products"><ChevronLeft size={18} /></button>
-          <button type="button" onClick={() => moveRail('right')} aria-label="Show more products"><ChevronRight size={18} /></button>
-        </div>
-      </div>
-      <div className="home-product-marquee" ref={railRef}>
-        <div className="home-product-track">
-          {homepageProductSpotlight.map((product) => (
-            <article className="home-product-card" key={product.title}>
-              <Link className="home-product-card-image" href="/products/" aria-label={`Explore ${product.title}`}>
-                <img src={product.image} alt={`${product.title} product render`} loading="lazy" />
+    <div className="home-product-marquee" role="group" aria-label="Product range">
+      <div className="home-product-track">
+        {[0, 1].map((copy) => homepageProductSpotlight.map((product) => {
+          const isClone = copy === 1;
+          return (
+            <article className="home-product-card" key={`${copy}-${product.title}`} aria-hidden={isClone || undefined}>
+              <Link className="home-product-card-image" href="/products/" tabIndex={isClone ? -1 : undefined} aria-label={`Explore ${product.title}`}>
+                <img src={product.image} alt={isClone ? '' : `${product.title} product render`} loading="lazy" />
                 <span className="home-product-card-chip">{product.group}</span>
                 <span className="home-product-card-cta">VIEW RANGE <ArrowUpRight size={14} /></span>
               </Link>
@@ -78,11 +68,11 @@ function ProductMarquee() {
                 <span className="micro-label">RANGE {product.number}</span>
                 <h3>{product.title}</h3>
                 <p>{product.detail}</p>
-                <Link className="inline-link" href="/products/">View all products <ArrowRight size={15} /></Link>
+                <Link className="inline-link" href="/products/" tabIndex={isClone ? -1 : undefined}>View all products <ArrowRight size={15} /></Link>
               </div>
             </article>
-          ))}
-        </div>
+          );
+        }))}
       </div>
     </div>
   );
@@ -144,7 +134,7 @@ function Home() {
             </div>
             <div className="home-product-marquee-wrap">
               <ProductMarquee />
-              <p className="home-product-marquee-note"><ArrowRight size={14} /> A considered collection of our core product capabilities</p>
+              <p className="home-product-marquee-note"><ArrowRight size={14} /> Scrolls automatically — hover to pause</p>
             </div>
             <div className="home-directory" aria-label="Explore all company pages">
               <div className="home-directory-intro"><span className="micro-label">THE BTL DIRECTORY</span><h3>Every page has a reason to visit.</h3><p>Follow the story from our people and process to the products, partnerships and signals shaping the industry.</p></div>
