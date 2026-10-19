@@ -134,7 +134,10 @@ type ManagedProduct = {
   sku: string;
   category: string;
   description: string;
+  imageUrl?: string;
 };
+
+const PUBLIC_API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? "https://bismillah-textiles-admin-api.ziakhalid236.workers.dev").replace(/\/$/, "");
 
 function managedProductToCatalog(product: ManagedProduct, index: number): Product | null {
   const category = categoryCopy.find((item) => item.title === product.category)?.title;
@@ -154,7 +157,7 @@ function managedProductToCatalog(product: ManagedProduct, index: number): Produc
     description: product.description,
     features: [product.sku, "Published catalog item"],
     photo: photoByCategory[category],
-    imageSrc: productAssetPaths[product.id],
+    imageSrc: product.imageUrl || productAssetPaths[product.id],
   };
 }
 
@@ -165,11 +168,11 @@ function imageUrl(key: PhotoKey, width = 960) {
 }
 
 function productImageSource(product: Product, width = 960) {
-  return productAssetPaths[product.id] ?? imageUrl(product.photo, width);
+  return product.imageSrc ?? productAssetPaths[product.id] ?? imageUrl(product.photo, width);
 }
 
 function productImageAlt(product: Product) {
-  return productAssetPaths[product.id]
+  return product.imageSrc || productAssetPaths[product.id]
     ? `${product.title} product render`
     : `Representative ${product.title.toLowerCase()} photograph`;
 }
@@ -185,7 +188,7 @@ export function ProductCatalog() {
 
   useEffect(() => {
     let active = true;
-    fetch("/api/public/products", { headers: { Accept: "application/json" }, cache: "no-store" })
+    fetch(`${PUBLIC_API_BASE_URL}/api/public/products`, { headers: { Accept: "application/json" }, cache: "no-store" })
       .then((response) => response.ok ? response.json() as Promise<ManagedProduct[]> : Promise.reject(new Error("Published catalog unavailable")))
       .then((managedProducts) => {
         const mapped = managedProducts.map(managedProductToCatalog).filter((product): product is Product => product !== null);
@@ -288,13 +291,14 @@ export function ProductCatalog() {
         <div className="catalog-product-grid">
           {visibleProducts.map((product) => {
             const photo = photos[product.photo];
+            const managedImage = Boolean(product.imageSrc || productAssetPaths[product.id]);
             const localImage = productImageSource(product);
-            const localSrcSet = productAssetPaths[product.id] ? undefined : `${imageUrl(product.photo, 560)} 560w, ${imageUrl(product.photo, 960)} 960w, ${imageUrl(product.photo, 1400)} 1400w`;
+            const localSrcSet = managedImage ? undefined : `${imageUrl(product.photo, 560)} 560w, ${imageUrl(product.photo, 960)} 960w, ${imageUrl(product.photo, 1400)} 1400w`;
             return (
               <article className="catalog-product-card" key={product.id}>
                 <button className="catalog-card-image" type="button" onClick={() => setSelected(product)} aria-label={`View details for ${product.title}`}>
                   <img src={localImage} srcSet={localSrcSet} sizes="(max-width: 620px) calc(100vw - 40px), (max-width: 980px) 46vw, 30vw" alt={productAssetPaths[product.id] ? productImageAlt(product) : `${productImageAlt(product)}: ${photo.alt}`} width="960" height="720" loading="lazy" decoding="async" />
-                  <span className="catalog-photo-label">{productAssetPaths[product.id] ? "BTL product render" : "Representative image"}</span>
+                  <span className="catalog-photo-label">{managedImage ? "BTL product image" : "Representative image"}</span>
                 </button>
                 <div className="catalog-card-copy">
                   <p className="catalog-product-index">{product.number} / {product.group}</p>

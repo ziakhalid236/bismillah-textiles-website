@@ -58,7 +58,7 @@ function rowDate(row) {
 }
 
 function productFromRow(row) {
-  return { id: row.id, name: row.name, sku: row.sku, category: row.category, status: row.status, description: row.description, updated: row.updated_at };
+  return { id: row.id, name: row.name, sku: row.sku, category: row.category, status: row.status, description: row.description, imageUrl: row.image_url || '', updated: row.updated_at };
 }
 
 function categoryFromRow(row) {
@@ -160,18 +160,18 @@ async function adminRoute(request, env, path) {
     return json(results.map(productFromRow), 200, request, env);
   }
   if (path === '/api/admin/products' && request.method === 'POST') {
-    if (!input || !text(input.id, 80) || !text(input.name, 160) || !text(input.sku, 80) || !text(input.category, 120) || !validStatus(input.status) || typeof input.description !== 'string' || input.description.length > 4000) return error('Product data is invalid.', 400, request, env);
+    if (!input || !text(input.id, 80) || !text(input.name, 160) || !text(input.sku, 80) || !text(input.category, 120) || !validStatus(input.status) || typeof input.description !== 'string' || input.description.length > 4000 || (input.imageUrl !== undefined && (!text(input.imageUrl, 2000) || !/^https:\/\//i.test(input.imageUrl.trim())))) return error('Product data is invalid.', 400, request, env);
     const now = new Date().toISOString();
-    try { await env.DB.prepare('INSERT INTO products (id,name,sku,category,status,description,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?)').bind(input.id.trim(), input.name.trim(), input.sku.trim(), input.category.trim(), input.status, input.description, now, now).run(); } catch (insertError) { return error('A record with that SKU already exists.', 409, request, env); }
+    try { await env.DB.prepare('INSERT INTO products (id,name,sku,category,status,description,image_url,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?)').bind(input.id.trim(), input.name.trim(), input.sku.trim(), input.category.trim(), input.status, input.description, input.imageUrl?.trim() || '', now, now).run(); } catch (insertError) { return error('A record with that SKU already exists.', 409, request, env); }
     const row = await env.DB.prepare('SELECT * FROM products WHERE id = ?').bind(input.id.trim()).first();
     return json(productFromRow(row), 201, request, env);
   }
   const productMatch = path.match(/^\/api\/admin\/products\/([^/]+)$/);
   if (productMatch && request.method === 'PUT') {
-    if (!input || !text(input.name, 160) || !text(input.sku, 80) || !text(input.category, 120) || !validStatus(input.status) || typeof input.description !== 'string' || input.description.length > 4000) return error('Product data is invalid.', 400, request, env);
+    if (!input || !text(input.name, 160) || !text(input.sku, 80) || !text(input.category, 120) || !validStatus(input.status) || typeof input.description !== 'string' || input.description.length > 4000 || (input.imageUrl !== undefined && (!text(input.imageUrl, 2000) || !/^https:\/\//i.test(input.imageUrl.trim())))) return error('Product data is invalid.', 400, request, env);
     const id = decodeURIComponent(productMatch[1]);
     const now = new Date().toISOString();
-    try { const result = await env.DB.prepare('UPDATE products SET name=?,sku=?,category=?,status=?,description=?,updated_at=? WHERE id=?').bind(input.name.trim(), input.sku.trim(), input.category.trim(), input.status, input.description, now, id).run(); if (!result.meta.changes) return error('Product not found.', 404, request, env); } catch (updateError) { return error('A record with that SKU already exists.', 409, request, env); }
+    try { const result = await env.DB.prepare('UPDATE products SET name=?,sku=?,category=?,status=?,description=?,image_url=?,updated_at=? WHERE id=?').bind(input.name.trim(), input.sku.trim(), input.category.trim(), input.status, input.description, input.imageUrl?.trim() || '', now, id).run(); if (!result.meta.changes) return error('Product not found.', 404, request, env); } catch (updateError) { return error('A record with that SKU already exists.', 409, request, env); }
     return json(productFromRow(await env.DB.prepare('SELECT * FROM products WHERE id = ?').bind(id).first()), 200, request, env);
   }
 
