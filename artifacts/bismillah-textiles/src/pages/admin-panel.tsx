@@ -247,7 +247,7 @@ function AdminPanel() {
     }
   }
 
-  async function uploadMedia(file: File, kind: MediaAsset['kind'], label: string) {
+  async function uploadMedia(file: File, kind: MediaAsset['kind'], label: string): Promise<MediaAsset> {
     const form = new FormData();
     form.append('file', file);
     form.append('kind', kind);
@@ -257,6 +257,7 @@ function AdminPanel() {
     const payload = await response.json().catch(() => null) as MediaAsset | { message?: string } | null;
     if (!response.ok) throw new AdminApiError((payload as { message?: string } | null)?.message ?? `Media upload failed (${response.status}).`, response.status);
     setMedia((current) => [payload as MediaAsset, ...current]);
+    return payload as MediaAsset;
   }
 
   async function updateMedia(asset: MediaAsset, patch: Partial<Pick<MediaAsset, 'label' | 'status'>>) {
@@ -405,7 +406,7 @@ function AdminPanel() {
             const category = categories.find((item) => item.id === id);
             if (category) void saveCategory({ ...category, active: !category.active });
           }} />}
-          {section === 'content' && selectedPage && <ContentView pages={pages} selected={selectedPage} media={media.filter((asset) => asset.kind === 'site' && asset.status === 'Published')} onSelect={setSelectedPageId} onUpdate={updatePage} />}
+          {section === 'content' && selectedPage && <ContentView pages={pages} selected={selectedPage} media={media.filter((asset) => asset.kind === 'site' && asset.status === 'Published')} onSelect={setSelectedPageId} onUpdate={updatePage} onUploadHero={async (file, label) => uploadMedia(file, 'site', label)} />}
           {section === 'media' && <MediaView assets={media} onUpload={uploadMedia} onUpdate={updateMedia} onDelete={deleteMedia} />}
 
           <footer className="admin-page-footer"><span>Secure admin workspace</span><span>Changes are saved to the connected database.</span></footer>
@@ -473,7 +474,7 @@ function Overview({ products, pages, publishedCount, draftCount, onNavigate, onE
 
 function MediaView({ assets, onUpload, onUpdate, onDelete }: {
   assets: MediaAsset[];
-  onUpload: (file: File, kind: MediaAsset['kind'], label: string) => Promise<void>;
+  onUpload: (file: File, kind: MediaAsset['kind'], label: string) => Promise<MediaAsset>;
   onUpdate: (asset: MediaAsset, patch: Partial<Pick<MediaAsset, 'label' | 'status'>>) => Promise<void>;
   onDelete: (asset: MediaAsset) => Promise<void>;
 }) {
@@ -566,15 +567,18 @@ function CategoriesView({ categories, products, onEdit, onToggle }: {
   );
 }
 
-function ContentView({ pages, selected, media, onSelect, onUpdate }: {
+function ContentView({ pages, selected, media, onSelect, onUpdate, onUploadHero }: {
   pages: ContentPage[];
   selected: ContentPage;
   media: MediaAsset[];
   onSelect: (id: string) => void;
   onUpdate: (page: ContentPage) => Promise<void>;
+  onUploadHero: (file: File, label: string) => Promise<MediaAsset>;
 }) {
   const [draft, setDraft] = useState(selected);
   const [saving, setSaving] = useState(false);
+  const [uploadingHero, setUploadingHero] = useState(false);
+  const [uploadMessage, setUploadMessage] = useState('');
 
   useEffect(() => setDraft(selected), [selected.id, selected.updated]);
 
@@ -582,6 +586,20 @@ function ContentView({ pages, selected, media, onSelect, onUpdate }: {
     setSaving(true);
     await onUpdate({ ...draft, status, updated: new Date().toISOString() });
     setSaving(false);
+  }
+
+  async function uploadHero(file: File) {
+    setUploadingHero(true);
+    setUploadMessage('Uploading to the site gallery…');
+    try {
+      const asset = await onUploadHero(file, draft.title || file.name);
+      setDraft((current) => ({ ...current, heroImageUrl: asset.url }));
+      setUploadMessage('Uploaded and selected. Publish changes to make it live.');
+    } catch (error) {
+      setUploadMessage(error instanceof Error ? error.message : 'Hero image upload failed.');
+    } finally {
+      setUploadingHero(false);
+    }
   }
 
   return (
@@ -597,12 +615,12 @@ function ContentView({ pages, selected, media, onSelect, onUpdate }: {
           <label>Page title<input value={draft.title} onChange={(event) => setDraft({ ...draft, title: event.target.value })} /></label>
           <label>Page path<input value={draft.path} onChange={(event) => setDraft({ ...draft, path: event.target.value })} placeholder="/about-us/" /></label>
           <label>Short summary<input value={draft.summary} onChange={(event) => setDraft({ ...draft, summary: event.target.value })} /></label>
-          <label>Hero image from private gallery<select value={draft.heroImageUrl} onChange={(event) => setDraft({ ...draft, heroImageUrl: event.target.value })}><option value="">Use the current page image</option>{media.map((asset) => <option key={asset.id} value={asset.url}>{asset.label}</option>)}</select></label>
+          <div className="admin-editor-image-field"><label>Hero image from site gallery<select value={draft.heroImageUrl} onChange={(event) => setDraft({ ...draft, heroImageUrl: event.target.value })}><option value="">Use the current page image</option>{media.map((asset) => <option key={asset.id} value={asset.url}>{asset.label}</option>)}</select></label><label className="admin-inline-upload"><span>Or upload directly to gallery</span><input type="file" accept="image/jpeg,image/png,image/webp,image/svg+xml" disabled={uploadingHero} onChange={(event) => { const file = event.target.files?.[0]; if (file) void uploadHero(file); event.currentTarget.value = ''; }} /><strong>{uploadingHero ? 'Uploading…' : 'Choose image'}</strong></label>{uploadMessage && <small className="admin-upload-message">{uploadMessage}</small>}</div>
           <label>Page copy<textarea rows={9} value={draft.body} onChange={(event) => setDraft({ ...draft, body: event.target.value })} /></label>
           <label>SEO title<input value={draft.seoTitle} onChange={(event) => setDraft({ ...draft, seoTitle: event.target.value })} maxLength={160} placeholder="Optional search title" /></label>
           <label>SEO description<textarea rows={3} value={draft.seoDescription} onChange={(event) => setDraft({ ...draft, seoDescription: event.target.value })} maxLength={320} placeholder="Optional search description" /></label>
         </div>
-        <div className="admin-editor-preview"><div><span className="admin-editor-label"><Eye size={13} /> PUBLIC PREVIEW</span><strong>{draft.title || 'Untitled page'}</strong><p>{draft.body || 'Your page content preview will appear here.'}</p></div><span className="admin-preview-stamp">BTL / WEB</span></div>
+        <div className="admin-live-preview" aria-label="Live page preview"><div className="admin-live-preview-bar"><span><span className="admin-live-dot" /> LIVE PREVIEW</span><a href={draft.path || '/'} target="_blank" rel="noreferrer">Open public page <ArrowUpRight size={13} /></a></div><article className="admin-preview-page"><div className="admin-preview-hero">{draft.heroImageUrl ? <img src={draft.heroImageUrl} alt="" /> : <div className="admin-preview-hero-placeholder"><span>BTL / HERO IMAGE</span></div>}<span className="admin-preview-hero-label">{draft.path || '/new-page/'}</span></div><div className="admin-preview-copy"><span className="admin-editor-label">BISMILLAH TEXTILES</span><h2>{draft.title || 'Untitled page'}</h2><p className="admin-preview-summary">{draft.summary || 'Add a short page summary.'}</p><div className="admin-preview-rule" /><p>{draft.body || 'Your page content preview will appear here as you type.'}</p></div></article></div>
         <div className="admin-editor-footer"><span><Clock3 size={13} /> Last saved {selected.updated}</span><div><button className="admin-button admin-button--secondary" type="button" disabled={saving} onClick={() => void save('Draft')}>Save draft</button><button className="admin-button admin-button--primary" type="button" disabled={saving} onClick={() => void save('Published')}><Check size={15} /> Publish changes</button></div></div>
       </section>
     </div>
