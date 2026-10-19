@@ -46,7 +46,37 @@ const homepageProductSpotlight = [
   { number: '01', group: 'HOME TEXTILES', title: 'Sheet sets', detail: 'Flat sheets, fitted sheets and pillowcases, made from our own woven fabric.', image: '/images/products/sheet-sets.jpg' },
   { number: '02', group: 'FABRIC', title: 'Printed fabric', detail: 'Customer-defined printed constructions developed through our integrated processing house.', image: '/images/products/printed-fabric.jpg' },
   { number: '03', group: 'HOSPITALITY', title: 'Hospitality bed linen', detail: 'Crisp plain and striped bed linen for hospitality programmes and repeatable quality.', image: '/images/products/hospitality-bed-linen.jpg' },
+  { number: '04', group: 'HOME TEXTILES', title: 'Duvet sets', detail: 'Duvet covers and matching pillowcases in woven and printed constructions.', image: '/images/products/duvet-sets.jpg' },
+  { number: '05', group: 'FABRIC', title: 'Jacquard fabric', detail: 'Figured woven fabric produced on our own air-jet looms.', image: '/images/products/jacquard-fabric.jpg' },
+  { number: '06', group: 'HOME TEXTILES', title: 'Curtains', detail: 'Window curtains and panels made from woven, dyed and printed fabrics.', image: '/images/products/curtains.jpg' },
 ];
+
+function ProductMarquee() {
+  return (
+    <div className="home-product-marquee" role="group" aria-label="Product range">
+      <div className="home-product-track">
+        {[0, 1].map((copy) => homepageProductSpotlight.map((product) => {
+          const isClone = copy === 1;
+          return (
+            <article className="home-product-card" key={`${copy}-${product.title}`} aria-hidden={isClone || undefined}>
+              <Link className="home-product-card-image" href="/products/" tabIndex={isClone ? -1 : undefined} aria-label={`Explore ${product.title}`}>
+                <img src={product.image} alt={isClone ? '' : `${product.title} product render`} loading="lazy" />
+                <span className="home-product-card-chip">{product.group}</span>
+                <span className="home-product-card-cta">VIEW RANGE <ArrowUpRight size={14} /></span>
+              </Link>
+              <div className="home-product-card-copy">
+                <span className="micro-label">RANGE {product.number}</span>
+                <h3>{product.title}</h3>
+                <p>{product.detail}</p>
+                <Link className="inline-link" href="/products/" tabIndex={isClone ? -1 : undefined}>View all products <ArrowRight size={15} /></Link>
+              </div>
+            </article>
+          );
+        }))}
+      </div>
+    </div>
+  );
+}
 
 const homepagePageTeasers = [
   { number: '01', label: 'ABOUT US', title: 'A family business, built to last.', detail: 'Meet the leadership, values and philosophy behind Bismillah Textiles.', href: '/about-us/' },
@@ -102,11 +132,9 @@ function Home() {
               <div><div className="section-kicker"><span>04</span><span className="kicker-rule" /> EXPLORE THE RANGE</div><h2 id="home-discovery-title">A closer look at<br /><em>what we make.</em></h2></div>
               <p>From everyday bedding to hospitality programmes and market context, start with the part of Bismillah Textiles that matters to you.</p>
             </div>
-            <div className="home-product-spotlight">
-              {homepageProductSpotlight.map((product) => <article className="home-product-card" key={product.title}>
-                <Link className="home-product-card-image" href="/products/" aria-label={`Explore ${product.title}`}><img src={product.image} alt={`${product.title} product render`} loading="lazy" /><span>VIEW PRODUCT RANGE <ArrowUpRight size={14} /></span></Link>
-                <div className="home-product-card-copy"><span className="micro-label">{product.number} / {product.group}</span><h3>{product.title}</h3><p>{product.detail}</p><Link className="inline-link" href="/products/">View all products <ArrowRight size={15} /></Link></div>
-              </article>)}
+            <div className="home-product-marquee-wrap">
+              <ProductMarquee />
+              <p className="home-product-marquee-note"><ArrowRight size={14} /> Scrolls automatically — hover to pause</p>
             </div>
             <div className="home-directory" aria-label="Explore all company pages">
               <div className="home-directory-intro"><span className="micro-label">THE BTL DIRECTORY</span><h3>Every page has a reason to visit.</h3><p>Follow the story from our people and process to the products, partnerships and signals shaping the industry.</p></div>
