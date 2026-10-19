@@ -151,19 +151,22 @@ function AdminPanel() {
     setLoadingData(true);
     setApiError('');
     try {
-      const [nextProducts, nextCategories, nextPages, nextMedia] = await Promise.all([
+      const results = await Promise.allSettled([
         adminRequest<Product[]>('/products'),
         adminRequest<Category[]>('/categories'),
         adminRequest<ContentPage[]>('/pages'),
         adminRequest<MediaAsset[]>('/media'),
       ]);
-      setProducts(nextProducts);
-      setCategories(nextCategories);
-      setPages(nextPages);
-      setMedia(nextMedia);
-      if (nextPages.length && !nextPages.some((page) => page.id === selectedPageId)) {
-        setSelectedPageId(nextPages[0].id);
+      const [productsResult, categoriesResult, pagesResult, mediaResult] = results;
+      if (productsResult.status === 'fulfilled') setProducts(productsResult.value);
+      if (categoriesResult.status === 'fulfilled') setCategories(categoriesResult.value);
+      if (pagesResult.status === 'fulfilled') {
+        setPages(pagesResult.value);
+        if (pagesResult.value.length && !pagesResult.value.some((page) => page.id === selectedPageId)) setSelectedPageId(pagesResult.value[0].id);
       }
+      if (mediaResult.status === 'fulfilled') setMedia(mediaResult.value);
+      const failed = results.flatMap((result, index) => result.status === 'rejected' ? [['products', 'categories', 'pages', 'media'][index], result.reason instanceof Error ? result.reason.message : 'request failed'] : []);
+      setApiError(failed.length ? `Some admin data could not be loaded: ${failed.map(([name, reason]) => `${name} (${reason})`).join(', ')}` : '');
     } catch (error) {
       setApiError(error instanceof Error ? error.message : 'Unable to load admin data.');
     } finally {

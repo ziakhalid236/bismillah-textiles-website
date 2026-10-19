@@ -70,7 +70,7 @@ function ProductMarquee() {
   return (
     <div className="home-product-carousel" role="group" aria-roledescription="carousel" aria-label="Featured product range" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setPaused(false); }}>
       <div className="home-product-carousel-viewport">
-        <div className="home-product-track" style={{ transform: `translateX(calc(-${activeIndex} * (var(--home-product-card-width) + var(--home-product-gap)))` }}>
+        <div className="home-product-track" style={{ transform: `translateX(calc(50% - (var(--home-product-card-width) / 2) - ${activeIndex} * (var(--home-product-card-width) + var(--home-product-gap)))` }}>
           {homepageProductSpotlight.map((product, index) => (
             <article className={index === activeIndex ? 'home-product-card is-active' : 'home-product-card'} key={product.title} aria-hidden={index !== activeIndex}>
               <Link className="home-product-card-image" href="/products/" tabIndex={index === activeIndex ? undefined : -1} aria-label={`Explore ${product.title}`}>
