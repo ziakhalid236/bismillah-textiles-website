@@ -12,14 +12,15 @@ function origins(env) {
 
 function corsHeaders(request, env) {
   const origin = request.headers.get('Origin');
-  const allowed = origin && origins(env).includes(origin) ? origin : origins(env)[0];
-  return {
-    'Access-Control-Allow-Origin': allowed,
+  const allowed = origin && origins(env).includes(origin) ? origin : null;
+  const headers = {
     'Access-Control-Allow-Credentials': 'true',
     'Access-Control-Allow-Headers': 'Content-Type, X-CSRF-Token',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
     'Vary': 'Origin',
   };
+  if (allowed) headers['Access-Control-Allow-Origin'] = allowed;
+  return headers;
 }
 
 function securityHeaders() {
@@ -74,7 +75,18 @@ function categoryFromRow(row) {
 }
 
 function pageFromRow(row) {
-  return { id: row.id, title: row.title, path: row.path, summary: row.summary, body: row.body, status: row.status, updated: row.updated_at };
+  return {
+    id: row.id,
+    title: row.title,
+    path: row.path,
+    summary: row.summary,
+    body: row.body,
+    heroImageUrl: row.hero_image_url || '',
+    seoTitle: row.seo_title || '',
+    seoDescription: row.seo_description || '',
+    status: row.status,
+    updated: row.updated_at,
+  };
 }
 
 function publicMediaUrl(request, id) {
@@ -305,16 +317,16 @@ async function adminRoute(request, env, path) {
     return json(results.map(pageFromRow), 200, request, env);
   }
   if (path === '/api/admin/pages' && request.method === 'POST') {
-    if (!input || !text(input.id, 80) || !text(input.title, 160) || !validPath(input.path) || typeof input.summary !== 'string' || input.summary.length > 1000 || typeof input.body !== 'string' || input.body.length > 20000 || !validStatus(input.status)) return error('Page data is invalid.', 400, request, env);
+    if (!input || !text(input.id, 80) || !text(input.title, 160) || !validPath(input.path) || typeof input.summary !== 'string' || input.summary.length > 1000 || typeof input.body !== 'string' || input.body.length > 20000 || !validStatus(input.status) || (input.heroImageUrl !== undefined && input.heroImageUrl !== '' && !input.heroImageUrl.startsWith('https://')) || typeof (input.seoTitle ?? '') !== 'string' || typeof (input.seoDescription ?? '') !== 'string') return error('Page data is invalid.', 400, request, env);
     const now = new Date().toISOString();
-    try { await env.DB.prepare('INSERT INTO site_pages (id,title,path,summary,body,status,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?)').bind(input.id.trim(), input.title.trim(), input.path, input.summary, input.body, input.status, now, now).run(); } catch (insertError) { return error('A page with that path already exists.', 409, request, env); }
+    try { await env.DB.prepare('INSERT INTO site_pages (id,title,path,summary,body,hero_image_url,seo_title,seo_description,status,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)').bind(input.id.trim(), input.title.trim(), input.path, input.summary, input.body, input.heroImageUrl?.trim() || '', input.seoTitle?.trim() || '', input.seoDescription?.trim() || '', input.status, now, now).run(); } catch (insertError) { return error('A page with that path already exists.', 409, request, env); }
     return json(pageFromRow(await env.DB.prepare('SELECT * FROM site_pages WHERE id = ?').bind(input.id.trim()).first()), 201, request, env);
   }
   const pageMatch = path.match(/^\/api\/admin\/pages\/([^/]+)$/);
   if (pageMatch && request.method === 'PUT') {
-    if (!input || !text(input.title, 160) || !validPath(input.path) || typeof input.summary !== 'string' || input.summary.length > 1000 || typeof input.body !== 'string' || input.body.length > 20000 || !validStatus(input.status)) return error('Page data is invalid.', 400, request, env);
+    if (!input || !text(input.title, 160) || !validPath(input.path) || typeof input.summary !== 'string' || input.summary.length > 1000 || typeof input.body !== 'string' || input.body.length > 20000 || !validStatus(input.status) || (input.heroImageUrl !== undefined && input.heroImageUrl !== '' && !input.heroImageUrl.startsWith('https://')) || typeof (input.seoTitle ?? '') !== 'string' || typeof (input.seoDescription ?? '') !== 'string') return error('Page data is invalid.', 400, request, env);
     const id = decodeURIComponent(pageMatch[1]);
-    try { const result = await env.DB.prepare('UPDATE site_pages SET title=?,path=?,summary=?,body=?,status=?,updated_at=? WHERE id=?').bind(input.title.trim(), input.path, input.summary, input.body, input.status, new Date().toISOString(), id).run(); if (!result.meta.changes) return error('Page not found.', 404, request, env); } catch (updateError) { return error('A page with that path already exists.', 409, request, env); }
+    try { const result = await env.DB.prepare('UPDATE site_pages SET title=?,path=?,summary=?,body=?,hero_image_url=?,seo_title=?,seo_description=?,status=?,updated_at=? WHERE id=?').bind(input.title.trim(), input.path, input.summary, input.body, input.heroImageUrl?.trim() || '', input.seoTitle?.trim() || '', input.seoDescription?.trim() || '', input.status, new Date().toISOString(), id).run(); if (!result.meta.changes) return error('Page not found.', 404, request, env); } catch (updateError) { return error('A page with that path already exists.', 409, request, env); }
     return json(pageFromRow(await env.DB.prepare('SELECT * FROM site_pages WHERE id = ?').bind(id).first()), 200, request, env);
   }
   return error('Not found.', 404, request, env);

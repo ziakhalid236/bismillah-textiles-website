@@ -1,9 +1,25 @@
-import type { ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { ArrowRight, ArrowUpRight, BedDouble, Hotel, Layers3, Scissors, Shirt } from 'lucide-react';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { ProductCatalog } from './product-catalog';
 
 const mapsEmbedUrl = 'https://maps.google.com/maps?q=Bismillah+Textiles+%28PVT%29+Limited+Khurrianwala+Faisalabad+Pakistan&output=embed';
+const PUBLIC_API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? 'https://bismillah-textiles-admin-api.ziakhalid236.workers.dev').replace(/\/$/, '');
+
+type ManagedPage = { title: string; path: string; summary: string; body: string; heroImageUrl?: string };
+
+function useManagedPage(path: string): ManagedPage | null {
+  const [managed, setManaged] = useState<ManagedPage | null>(null);
+  useEffect(() => {
+    let active = true;
+    fetch(`${PUBLIC_API_BASE_URL}/api/public/pages?path=${encodeURIComponent(path)}`, { headers: { Accept: 'application/json' }, cache: 'no-store' })
+      .then((response) => response.ok ? response.json() as Promise<ManagedPage> : null)
+      .then((page) => { if (active && page) setManaged(page); })
+      .catch(() => undefined);
+    return () => { active = false; };
+  }, [path]);
+  return managed;
+}
 
 export function MapEmbed() {
   return <iframe className="map-embed" src={mapsEmbedUrl} title="Interactive Google Map showing Bismillah Textiles in Khurrianwala, Faisalabad" loading="lazy" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />;
@@ -21,21 +37,29 @@ type PageFrameProps = {
 };
 
 function PageFrame({ number, title, lead, image, imageAlt, caption, children, showCta = true }: PageFrameProps) {
+  const [location] = useLocation();
+  const managed = useManagedPage(location);
+  const visibleTitle = managed?.title || title;
+  const visibleLead = managed?.summary || lead;
+  const visibleImage = managed?.heroImageUrl || image;
   return (
     <div className="content-page">
       <section className="interior-hero section-pad">
         <div className="interior-hero-copy">
           <div className="section-kicker"><span>{number}</span><span className="kicker-rule" /> BISMILLAH TEXTILES</div>
-          <h1>{title}</h1>
-          <p>{lead}</p>
+          <h1>{visibleTitle}</h1>
+          <p>{visibleLead}</p>
           {showCta && <Link className="button button-red" href="/contact-us/">Talk to our team <ArrowRight size={16} /></Link>}
         </div>
         <figure className="interior-hero-visual">
-          <img src={image} alt={imageAlt} />
+          <img src={visibleImage} alt={imageAlt} />
           <figcaption><span>{caption}</span><span>KHURRIANWALA, PAKISTAN</span></figcaption>
         </figure>
       </section>
-      <div className="page-content section-pad">{children}</div>
+      <div className="page-content section-pad">
+        {managed?.body && <section className="managed-page-copy" aria-label="Page introduction"><p>{managed.body}</p></section>}
+        {children}
+      </div>
     </div>
   );
 }

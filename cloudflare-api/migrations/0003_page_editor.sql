@@ -1,0 +1,3 @@
+ALTER TABLE site_pages ADD COLUMN hero_image_url TEXT NOT NULL DEFAULT '';
+ALTER TABLE site_pages ADD COLUMN seo_title TEXT NOT NULL DEFAULT '';
+ALTER TABLE site_pages ADD COLUMN seo_description TEXT NOT NULL DEFAULT '';

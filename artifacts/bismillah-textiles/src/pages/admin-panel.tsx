@@ -54,6 +54,9 @@ type ContentPage = {
   path: string;
   summary: string;
   body: string;
+  heroImageUrl: string;
+  seoTitle: string;
+  seoDescription: string;
   status: Status;
   updated: string;
 };
@@ -308,6 +311,9 @@ function AdminPanel() {
       path: '/new-page/',
       summary: 'Add a short summary for this page.',
       body: '',
+      heroImageUrl: '',
+      seoTitle: '',
+      seoDescription: '',
       status: 'Draft',
       updated: 'Just now',
     };
@@ -399,7 +405,7 @@ function AdminPanel() {
             const category = categories.find((item) => item.id === id);
             if (category) void saveCategory({ ...category, active: !category.active });
           }} />}
-          {section === 'content' && selectedPage && <ContentView pages={pages} selected={selectedPage} onSelect={setSelectedPageId} onUpdate={updatePage} />}
+          {section === 'content' && selectedPage && <ContentView pages={pages} selected={selectedPage} media={media.filter((asset) => asset.kind === 'site' && asset.status === 'Published')} onSelect={setSelectedPageId} onUpdate={updatePage} />}
           {section === 'media' && <MediaView assets={media} onUpload={uploadMedia} onUpdate={updateMedia} onDelete={deleteMedia} />}
 
           <footer className="admin-page-footer"><span>Secure admin workspace</span><span>Changes are saved to the connected database.</span></footer>
@@ -560,9 +566,10 @@ function CategoriesView({ categories, products, onEdit, onToggle }: {
   );
 }
 
-function ContentView({ pages, selected, onSelect, onUpdate }: {
+function ContentView({ pages, selected, media, onSelect, onUpdate }: {
   pages: ContentPage[];
   selected: ContentPage;
+  media: MediaAsset[];
   onSelect: (id: string) => void;
   onUpdate: (page: ContentPage) => Promise<void>;
 }) {
@@ -588,8 +595,12 @@ function ContentView({ pages, selected, onSelect, onUpdate }: {
         <div className="admin-editor-toolbar"><div><span className="admin-editor-label">EDITING PAGE</span><span className="admin-editor-path">{selected.path}</span></div><StatusBadge status={selected.status} /></div>
         <div className="admin-editor-fields">
           <label>Page title<input value={draft.title} onChange={(event) => setDraft({ ...draft, title: event.target.value })} /></label>
+          <label>Page path<input value={draft.path} onChange={(event) => setDraft({ ...draft, path: event.target.value })} placeholder="/about-us/" /></label>
           <label>Short summary<input value={draft.summary} onChange={(event) => setDraft({ ...draft, summary: event.target.value })} /></label>
+          <label>Hero image from private gallery<select value={draft.heroImageUrl} onChange={(event) => setDraft({ ...draft, heroImageUrl: event.target.value })}><option value="">Use the current page image</option>{media.map((asset) => <option key={asset.id} value={asset.url}>{asset.label}</option>)}</select></label>
           <label>Page copy<textarea rows={9} value={draft.body} onChange={(event) => setDraft({ ...draft, body: event.target.value })} /></label>
+          <label>SEO title<input value={draft.seoTitle} onChange={(event) => setDraft({ ...draft, seoTitle: event.target.value })} maxLength={160} placeholder="Optional search title" /></label>
+          <label>SEO description<textarea rows={3} value={draft.seoDescription} onChange={(event) => setDraft({ ...draft, seoDescription: event.target.value })} maxLength={320} placeholder="Optional search description" /></label>
         </div>
         <div className="admin-editor-preview"><div><span className="admin-editor-label"><Eye size={13} /> PUBLIC PREVIEW</span><strong>{draft.title || 'Untitled page'}</strong><p>{draft.body || 'Your page content preview will appear here.'}</p></div><span className="admin-preview-stamp">BTL / WEB</span></div>
         <div className="admin-editor-footer"><span><Clock3 size={13} /> Last saved {selected.updated}</span><div><button className="admin-button admin-button--secondary" type="button" disabled={saving} onClick={() => void save('Draft')}>Save draft</button><button className="admin-button admin-button--primary" type="button" disabled={saving} onClick={() => void save('Published')}><Check size={15} /> Publish changes</button></div></div>
@@ -609,7 +620,8 @@ function ProductDialog({ initial, categories, media, onClose, onSave }: {
   const [sku, setSku] = useState(initial?.sku ?? '');
   const [category, setCategory] = useState(initial?.category ?? categories[0]?.name ?? '');
   const [description, setDescription] = useState(initial?.description ?? '');
-  const [imageUrl, setImageUrl] = useState(initial?.imageUrl ?? '');
+  const [imageUrl, setImageUrl] = useState(initial?.imageUrl?.includes('/api/public/media/file/') ? initial.imageUrl : '');
+  const [legacyImageUrl, setLegacyImageUrl] = useState(initial?.imageUrl && !initial.imageUrl.includes('/api/public/media/file/') ? initial.imageUrl : '');
   const [status, setStatus] = useState<Status>(initial?.status ?? 'Draft');
   const [error, setError] = useState('');
 
@@ -619,14 +631,15 @@ function ProductDialog({ initial, categories, media, onClose, onSave }: {
       setError('Add a product name, SKU and category to continue.');
       return;
     }
-    if (imageUrl.trim() && !/^https:\/\//i.test(imageUrl.trim())) {
+    const selectedImageUrl = imageUrl.trim() || legacyImageUrl.trim();
+    if (legacyImageUrl.trim() && !/^https:\/\//i.test(legacyImageUrl.trim())) {
       setError('Image URL must start with https://');
       return;
     }
-    onSave({ id: initial?.id ?? `product-${Date.now()}`, name: name.trim(), sku: sku.trim(), category, description: description.trim(), imageUrl: imageUrl.trim(), status, updated: 'Just now' });
+    onSave({ id: initial?.id ?? `product-${Date.now()}`, name: name.trim(), sku: sku.trim(), category, description: description.trim(), imageUrl: selectedImageUrl, status, updated: 'Just now' });
   }
 
-  return <div className="admin-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><section className="admin-modal" role="dialog" aria-modal="true" aria-labelledby="product-dialog-title"><div className="admin-modal-heading"><div><p className="admin-eyebrow">Catalog item</p><h2 id="product-dialog-title">{initial ? 'Edit product' : 'Add product'}</h2></div><button className="admin-icon-button" type="button" onClick={onClose} aria-label="Close product editor"><X size={18} /></button></div><form onSubmit={submit}><label>Product name<input value={name} onChange={(event) => setName(event.target.value)} placeholder="e.g. Sheet sets" autoFocus /></label><div className="admin-form-row"><label>SKU<input value={sku} onChange={(event) => setSku(event.target.value)} placeholder="BTL-HM-001" /></label><label>Category<select value={category} onChange={(event) => setCategory(event.target.value)}>{categories.filter((item) => item.active).map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}</select></label></div><label>Description<textarea rows={4} value={description} onChange={(event) => setDescription(event.target.value)} placeholder="Describe the product range for buyers" /></label><label>Choose product image from private gallery <span className="admin-field-help">Upload product images in Media library, then select one here.</span><select value={imageUrl} onChange={(event) => setImageUrl(event.target.value)}><option value="">Use the current catalog image</option>{media.filter((asset) => asset.status === 'Published').map((asset) => <option key={asset.id} value={asset.url}>{asset.label}</option>)}</select></label><label>Legacy HTTPS image URL <span className="admin-field-help">Optional fallback for an existing approved image URL.</span><input type="url" value={imageUrl} onChange={(event) => setImageUrl(event.target.value)} placeholder="https://example.com/product-image.jpg" /></label><label>Visibility<select value={status} onChange={(event) => setStatus(event.target.value as Status)}><option>Draft</option><option>Published</option></select></label>{error && <p className="admin-form-error">{error}</p>}<div className="admin-modal-actions"><button className="admin-button admin-button--secondary" type="button" onClick={onClose}>Cancel</button><button className="admin-button admin-button--primary" type="submit"><Check size={15} /> Save product</button></div></form></section></div>;
+  return <div className="admin-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><section className="admin-modal" role="dialog" aria-modal="true" aria-labelledby="product-dialog-title"><div className="admin-modal-heading"><div><p className="admin-eyebrow">Catalog item</p><h2 id="product-dialog-title">{initial ? 'Edit product' : 'Add product'}</h2></div><button className="admin-icon-button" type="button" onClick={onClose} aria-label="Close product editor"><X size={18} /></button></div><form onSubmit={submit}><label>Product name<input value={name} onChange={(event) => setName(event.target.value)} placeholder="e.g. Sheet sets" autoFocus /></label><div className="admin-form-row"><label>SKU<input value={sku} onChange={(event) => setSku(event.target.value)} placeholder="BTL-HM-001" /></label><label>Category<select value={category} onChange={(event) => setCategory(event.target.value)}>{categories.filter((item) => item.active).map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}</select></label></div><label>Description<textarea rows={4} value={description} onChange={(event) => setDescription(event.target.value)} placeholder="Describe the product range for buyers" /></label><label>Choose product image from private gallery <span className="admin-field-help">Upload product images in Media library, then select one here.</span><select value={imageUrl} onChange={(event) => { setImageUrl(event.target.value); if (event.target.value) setLegacyImageUrl(''); }}><option value="">Use the current catalog image</option>{media.filter((asset) => asset.status === 'Published').map((asset) => <option key={asset.id} value={asset.url}>{asset.label}</option>)}</select></label><label>Legacy HTTPS image URL <span className="admin-field-help">Optional fallback for an existing approved image URL.</span><input type="url" value={legacyImageUrl} onChange={(event) => { setLegacyImageUrl(event.target.value); if (event.target.value) setImageUrl(''); }} placeholder="https://example.com/product-image.jpg" /></label><label>Visibility<select value={status} onChange={(event) => setStatus(event.target.value as Status)}><option>Draft</option><option>Published</option></select></label>{error && <p className="admin-form-error">{error}</p>}<div className="admin-modal-actions"><button className="admin-button admin-button--secondary" type="button" onClick={onClose}>Cancel</button><button className="admin-button admin-button--primary" type="submit"><Check size={15} /> Save product</button></div></form></section></div>;
 }
 
 function CategoryDialog({ initial, onClose, onSave }: {
