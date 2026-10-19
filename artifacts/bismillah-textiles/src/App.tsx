@@ -121,12 +121,8 @@ const homepageBrandPartners = [
 ];
 
 const homepageCertificationHighlights = [
-  { name: 'SA 8000:2014', image: '/images/certifications/sa8000.png', href: 'https://bismillah.com.pk/wp-content/uploads/certificates/SA%208000%20Certificate.pdf' },
-  { name: 'ISO 9001:2015', image: '/images/certifications/iso9001.png', href: 'https://bismillah.com.pk/wp-content/uploads/2022/05/ISO-90001-2015-QMS.pdf' },
-  { name: 'ISO 14001:2015', image: '/images/certifications/iso14001.png', href: 'https://bismillah.com.pk/wp-content/uploads/2022/05/ISO-14001-2015-EMS.pdf' },
-  { name: 'OEKO-TEX', image: '/images/certifications/oeko-tex.png', href: 'https://bismillah.com.pk/wp-content/uploads/Oeko-Tex-Fabric.pdf' },
-  { name: 'GOTS', image: '/images/certifications/gots.png', href: 'https://bismillah.com.pk/wp-content/uploads/gots/GOTS.pdf' },
-  { name: 'ZDHC', image: '/images/certifications/zdhc.png', href: 'https://bismillah.com.pk/wp-content/uploads/ZDHC-Report.pdf' },
+  { name: 'ISO 14001:2015 · valid to Jun 2028', image: '/images/certifications/iso14001.png', href: 'https://bismillah.com.pk/wp-content/uploads/2022/05/ISO-14001-2015-EMS.pdf' },
+  { name: 'ZDHC Supplier to Zero · valid to Jan 2027', image: '/images/certifications/zdhc.png', href: 'https://bismillah.com.pk/wp-content/uploads/ZDHC-Report.pdf' },
 ];
 
 function Home() {

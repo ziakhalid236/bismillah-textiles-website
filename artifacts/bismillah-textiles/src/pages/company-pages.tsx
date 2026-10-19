@@ -220,46 +220,20 @@ export function ContactPage() {
 }
 
 const certifications = [
-  'SA 8000:2014',
-  'SLCP Certificate',
-  'Sedex members ethical trade audit report',
-  'ISO 9001:2015',
-  'ISO 14001:2015',
-  'OEKO-TEX (Made-ups)',
-  'OEKO-TEX (Fabrics)',
-  'OEKO-TEX (Commission)',
-  'Detox Test Report',
-  'Sanfor Certificate',
-  'OEKO-TEX (Made in Green)',
-  'OEKO-TEX (STeP Certificate)',
-  'Zero Discharge of Hazardous Chemicals (ZDHC Certificate)',
-  'BEPI Certificate',
-  'Higg Index Certificate',
-  'Cotton Made in Africa',
-  'SCAN Report',
-  'BCI Membership Certificate',
-  'GOTS Certificate',
-  'OCS Certificate',
-  'GRS Certificate',
-  'PIE Participation Certificate',
-  'LEED Certificate',
-  'Pakistan Accord',
+  'ISO 14001:2015 — valid until 06 June 2028',
+  'ZDHC Supplier to Zero, Level 1 — acknowledgement valid until 30 January 2027',
 ];
 
 const certificationPreviews = [
-  { name: 'SA 8000:2014', image: '/images/certifications/sa8000.png', href: 'https://bismillah.com.pk/wp-content/uploads/certificates/SA%208000%20Certificate.pdf' },
-  { name: 'ISO 9001:2015', image: '/images/certifications/iso9001.png', href: 'https://bismillah.com.pk/wp-content/uploads/2022/05/ISO-90001-2015-QMS.pdf' },
-  { name: 'ISO 14001:2015', image: '/images/certifications/iso14001.png', href: 'https://bismillah.com.pk/wp-content/uploads/2022/05/ISO-14001-2015-EMS.pdf' },
-  { name: 'OEKO-TEX (Fabrics)', image: '/images/certifications/oeko-tex.png', href: 'https://bismillah.com.pk/wp-content/uploads/Oeko-Tex-Fabric.pdf' },
-  { name: 'GOTS', image: '/images/certifications/gots.png', href: 'https://bismillah.com.pk/wp-content/uploads/gots/GOTS.pdf' },
-  { name: 'ZDHC', image: '/images/certifications/zdhc.png', href: 'https://bismillah.com.pk/wp-content/uploads/ZDHC-Report.pdf' },
+  { name: 'ISO 14001:2015 · valid until 06 June 2028', image: '/images/certifications/iso14001.png', href: 'https://bismillah.com.pk/wp-content/uploads/2022/05/ISO-14001-2015-EMS.pdf' },
+  { name: 'ZDHC Supplier to Zero · valid until 30 January 2027', image: '/images/certifications/zdhc.png', href: 'https://bismillah.com.pk/wp-content/uploads/ZDHC-Report.pdf' },
 ];
 
 export function CertificationsPage() {
   return (
     <PageFrame number="07" title={<>Quality is an<br /><em>evolving process.</em></>} lead="Our quality policy combines in-house process controls, experienced technicians and current production technology." image="/images/1791856048064_1791856385381.jpg" imageAlt="Textile machinery used in the production process" caption="QUALITY THROUGH EACH STAGE">
       <section className="page-story-grid"><div><SectionTitle number="01" title="Our quality policy" /><p>“Quality is an evolving process, not a fixed standard.” We operate an extensive system of in-house quality and process control, alongside environmental, social and security requirements in our management systems.</p><p>Our policy also emphasizes modern machinery, dyes and chemicals, supported by experienced technicians in our quality-control department.</p></div><div className="quality-note"><span className="micro-label">QUALITY / PROCESS / RESPONSIBILITY</span><h2>Built into<br /><em>the process.</em></h2><p>Quality checks and controls are applied across production, not only to the finished product.</p></div></section>
-      <section className="page-section"><SectionTitle number="02" title="Our certifications" intro="Certifications and reports we hold or participate in." /><div className="certification-preview-grid">{certificationPreviews.map((item) => <a className="certification-preview-card" href={item.href} target="_blank" rel="noopener noreferrer" key={item.name}><img src={item.image} alt={`${item.name} certificate preview`} /><span>{item.name}<ArrowUpRight size={14} /></span></a>)}</div><div className="certification-grid">{certifications.map((item, index) => <div className="certification-item" key={item}><span>{String(index + 1).padStart(2, '0')}</span><strong>{item}</strong></div>)}</div><p className="small-print">Certificate scope and validity dates are available on request. Please contact our sales team.</p></section>
+      <section className="page-section"><SectionTitle number="02" title="Our certifications" intro="Current documents published by Bismillah Textiles and checked for validity before display." /><div className="certification-preview-grid">{certificationPreviews.map((item) => <a className="certification-preview-card" href={item.href} target="_blank" rel="noopener noreferrer" key={item.name}><img src={item.image} alt={`${item.name} certificate preview`} /><span>{item.name}<ArrowUpRight size={14} /></span></a>)}</div><div className="certification-grid">{certifications.map((item, index) => <div className="certification-item" key={item}><span>{String(index + 1).padStart(2, '0')}</span><strong>{item}</strong></div>)}</div><p className="small-print">Expired documents are not displayed. Validity is based on the dates shown in the linked official documents.</p></section>
     </PageFrame>
   );
 }
