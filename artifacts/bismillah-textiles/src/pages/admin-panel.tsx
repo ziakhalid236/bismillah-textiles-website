@@ -9,6 +9,8 @@ import {
   Eye,
   FileText,
   Globe2,
+  Image,
+  Images,
   LayoutDashboard,
   LogOut,
   Package,
@@ -18,13 +20,15 @@ import {
   ShieldCheck,
   Sparkles,
   Tag,
+  Trash2,
+  UploadCloud,
   Users,
   X,
 } from 'lucide-react';
 import './admin-panel.css';
 
 type Status = 'Published' | 'Draft';
-type Section = 'overview' | 'products' | 'categories' | 'content';
+type Section = 'overview' | 'products' | 'categories' | 'content' | 'media';
 
 type Product = {
   id: string;
@@ -51,6 +55,18 @@ type ContentPage = {
   summary: string;
   body: string;
   status: Status;
+  updated: string;
+};
+
+type MediaAsset = {
+  id: string;
+  kind: 'product' | 'certificate' | 'brand' | 'site';
+  label: string;
+  originalName: string;
+  mimeType: string;
+  sizeBytes: number;
+  status: Status;
+  url: string;
   updated: string;
 };
 
@@ -93,6 +109,7 @@ const navItems: { id: Section; label: string; icon: typeof LayoutDashboard }[] =
   { id: 'products', label: 'Products', icon: Package },
   { id: 'categories', label: 'Categories', icon: Tag },
   { id: 'content', label: 'Site content', icon: FileText },
+  { id: 'media', label: 'Media library', icon: Images },
 ];
 
 const sectionTitles: Record<Section, { title: string; eyebrow: string; description: string }> = {
@@ -100,6 +117,7 @@ const sectionTitles: Record<Section, { title: string; eyebrow: string; descripti
   products: { title: 'Products', eyebrow: 'Catalog management', description: 'Manage the product lines shown to brands and retail partners.' },
   categories: { title: 'Categories', eyebrow: 'Catalog structure', description: 'Organize product lines into clear, buyer-friendly ranges.' },
   content: { title: 'Site content', eyebrow: 'Page editor', description: 'Update the words and key details across your company profile.' },
+  media: { title: 'Media library', eyebrow: 'Private R2 storage', description: 'Upload and publish product images, certificates and brand logos from the gallery.' },
 };
 
 function StatusBadge({ status }: { status: Status }) {
@@ -119,6 +137,7 @@ function AdminPanel() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [pages, setPages] = useState<ContentPage[]>([]);
+  const [media, setMedia] = useState<MediaAsset[]>([]);
   const [productDialog, setProductDialog] = useState<{ product?: Product } | null>(null);
   const [categoryDialog, setCategoryDialog] = useState<{ category?: Category } | null>(null);
   const [selectedPageId, setSelectedPageId] = useState('home');
@@ -129,14 +148,16 @@ function AdminPanel() {
     setLoadingData(true);
     setApiError('');
     try {
-      const [nextProducts, nextCategories, nextPages] = await Promise.all([
+      const [nextProducts, nextCategories, nextPages, nextMedia] = await Promise.all([
         adminRequest<Product[]>('/products'),
         adminRequest<Category[]>('/categories'),
         adminRequest<ContentPage[]>('/pages'),
+        adminRequest<MediaAsset[]>('/media'),
       ]);
       setProducts(nextProducts);
       setCategories(nextCategories);
       setPages(nextPages);
+      setMedia(nextMedia);
       if (nextPages.length && !nextPages.some((page) => page.id === selectedPageId)) {
         setSelectedPageId(nextPages[0].id);
       }
@@ -221,6 +242,28 @@ function AdminPanel() {
     } catch (error) {
       setApiError(error instanceof Error ? error.message : 'Unable to save product.');
     }
+  }
+
+  async function uploadMedia(file: File, kind: MediaAsset['kind'], label: string) {
+    const form = new FormData();
+    form.append('file', file);
+    form.append('kind', kind);
+    form.append('label', label);
+    form.append('status', 'Published');
+    const response = await fetch(`${API_BASE_URL}/api/admin/media`, { method: 'POST', body: form, credentials: 'include', cache: 'no-store' });
+    const payload = await response.json().catch(() => null) as MediaAsset | { message?: string } | null;
+    if (!response.ok) throw new AdminApiError((payload as { message?: string } | null)?.message ?? `Media upload failed (${response.status}).`, response.status);
+    setMedia((current) => [payload as MediaAsset, ...current]);
+  }
+
+  async function updateMedia(asset: MediaAsset, patch: Partial<Pick<MediaAsset, 'label' | 'status'>>) {
+    const saved = await adminRequest<MediaAsset>(`/media/${encodeURIComponent(asset.id)}`, { method: 'PUT', body: JSON.stringify({ label: patch.label ?? asset.label, status: patch.status ?? asset.status }) });
+    setMedia((current) => current.map((item) => item.id === saved.id ? saved : item));
+  }
+
+  async function deleteMedia(asset: MediaAsset) {
+    await adminRequest<{ deleted: boolean }>(`/media/${encodeURIComponent(asset.id)}`, { method: 'DELETE' });
+    setMedia((current) => current.filter((item) => item.id !== asset.id));
   }
 
   async function saveCategory(category: Category) {
@@ -357,12 +400,13 @@ function AdminPanel() {
             if (category) void saveCategory({ ...category, active: !category.active });
           }} />}
           {section === 'content' && selectedPage && <ContentView pages={pages} selected={selectedPage} onSelect={setSelectedPageId} onUpdate={updatePage} />}
+          {section === 'media' && <MediaView assets={media} onUpload={uploadMedia} onUpdate={updateMedia} onDelete={deleteMedia} />}
 
           <footer className="admin-page-footer"><span>Secure admin workspace</span><span>Changes are saved to the connected database.</span></footer>
         </main>
       </div>
 
-      {productDialog && <ProductDialog key={productDialog.product?.id ?? 'new-product'} initial={productDialog.product} categories={categories} onClose={() => setProductDialog(null)} onSave={saveProduct} />}
+      {productDialog && <ProductDialog key={productDialog.product?.id ?? 'new-product'} initial={productDialog.product} categories={categories} media={media.filter((asset) => asset.kind === 'product')} onClose={() => setProductDialog(null)} onSave={saveProduct} />}
       {categoryDialog && <CategoryDialog key={categoryDialog.category?.id ?? 'new-category'} initial={categoryDialog.category} onClose={() => setCategoryDialog(null)} onSave={saveCategory} />}
     </div>
   );
@@ -419,6 +463,58 @@ function Overview({ products, pages, publishedCount, draftCount, onNavigate, onE
       </section>
     </div>
   );
+}
+
+function MediaView({ assets, onUpload, onUpdate, onDelete }: {
+  assets: MediaAsset[];
+  onUpload: (file: File, kind: MediaAsset['kind'], label: string) => Promise<void>;
+  onUpdate: (asset: MediaAsset, patch: Partial<Pick<MediaAsset, 'label' | 'status'>>) => Promise<void>;
+  onDelete: (asset: MediaAsset) => Promise<void>;
+}) {
+  const [kind, setKind] = useState<MediaAsset['kind']>('product');
+  const [label, setLabel] = useState('');
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState('');
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!file) { setMessage('Choose a file from your device first.'); return; }
+    setUploading(true);
+    setMessage('');
+    try {
+      await onUpload(file, kind, label.trim() || file.name);
+      setFile(null);
+      setLabel('');
+      event.currentTarget.reset();
+      setMessage('File uploaded to the private media library.');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Upload failed.');
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return <div className="admin-media-view">
+    <section className="admin-panel admin-upload-panel">
+      <div className="admin-panel-heading"><div><h2>Upload from gallery</h2><p>Files stay in private R2 storage and are served only when published.</p></div><span className="admin-live-mark"><ShieldCheck size={14} /> PRIVATE</span></div>
+      <form className="admin-upload-form" onSubmit={submit}>
+        <label>Asset type<select value={kind} onChange={(event) => setKind(event.target.value as MediaAsset['kind'])}><option value="product">Product image</option><option value="certificate">Certificate</option><option value="brand">Brand logo</option><option value="site">Site image</option></select></label>
+        <label>Gallery label<input value={label} onChange={(event) => setLabel(event.target.value)} placeholder="e.g. ISO 9001:2015" maxLength={160} /></label>
+        <label className="admin-file-picker"><span><UploadCloud size={20} />{file ? file.name : 'Choose image or certificate file'}</span><small>Images up to 10 MB; certificates may also be PDF.</small><input type="file" accept={kind === 'certificate' ? 'image/jpeg,image/png,image/webp,image/svg+xml,application/pdf' : 'image/jpeg,image/png,image/webp,image/svg+xml'} onChange={(event) => setFile(event.target.files?.[0] ?? null)} /></label>
+        <button className="admin-button admin-button--primary" type="submit" disabled={uploading}><UploadCloud size={16} />{uploading ? 'Uploading…' : 'Upload to gallery'}</button>
+      </form>
+      {message && <p className="admin-upload-message" role="status">{message}</p>}
+    </section>
+    <section className="admin-media-grid" aria-label="Saved media assets">
+      {assets.map((asset) => <article className="admin-media-card" key={asset.id}>
+        <div className="admin-media-preview">{asset.mimeType.startsWith('image/') ? <img src={asset.url} alt="" loading="lazy" /> : <FileText size={30} />}</div>
+        <div className="admin-media-card-copy"><span className="admin-media-kind">{asset.kind} / {Math.ceil(asset.sizeBytes / 1024)} KB</span><input aria-label={`Label for ${asset.originalName}`} value={asset.label} onChange={(event) => { const next = event.target.value; void onUpdate(asset, { label: next }); }} /><small>{asset.originalName}</small></div>
+        <div className="admin-media-card-actions"><StatusBadge status={asset.status} /><button className="admin-row-action" type="button" onClick={() => void onUpdate(asset, { status: asset.status === 'Published' ? 'Draft' : 'Published' })} aria-label={`${asset.status === 'Published' ? 'Unpublish' : 'Publish'} ${asset.label}`}><Globe2 size={15} /></button><button className="admin-row-action admin-row-action--danger" type="button" onClick={() => { if (window.confirm(`Delete ${asset.label}?`)) void onDelete(asset); }} aria-label={`Delete ${asset.label}`}><Trash2 size={15} /></button></div>
+      </article>)}
+      {assets.length === 0 && <div className="admin-empty admin-media-empty"><Image size={24} /><strong>Your gallery is ready</strong><span>Upload a product image, certificate or logo to begin.</span></div>}
+    </section>
+  </div>;
 }
 
 function ProductsView({ products, total, search, status, onSearch, onStatus, onEdit, onAdd }: {
@@ -502,9 +598,10 @@ function ContentView({ pages, selected, onSelect, onUpdate }: {
   );
 }
 
-function ProductDialog({ initial, categories, onClose, onSave }: {
+function ProductDialog({ initial, categories, media, onClose, onSave }: {
   initial?: Product;
   categories: Category[];
+  media: MediaAsset[];
   onClose: () => void;
   onSave: (product: Product) => void;
 }) {
@@ -529,7 +626,7 @@ function ProductDialog({ initial, categories, onClose, onSave }: {
     onSave({ id: initial?.id ?? `product-${Date.now()}`, name: name.trim(), sku: sku.trim(), category, description: description.trim(), imageUrl: imageUrl.trim(), status, updated: 'Just now' });
   }
 
-  return <div className="admin-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><section className="admin-modal" role="dialog" aria-modal="true" aria-labelledby="product-dialog-title"><div className="admin-modal-heading"><div><p className="admin-eyebrow">Catalog item</p><h2 id="product-dialog-title">{initial ? 'Edit product' : 'Add product'}</h2></div><button className="admin-icon-button" type="button" onClick={onClose} aria-label="Close product editor"><X size={18} /></button></div><form onSubmit={submit}><label>Product name<input value={name} onChange={(event) => setName(event.target.value)} placeholder="e.g. Sheet sets" autoFocus /></label><div className="admin-form-row"><label>SKU<input value={sku} onChange={(event) => setSku(event.target.value)} placeholder="BTL-HM-001" /></label><label>Category<select value={category} onChange={(event) => setCategory(event.target.value)}>{categories.filter((item) => item.active).map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}</select></label></div><label>Description<textarea rows={4} value={description} onChange={(event) => setDescription(event.target.value)} placeholder="Describe the product range for buyers" /></label><label>Product image URL <span className="admin-field-help">Optional HTTPS URL; leave blank to use the current catalog image.</span><input type="url" value={imageUrl} onChange={(event) => setImageUrl(event.target.value)} placeholder="https://example.com/product-image.jpg" /></label><label>Visibility<select value={status} onChange={(event) => setStatus(event.target.value as Status)}><option>Draft</option><option>Published</option></select></label>{error && <p className="admin-form-error">{error}</p>}<div className="admin-modal-actions"><button className="admin-button admin-button--secondary" type="button" onClick={onClose}>Cancel</button><button className="admin-button admin-button--primary" type="submit"><Check size={15} /> Save product</button></div></form></section></div>;
+  return <div className="admin-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><section className="admin-modal" role="dialog" aria-modal="true" aria-labelledby="product-dialog-title"><div className="admin-modal-heading"><div><p className="admin-eyebrow">Catalog item</p><h2 id="product-dialog-title">{initial ? 'Edit product' : 'Add product'}</h2></div><button className="admin-icon-button" type="button" onClick={onClose} aria-label="Close product editor"><X size={18} /></button></div><form onSubmit={submit}><label>Product name<input value={name} onChange={(event) => setName(event.target.value)} placeholder="e.g. Sheet sets" autoFocus /></label><div className="admin-form-row"><label>SKU<input value={sku} onChange={(event) => setSku(event.target.value)} placeholder="BTL-HM-001" /></label><label>Category<select value={category} onChange={(event) => setCategory(event.target.value)}>{categories.filter((item) => item.active).map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}</select></label></div><label>Description<textarea rows={4} value={description} onChange={(event) => setDescription(event.target.value)} placeholder="Describe the product range for buyers" /></label><label>Choose product image from private gallery <span className="admin-field-help">Upload product images in Media library, then select one here.</span><select value={imageUrl} onChange={(event) => setImageUrl(event.target.value)}><option value="">Use the current catalog image</option>{media.filter((asset) => asset.status === 'Published').map((asset) => <option key={asset.id} value={asset.url}>{asset.label}</option>)}</select></label><label>Legacy HTTPS image URL <span className="admin-field-help">Optional fallback for an existing approved image URL.</span><input type="url" value={imageUrl} onChange={(event) => setImageUrl(event.target.value)} placeholder="https://example.com/product-image.jpg" /></label><label>Visibility<select value={status} onChange={(event) => setStatus(event.target.value as Status)}><option>Draft</option><option>Published</option></select></label>{error && <p className="admin-form-error">{error}</p>}<div className="admin-modal-actions"><button className="admin-button admin-button--secondary" type="button" onClick={onClose}>Cancel</button><button className="admin-button admin-button--primary" type="submit"><Check size={15} /> Save product</button></div></form></section></div>;
 }
 
 function CategoryDialog({ initial, onClose, onSave }: {

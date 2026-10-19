@@ -6,7 +6,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import AdminPanel from '@/pages/admin-panel';
 import pageMetadata from './page-metadata.json';
-import { ArrowDown, ArrowRight, ArrowUpRight, Mail, MapPin, Menu, Phone, X } from 'lucide-react';
+import { ArrowDown, ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Mail, MapPin, Menu, Phone, X } from 'lucide-react';
 import {
   AboutPage,
   BrandsPage,
@@ -44,6 +44,8 @@ const sitePages = [
   { label: 'International News', path: '/international-news/' },
 ];
 
+const PUBLIC_API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? 'https://bismillah-textiles-admin-api.ziakhalid236.workers.dev').replace(/\/$/, '');
+
 const homepageProductSpotlight = [
   { number: '01', group: 'HOME TEXTILES', title: 'Sheet sets', detail: 'Flat sheets, fitted sheets and pillowcases, made from our own woven fabric.', image: '/images/products/sheet-sets.jpg' },
   { number: '02', group: 'FABRIC', title: 'Printed fabric', detail: 'Customer-defined printed constructions developed through our integrated processing house.', image: '/images/products/printed-fabric.jpg' },
@@ -54,15 +56,25 @@ const homepageProductSpotlight = [
 ];
 
 function ProductMarquee() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const total = homepageProductSpotlight.length;
+  const move = (direction: number) => setActiveIndex((current) => (current + direction + total) % total);
+
+  useEffect(() => {
+    if (paused) return undefined;
+    const timer = window.setInterval(() => move(1), 5200);
+    return () => window.clearInterval(timer);
+  }, [paused]);
+
   return (
-    <div className="home-product-marquee" role="group" aria-label="Product range">
-      <div className="home-product-track">
-        {[0, 1].map((copy) => homepageProductSpotlight.map((product) => {
-          const isClone = copy === 1;
-          return (
-            <article className="home-product-card" key={`${copy}-${product.title}`} aria-hidden={isClone || undefined}>
-              <Link className="home-product-card-image" href="/products/" tabIndex={isClone ? -1 : undefined} aria-label={`Explore ${product.title}`}>
-                <img src={product.image} alt={isClone ? '' : `${product.title} product render`} loading="lazy" />
+    <div className="home-product-carousel" role="group" aria-roledescription="carousel" aria-label="Featured product range" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setPaused(false); }}>
+      <div className="home-product-carousel-viewport">
+        <div className="home-product-track" style={{ transform: `translateX(calc(-${activeIndex} * (var(--home-product-card-width) + var(--home-product-gap)))` }}>
+          {homepageProductSpotlight.map((product, index) => (
+            <article className={index === activeIndex ? 'home-product-card is-active' : 'home-product-card'} key={product.title} aria-hidden={index !== activeIndex}>
+              <Link className="home-product-card-image" href="/products/" tabIndex={index === activeIndex ? undefined : -1} aria-label={`Explore ${product.title}`}>
+                <img src={product.image} alt={index === activeIndex ? `${product.title} product render` : ''} loading={index === activeIndex ? 'eager' : 'lazy'} />
                 <span className="home-product-card-chip">{product.group}</span>
                 <span className="home-product-card-cta">VIEW RANGE <ArrowUpRight size={14} /></span>
               </Link>
@@ -70,11 +82,16 @@ function ProductMarquee() {
                 <span className="micro-label">RANGE {product.number}</span>
                 <h3>{product.title}</h3>
                 <p>{product.detail}</p>
-                <Link className="inline-link" href="/products/" tabIndex={isClone ? -1 : undefined}>View all products <ArrowRight size={15} /></Link>
+                <Link className="inline-link" href="/products/" tabIndex={index === activeIndex ? undefined : -1}>View all products <ArrowRight size={15} /></Link>
               </div>
             </article>
-          );
-        }))}
+          ))}
+        </div>
+      </div>
+      <button className="home-product-control home-product-control--prev" type="button" onClick={() => move(-1)} aria-label="Previous featured product"><ChevronLeft size={23} /></button>
+      <button className="home-product-control home-product-control--next" type="button" onClick={() => move(1)} aria-label="Next featured product"><ChevronRight size={23} /></button>
+      <div className="home-product-pagination" aria-label="Choose featured product">
+        {homepageProductSpotlight.map((product, index) => <button key={product.title} className={index === activeIndex ? 'is-active' : undefined} type="button" onClick={() => setActiveIndex(index)} aria-label={`Show ${product.title}`} aria-current={index === activeIndex ? 'true' : undefined} />)}
       </div>
     </div>
   );
@@ -114,6 +131,27 @@ const homepageCertificationHighlights = [
 
 function Home() {
   const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=Bismillah+Textiles+1+KM+Jaranwala+Road+Khurrianwala+Faisalabad+Pakistan';
+  const [managedBrands, setManagedBrands] = useState<{ name: string; image: string }[]>([]);
+  const [managedCertificates, setManagedCertificates] = useState<{ name: string; image: string; href: string }[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    const loadMedia = async (kind: 'brand' | 'certificate') => {
+      try {
+        const response = await fetch(`${PUBLIC_API_BASE_URL}/api/public/media?kind=${kind}`, { headers: { Accept: 'application/json' }, cache: 'no-store' });
+        if (!response.ok) return;
+        const assets = await response.json() as { label: string; url: string }[];
+        if (!active) return;
+        if (kind === 'brand') setManagedBrands(assets.map((asset) => ({ name: asset.label, image: asset.url })));
+        else setManagedCertificates(assets.map((asset) => ({ name: asset.label, image: asset.url, href: asset.url })));
+      } catch { /* Keep the curated local fallback when the media service is unavailable. */ }
+    };
+    void Promise.all([loadMedia('brand'), loadMedia('certificate')]);
+    return () => { active = false; };
+  }, []);
+
+  const brandPartners = managedBrands.length ? managedBrands : homepageBrandPartners;
+  const certificationHighlights = managedCertificates.length ? managedCertificates : homepageCertificationHighlights;
   return (
     <div className="home-content">
         <section className="hero" id="home">
@@ -157,7 +195,7 @@ function Home() {
             </div>
             <div className="home-product-marquee-wrap">
               <ProductMarquee />
-              <p className="home-product-marquee-note"><ArrowRight size={14} /> Scrolls automatically — hover to pause</p>
+              <p className="home-product-marquee-note"><ArrowRight size={14} /> Swipe, use the arrows, or choose a range below.</p>
             </div>
             <div className="home-directory" aria-label="Explore all company pages">
               <div className="home-directory-intro"><span className="micro-label">THE BTL DIRECTORY</span><h3>Every page has a reason to visit.</h3><p>Follow the story from our people and process to the products, partnerships and signals shaping the industry.</p></div>
@@ -165,12 +203,12 @@ function Home() {
             </div>
             <section className="home-brand-showcase" aria-labelledby="home-brand-title">
               <div className="home-brand-heading"><div><div className="section-kicker"><span>05</span><span className="kicker-rule" /> SELECTED PARTNERS</div><h2 id="home-brand-title">Made for names<br /><em>people know.</em></h2></div><p>We manufacture for established brands and retailers across international markets. Partner names are shown as a company-published selection.</p></div>
-              <div className="home-brand-logo-grid">{homepageBrandPartners.map((partner) => <div className="home-brand-logo" key={partner.name}><img src={partner.image} alt={`${partner.name} logo`} loading="lazy" /></div>)}</div>
+              <div className="home-brand-logo-grid">{brandPartners.map((partner) => <div className="home-brand-logo" key={partner.name}><img src={partner.image} alt={`${partner.name} logo`} loading="lazy" /></div>)}</div>
               <Link className="inline-link" href="/brands-retailers/">See all brands and retailers <ArrowRight size={15} /></Link>
             </section>
             <section className="home-certification-showcase" aria-labelledby="home-certification-title">
               <div className="home-certification-heading"><div><div className="section-kicker"><span>06</span><span className="kicker-rule" /> QUALITY SYSTEMS</div><h2 id="home-certification-title">Proof behind<br /><em>the process.</em></h2></div><p>Selected certificate previews sourced from the official Bismillah Textiles certifications list. Open each card for the source document.</p></div>
-              <div className="home-certification-grid">{homepageCertificationHighlights.map((certificate) => <a className="home-certification-card" href={certificate.href} target="_blank" rel="noopener noreferrer" key={certificate.name}><img src={certificate.image} alt={`${certificate.name} certificate preview`} loading="lazy" /><span>{certificate.name} <ArrowUpRight size={14} /></span></a>)}</div>
+              <div className="home-certification-grid">{certificationHighlights.map((certificate) => <a className="home-certification-card" href={certificate.href} target="_blank" rel="noopener noreferrer" key={certificate.name}><img src={certificate.image} alt={`${certificate.name} certificate preview`} loading="lazy" /><span>{certificate.name} <ArrowUpRight size={14} /></span></a>)}</div>
               <Link className="inline-link" href="/certifications/">View certifications <ArrowRight size={15} /></Link>
             </section>
           </section>
