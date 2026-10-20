@@ -186,7 +186,6 @@ export function ProductCatalog() {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const visibleProducts = activeFilter === "All" ? catalogProducts : catalogProducts.filter((product) => product.category === activeFilter);
-  const tickerProducts = catalogProducts.map((product) => product.title);
   const mobilePageCount = Math.min(6, visibleProducts.length);
   const mobilePageIndex = mobilePageCount <= 1 ? 0 : Math.min(mobilePageCount - 1, Math.round((activeProductIndex / Math.max(visibleProducts.length - 1, 1)) * (mobilePageCount - 1)));
 
@@ -262,53 +261,26 @@ export function ProductCatalog() {
     <div className="product-catalog-page">
       <section className="catalog-hero" aria-labelledby="catalog-title">
         <div className="catalog-hero-copy">
-          <p className="catalog-kicker"><span /> Made in Faisalabad</p>
-          <h1 id="catalog-title">Textiles for <em>everyday living.</em></h1>
-          <p className="catalog-lede">Our vertically integrated facilities produce and export home textiles for established brands and retailers around the world.</p>
-          <a className="catalog-primary-link" href="mailto:sales@bismillah.com.pk?subject=Product%20enquiry">Talk to our team <ArrowUpRight aria-hidden="true" size={17} /></a>
-          <div className="catalog-hero-caption"><span>Made with care in Faisalabad</span><span>Faisalabad, Punjab, Pakistan</span></div>
+          <p className="catalog-kicker"><span /> Connected production</p>
+          <h2 id="catalog-title">Built from the yarn<br /><em>up.</em></h2>
+          <p className="catalog-lede">Weaving, processing and stitching work together at our Faisalabad facilities, giving every range a clear connection from first thread to finished textile.</p>
+          <a className="catalog-primary-link" href="/manufacturing-facilities/">Explore our facilities <ArrowUpRight aria-hidden="true" size={17} /></a>
+          <div className="catalog-hero-caption"><span>Made with care in Faisalabad</span><span>Production, connected</span></div>
         </div>
         <figure className="catalog-hero-visual">
-          <img src={imageUrl("looms", 1500)} alt="Illustrative view of industrial textile looms" width="1500" height="1125" fetchPriority="high" decoding="async" />
-          <figcaption><span>Production, connected</span><span>Illustrative photography</span></figcaption>
+          <img src={imageUrl("looms", 1500)} alt="Industrial textile looms at work in a Bismillah Textiles facility" width="1500" height="1125" loading="lazy" decoding="async" />
+          <figcaption><span>In-house capability</span><span>From yarn to finished textile</span></figcaption>
         </figure>
-      </section>
-
-      <div className="catalog-live-ticker" aria-label="Live product range">
-        <span className="catalog-live-label"><i aria-hidden="true" /> Live product range</span>
-        <div className="catalog-ticker-viewport">
-          <div className="catalog-ticker-track">
-            {[...tickerProducts, ...tickerProducts].map((title, index) => <span key={`${title}-${index}`}><b aria-hidden="true">＋</b>{title}</span>)}
-          </div>
-        </div>
-      </div>
-
-      <section className="catalog-section catalog-areas" aria-labelledby="areas-title">
-        <div className="catalog-section-heading">
-          <p className="catalog-kicker"><span /> Company profile</p>
-          <h2 id="areas-title">Our product areas</h2>
-          <p>Four complementary categories, supported by in-house manufacturing.</p>
-        </div>
-        <div className="catalog-area-grid">
-          {categoryCopy.map((area) => (
-            <article className="catalog-area-card" key={area.title}>
-              <span className="catalog-area-number">{area.number} / {area.title === "Garments & apparel fabrics" ? "APPAREL" : area.title.toUpperCase()}</span>
-              <h3>{area.title}</h3>
-              <p>{area.description}</p>
-              <span className="catalog-area-count">{catalogProducts.filter((product) => product.category === area.title).length} products</span>
-            </article>
-          ))}
-        </div>
       </section>
 
       <section className="catalog-section catalog-products" id="product-range" aria-labelledby="products-title">
         <div className="catalog-section-heading catalog-product-heading">
           <div>
-            <p className="catalog-kicker"><span /> Product range</p>
-            <h2 id="products-title">What we make</h2>
-            <p>Browse by category. For constructions, thread counts, sizes or custom programmes, contact our sales team.</p>
+            <p className="catalog-kicker"><span /> Explore the range</p>
+            <h2 id="products-title">Made for the<br /><em>way people live.</em></h2>
+            <p>From woven foundations to finished home textiles, each range is developed through connected in-house capabilities. Browse the lines below, then speak with our sales team about the right construction for your programme.</p>
           </div>
-            <span className="catalog-total">{catalogProducts.length} product lines</span>
+          <span className="catalog-total">{catalogProducts.length} product lines</span>
         </div>
 
         <div className="catalog-filter-row" role="group" aria-label="Filter products by category">
