@@ -105,3 +105,28 @@
 .news-insights-links .inline-link{margin-top:auto}
 @media(max-width:700px){.certification-preview-grid,.news-insights-links{grid-template-columns:1fr}.certification-preview-card{min-height:125px;padding:13px 14px;gap:15px}.certification-preview-card img{width:92px;height:90px}.certification-preview-card span{font-size:10px}.managed-page-copy{padding:19px 20px;font-size:12px}.news-insights-links>a{min-height:220px;padding:23px}.news-insights-links h3{margin-top:24px;font-size:27px}}
 @media(prefers-reduced-motion:reduce){.certification-preview-card,.news-insights-links>a{transition:none!important}}
+
+/* Homepage proof cards: turn the three operating facts into clear, equal editorial cards. */
+.product-notes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:47px;border:0}
+.product-notes>div,.product-notes>div+div{display:flex;min-height:142px;flex-direction:column;align-items:flex-start;padding:22px 22px 20px;border:1px solid #d9d0c5;background:#fffdf8;box-shadow:0 10px 22px rgba(53,39,27,.05);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.product-notes>div:nth-child(2){background:#eee8de}.product-notes>div:nth-child(3){background:#302522;color:#fff8ee;border-color:#302522}
+.product-notes>div:hover{transform:translateY(-4px);border-color:#b99b73;box-shadow:0 18px 30px rgba(53,39,27,.12)}
+.product-notes>div:nth-child(3) .note-number{color:#e7c8a6}.product-notes>div:nth-child(3) p{color:#d1c4b6}
+.product-notes .note-number{font-size:9px;font-weight:800;letter-spacing:.15em}.product-notes h4{margin:18px 0 7px;font-size:18px;letter-spacing:-.045em}.product-notes p{margin:0;color:#75695e;font-size:11px;line-height:1.65}
+@media(max-width:640px){.product-notes{grid-template-columns:1fr;gap:9px;margin-top:32px}.product-notes>div,.product-notes>div+div{min-height:0;padding:17px 18px;flex-direction:row;align-items:center;gap:10px}.product-notes h4{display:block;margin:0;min-width:118px;font-size:16px}.product-notes p{margin:0;font-size:10px}.product-notes .note-number{align-self:flex-start;padding-top:2px}}
+@media(prefers-reduced-motion:reduce){.product-notes>div{transition:none!important}}
+
+/* Shared interior card refinement: stronger hierarchy without changing the established palette. */
+.facility-card,.product-grid article,.partner-card,.contact-card,.news-card,.fact-card{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.facility-card{position:relative;padding:27px 24px 28px;border:1px solid #d9d0c5;background:#fffdf8;box-shadow:0 8px 18px rgba(53,39,27,.04)}
+.facility-card:nth-child(4n+2),.product-grid article:nth-child(2){background:#eee8de}.facility-card:nth-child(4n+3),.product-grid article:nth-child(3){background:#eae2d6}
+.facility-card:hover,.product-grid article:hover,.partner-card:hover,.contact-card:hover,.news-card:hover{transform:translateY(-4px);border-color:#b99b73;box-shadow:0 16px 28px rgba(53,39,27,.12)}
+.facility-card h3{font-size:25px}.facility-card p{max-width:440px}
+.product-grid{gap:14px}.product-grid article{position:relative;border:1px solid #d9d0c5;box-shadow:0 8px 18px rgba(53,39,27,.04)}
+.product-grid article::after{content:'↗';position:absolute;right:25px;bottom:22px;color:var(--red);font-size:18px;opacity:.75}
+.partner-card{border-color:#d9d0c5;box-shadow:0 6px 14px rgba(53,39,27,.035)}
+.partner-logo-frame{height:62px}.partner-card figcaption{font-size:10px}
+.contact-card{background:#fffdf8}.news-card{border:1px solid #d9d0c5;box-shadow:0 8px 18px rgba(53,39,27,.04)}
+.fact-card{padding:25px 22px 23px 0}.fact-card:hover{transform:translateY(-3px)}
+@media(max-width:850px){.facility-card{padding:22px 20px 24px}.product-grid{gap:10px}.product-grid article{min-height:190px;padding:22px}.partner-card{min-height:112px}.news-card{min-height:250px}}
+@media(prefers-reduced-motion:reduce){.facility-card,.product-grid article,.partner-card,.contact-card,.news-card,.fact-card{transition:none!important}}
