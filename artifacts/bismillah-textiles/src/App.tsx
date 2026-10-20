@@ -94,7 +94,7 @@ const homepagePageTeasers = [
   { number: '02', label: 'MANUFACTURING', title: 'One connected way of making.', detail: 'See how weaving, dyeing, processing and stitching work together in-house.', image: '/images/1791856251182_1791856385300.jpg', imageAlt: 'Textile machinery on the Bismillah Textiles production floor', href: '/manufacturing-facilities/' },
   { number: '03', label: 'BRANDS & RETAILERS', title: 'Made here. Known worldwide.', detail: 'Explore the long-term brand and retail partnerships around our work.', image: '/images/brands/next-retailer.jpg', imageAlt: 'Textile retail display representing Bismillah Textiles partnerships', href: '/brands-retailers/' },
   { number: '04', label: 'CAREERS', title: 'Build your future with our team.', detail: 'Learning, opportunity and progression across a growing textile operation.', image: '/images/about-factory-team.jpg', imageAlt: 'People working together at Bismillah Textiles', href: '/careers/' },
-  { number: '05', label: 'CONTACT', title: 'Find us in Khurrianwala.', detail: 'Reach the sales, general enquiries or careers team and plan a visit.', image: '/images/main-gate.jpg', imageAlt: 'Main entrance gate at Bismillah Textiles', href: '/contact-us/' },
+  { number: '05', label: 'CONTACT', title: 'Find us in Faisalabad.', detail: 'Reach the sales, general enquiries or careers team and plan a visit.', image: '/images/main-gate.jpg', imageAlt: 'Main entrance gate at Bismillah Textiles', href: '/contact-us/' },
   { number: '06', label: 'CERTIFICATIONS', title: 'Quality is an evolving process.', detail: 'See the systems, standards and certificates that support our process.', image: '/images/1791856048064_1791856385381.jpg', imageAlt: 'Textile production equipment used in quality-controlled manufacturing', href: '/certifications/' },
   { number: '07', label: 'NEWS', title: 'Progress, people and new ideas.', detail: 'Catch up on company updates, community initiatives and recognition.', image: '/images/factory-courtyard.jpg', imageAlt: 'Bismillah Textiles facility in Faisalabad', href: '/news/' },
   { number: '08', label: 'MARKET INSIGHTS', title: 'Signals to watch. Claims kept in view.', detail: 'Read the latest textile market context with sources and limits made visible.', image: '/images/1791855918484_1791856385398.jpg', imageAlt: 'Fabric inspection inside the Bismillah Textiles facility', href: '/markets-industry-insights/' },
@@ -144,14 +144,14 @@ function Home() {
     <div className="home-content">
         <section className="hero" id="home">
           <div className="hero-copy">
-            <div className="eyebrow"><span className="eyebrow-line" /> MADE IN KHURRIANWALA</div>
+            <div className="eyebrow"><span className="eyebrow-line" /> MADE IN FAISALABAD</div>
             <h1>We make the<br /><em>everyday</em> feel<br />exceptional.</h1>
             <p className="hero-lede">Founded in 1989, we bring weaving, processing and stitching together at our home in Faisalabad, Pakistan.</p>
             <div className="hero-actions"><a className="button button-red" href="#work">Explore our work <ArrowDown size={16} /></a><a className="text-link" href={mapsUrl} target="_blank" rel="noreferrer">Visit our facility <ArrowUpRight size={15} /></a></div>
             <div className="hero-foot"><span className="hero-coordinate">01 KM JARANWALA ROAD · KHURRIANWALA</span><span className="hero-mark">BTL <span>／</span> 01</span></div>
           </div>
           <div className="hero-visual">
-            <img className="hero-image" src="/images/factory-courtyard.jpg" alt="Bismillah Textiles facility in Khurrianwala, Faisalabad" />
+            <img className="hero-image" src="/images/factory-courtyard.jpg" alt="Bismillah Textiles facility in Faisalabad, Punjab, Pakistan" />
             <div className="image-stamp"><span>MADE</span><span>IN-HOUSE</span><span className="stamp-rule" /><span>SINCE 1989</span></div>
             <div className="photo-caption"><span>01 — OUR PLACE OF WORK</span><span>FAISALABAD, PAKISTAN</span></div>
           </div>
@@ -203,7 +203,7 @@ function Home() {
         </section>
 
         <section className="visit" id="visit">
-          <div className="visit-info"><div className="section-kicker light-kicker"><span>03</span><span className="kicker-rule" /> FIND THE MILL</div><h2>Come see where<br /><em>the work happens.</em></h2><p className="visit-intro">Visit Bismillah Textiles in Khurrianwala. Call ahead or open directions to find your way to the facility.</p>
+          <div className="visit-info"><div className="section-kicker light-kicker"><span>03</span><span className="kicker-rule" /> FIND THE MILL</div><h2>Come see where<br /><em>the work happens.</em></h2><p className="visit-intro">Visit Bismillah Textiles in Faisalabad. Call ahead or open directions to find your way to the facility.</p>
             <div className="visit-details"><div className="detail-row"><MapPin /><div><span className="detail-label">ADDRESS</span><span>01 KM Jaranwala Road</span><span>Khurrianwala, Faisalabad, Pakistan</span></div></div><div className="detail-row"><Phone /><div><span className="detail-label">PHONE</span><a href="tel:+92412428888">+92 41 242 8888</a></div></div><div className="detail-row"><Mail /><div><span className="detail-label">GENERAL ENQUIRIES</span><a href="mailto:info@bismillah.com.pk">info@bismillah.com.pk</a></div></div></div>
             <div className="visit-actions"><a className="button button-cream" href={mapsUrl} target="_blank" rel="noreferrer">Get directions <ArrowUpRight size={16} /></a><a className="phone-link" href="tel:+92412428888"><Phone size={15} /> Call +92 41 242 8888</a></div>
           </div>
@@ -267,7 +267,7 @@ function SiteFrame() {
 
   return (
     <div className="site-shell">
-      <div className="topline"><span>KHURRIANWALA, PAKISTAN</span><span className="topline-right"><span className="live-dot" /> Vertically integrated since 1989</span></div>
+      <div className="topline"><span>FAISALABAD, PUNJAB, PAKISTAN</span><span className="topline-right"><span className="live-dot" /> Vertically integrated since 1989</span></div>
       <header className="main-header">
         <Link href="/" className="brand" aria-label="Bismillah Textiles home"><img src="/images/BTL-New-Logo-01_1791856385213.png" alt="Bismillah Textiles (Private) Limited" /></Link>
         <nav className={menuOpen ? 'nav-links is-open' : 'nav-links'} aria-label="Main navigation">
@@ -293,7 +293,7 @@ function SiteFrame() {
       </main>
       <footer className="footer">
         <Link href="/" className="footer-brand">BISMILLAH<span>TEXTILES (PRIVATE) LIMITED</span></Link>
-        <span className="footer-tagline">TEXTILES, MADE IN KHURRIANWALA.</span>
+        <span className="footer-tagline">TEXTILES, MADE IN FAISALABAD.</span>
         <nav className="footer-nav" aria-label="Footer navigation">{sitePages.slice(1).map((page) => <Link href={page.path} key={page.path}>{page.label}</Link>)}</nav>
         <nav className="footer-social" aria-label="Social media">
           <a href="https://www.facebook.com/BismillahTextilesOfficial/" target="_blank" rel="noopener noreferrer">FACEBOOK <ArrowUpRight size={12} /></a>

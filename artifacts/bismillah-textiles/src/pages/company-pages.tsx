@@ -22,7 +22,7 @@ function useManagedPage(path: string): ManagedPage | null {
 }
 
 export function MapEmbed() {
-  return <iframe className="map-embed" src={mapsEmbedUrl} title="Interactive Google Map showing Bismillah Textiles in Khurrianwala, Faisalabad" loading="lazy" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />;
+  return <iframe className="map-embed" src={mapsEmbedUrl} title="Interactive Google Map showing Bismillah Textiles in Faisalabad, Punjab, Pakistan" loading="lazy" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />;
 }
 
 type PageFrameProps = {
@@ -53,7 +53,7 @@ function PageFrame({ number, title, lead, image, imageAlt, caption, children, sh
         </div>
         <figure className="interior-hero-visual">
           <img src={visibleImage} alt={imageAlt} />
-          <figcaption><span>{caption}</span><span>KHURRIANWALA, PAKISTAN</span></figcaption>
+          <figcaption><span>{caption}</span><span>FAISALABAD, PUNJAB, PAKISTAN</span></figcaption>
         </figure>
       </section>
       <div className="page-content section-pad">
@@ -208,7 +208,7 @@ export function CareersPage() {
 export function ContactPage() {
   const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=Bismillah+Textiles+01+KM+Jaranwala+Road+Khurrianwala+Faisalabad+Pakistan';
   return (
-    <PageFrame number="06" title={<>Find us in<br /><em>Khurrianwala.</em></>} lead="Contact Bismillah Textiles or visit our manufacturing campus at 01 KM Jaranwala Road, Khurrianwala, Faisalabad." image="/images/main-gate.jpg" imageAlt="Main entrance gate of Bismillah Textiles" caption="WELCOME TO OUR FACILITY" showCta={false}>
+    <PageFrame number="06" title={<>Find us in<br /><em>Faisalabad.</em></>} lead="Contact Bismillah Textiles or visit our manufacturing campus in Faisalabad, Punjab, Pakistan." image="/images/main-gate.jpg" imageAlt="Main entrance gate of Bismillah Textiles in Faisalabad" caption="WELCOME TO OUR FACILITY" showCta={false}>
       <section className="page-section"><SectionTitle number="01" title="Get in touch" intro="Contact the appropriate team for textile enquiries, general questions or careers." /><div className="contact-grid">
         <article className="contact-card"><span className="micro-label">VISIT US</span><h3>Company address</h3><p>01 KM Jaranwala Road<br />Khurrianwala, Faisalabad<br />Pakistan</p><a className="inline-link" href={mapsUrl} target="_blank" rel="noreferrer">Open directions <ArrowUpRight size={15} /></a></article>
         <article className="contact-card"><span className="micro-label">PROSPECTIVE TEXTILE BUYERS</span><h3>Javed Maqbool</h3><p>GM Marketing<br />+92 41 242 8888 Ext. 102</p><a href="tel:+92412428888;ext=102">Call the textile sales contact</a><a href="mailto:javed@bismillah.com.pk">javed@bismillah.com.pk</a><a href="mailto:sales@bismillah.com.pk">sales@bismillah.com.pk</a></article>

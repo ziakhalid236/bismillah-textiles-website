@@ -202,6 +202,7 @@ function AdminPanel() {
   const publishedCount = products.filter((product) => product.status === 'Published').length;
   const draftCount = products.filter((product) => product.status === 'Draft').length;
   const selectedPage = pages.find((page) => page.id === selectedPageId) ?? pages[0];
+  const databaseConnected = authenticated && !loadingData && !apiError;
   const filteredProducts = products.filter((product) => {
     const matchesSearch = `${product.name} ${product.sku} ${product.category}`.toLowerCase().includes(productSearch.toLowerCase());
     const matchesStatus = productStatus === 'All statuses' || product.status === productStatus;
@@ -361,7 +362,7 @@ function AdminPanel() {
           ))}
         </nav>
         <div className="admin-sidebar-bottom">
-          <div className="admin-demo-status"><span className="admin-demo-dot" /><span><strong>Connected admin</strong><small>Changes saved to database</small></span></div>
+          <div className="admin-demo-status"><span className="admin-demo-dot" /><span><strong>{databaseConnected ? 'Live database' : loadingData ? 'Loading database' : 'Database needs attention'}</strong><small>{databaseConnected ? `${products.length} products · ${pages.length} pages · ${media.length} media assets` : 'Verify the API connection before editing'}</small></span></div>
           <a href="/" className="admin-nav-item"><Globe2 size={18} strokeWidth={1.8} /><span>View public site</span><ArrowUpRight size={14} /></a>
           <button className="admin-nav-item admin-signout" type="button" onClick={signOut}><LogOut size={18} strokeWidth={1.8} /><span>Sign out</span></button>
         </div>
@@ -371,7 +372,7 @@ function AdminPanel() {
         <header className="admin-topbar">
           <div className="admin-breadcrumb"><span>Workspace</span><span>/</span><strong>{pageInfo.title}</strong></div>
           <div className="admin-top-actions">
-            <span className="admin-preview-chip"><span /> DATABASE</span>
+            <span className="admin-preview-chip"><span /> {databaseConnected ? 'LIVE DATABASE' : loadingData ? 'LOADING' : 'DATABASE CHECK'}</span>
             <a className="admin-icon-button" href="/" aria-label="Preview public website" title="Preview public website"><Eye size={18} /></a>
             <button className="admin-icon-button admin-notification-button" type="button" aria-label="Notifications"><Bell size={18} /><i /></button>
             <button className="admin-profile-button" type="button" aria-label={`Signed in as ${adminUsername}`}><span>{adminUsername.slice(0, 2).toUpperCase()}</span><ChevronDown size={14} /></button>
@@ -412,7 +413,7 @@ function AdminPanel() {
           {section === 'content' && selectedPage && <ContentView pages={pages} selected={selectedPage} media={media.filter((asset) => asset.kind === 'site' && asset.status === 'Published')} onSelect={setSelectedPageId} onUpdate={updatePage} onUploadHero={async (file, label) => uploadMedia(file, 'site', label)} />}
           {section === 'media' && <MediaView assets={media} onUpload={uploadMedia} onUpdate={updateMedia} onDelete={deleteMedia} />}
 
-          <footer className="admin-page-footer"><span>Secure admin workspace</span><span>Changes are saved to the connected database.</span></footer>
+          <footer className="admin-page-footer"><span>Secure admin workspace</span><span>{databaseConnected ? 'Live data loaded from the connected database.' : 'Database status is shown above before editing.'}</span></footer>
         </main>
       </div>
 

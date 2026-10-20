@@ -229,11 +229,11 @@ export function ProductCatalog() {
     <div className="product-catalog-page">
       <section className="catalog-hero" aria-labelledby="catalog-title">
         <div className="catalog-hero-copy">
-          <p className="catalog-kicker"><span /> Made in Khurrianwala</p>
+          <p className="catalog-kicker"><span /> Made in Faisalabad</p>
           <h1 id="catalog-title">Textiles for <em>everyday living.</em></h1>
           <p className="catalog-lede">Our vertically integrated facilities produce and export home textiles for established brands and retailers around the world.</p>
           <a className="catalog-primary-link" href="mailto:sales@bismillah.com.pk?subject=Product%20enquiry">Talk to our team <ArrowUpRight aria-hidden="true" size={17} /></a>
-          <div className="catalog-hero-caption"><span>Made with care in Faisalabad</span><span>Khurrianwala, Pakistan</span></div>
+          <div className="catalog-hero-caption"><span>Made with care in Faisalabad</span><span>Faisalabad, Punjab, Pakistan</span></div>
         </div>
         <figure className="catalog-hero-visual">
           <img src={imageUrl("looms", 1500)} alt="Illustrative view of industrial textile looms" width="1500" height="1125" fetchPriority="high" decoding="async" />

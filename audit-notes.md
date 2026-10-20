@@ -1,21 +1,25 @@
-# Bismillah Textiles website audit notes
+# Bismillah Textiles — Current audit
 
-## External references
+## Repository
 
-- GitHub OAuth scopes: https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps
-- GitHub CLI quickstart: https://docs.github.com/github-cli/github-cli/quickstart
-- GitHub personal access tokens: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+The active production source is the `main` branch of `ziakhalid236/bismillah-textiles-website`. Frontend source is under `artifacts/bismillah-textiles`; the Cloudflare Worker source is under `cloudflare-api`. Historical deployment-error notes were removed from this report because they no longer describe the current system.
 
-## Vercel verification
+## Live API verification
 
-- Project: `bismillah-textiles-website`
-- Project ID: `prj_XzZw6k459eq1HPrh7eRzaFXceAn3`
-- Linked GitHub repository in deployment metadata: `ziakhalid236/bismillah-textiles-website`
-- Failed deployment at commit `e4bed26830373f9adb8ae0fa8e85d24a097eb7ba`: `lint_or_type_error` in `artifacts/api-server/src/app.ts` and related imports.
-- New deployment at commit `7732f7b7af75ebd6d93238d32a732db48eb418f6`: `BLOCKED` by Vercel account configuration, not by a build error.
-- Existing public URL served static pages successfully, but `/api/healthz` returned 404 because the previous deployment did not include the API function.
+The Cloudflare Worker health endpoint returned HTTP 200 with `ok: true` and database enabled during the latest audit. Public API checks returned real D1-backed records: products, categories and managed page content. The public media endpoint also responded successfully. The admin endpoints remain authenticated and were not accessed without the connected admin session.
 
-## Local verification
+## Admin verification
 
-- `pnpm run typecheck`: passed after the deployment fixes.
-- `pnpm run build:vercel`: passed and produced `artifacts/api-server/dist/vercel.mjs`.
+The frontend uses the production Worker base URL by default, sends credentials with requests, and loads products, categories, pages and media independently so one failed resource does not hide all other live data. The interface now shows whether data is loading, connected to the live database, or requires attention, including loaded record counts.
+
+## Current information architecture
+
+The main navigation uses focused hubs. Products and brands/retailers share the Products & Partners page. Contact and certifications share the Contact & Certifications page. Company news links to the market and international briefings through the News & Insights hub. Existing compatibility URLs remain available, while the public Careers route has been removed.
+
+## Content cleanup
+
+General location branding now uses Faisalabad, Punjab, Pakistan. Khurrianwala is retained only in address and map destination strings. No production media, backend binding, database migration or required source was removed as part of the report cleanup.
+
+## Remaining operational check
+
+After the latest GitHub push, wait for the connected Vercel deployment, then log in at `/admin/` with the authorized admin account and confirm that live counts appear in the dashboard. Credentials are intentionally not stored in the repository or this report.

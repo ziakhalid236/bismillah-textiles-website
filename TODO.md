@@ -1,39 +1,27 @@
-# Bismillah Textiles — Approved Delivery TODO
+# Bismillah Textiles — Current status
 
-## 1. Reference-led homepage product carousel
+## Completed production scope
 
-- [ ] Replace the current product showcase with an image-first horizontal carousel matching the supplied mobile reference: one dominant product card, the next card visibly peeking on the right, left/right controls, pagination dots, and responsive behavior.
-- [ ] Keep product cards free of prices, currency, shopping bags, carts, and commerce UI.
-- [ ] Preserve buyer-facing product title, category/index, short description, and a product-details action.
-- [ ] Support touch swipe/drag, arrow buttons, keyboard focus/arrow navigation, accessible labels, and reduced-motion behavior.
+- [x] Reference-led homepage product carousel with active-card centering, controls, pagination, touch/keyboard behavior and reduced-motion support.
+- [x] Secure admin authentication through Cloudflare Worker secrets with secure session cookies and origin checks.
+- [x] Direct admin gallery uploads for products, certificates, brand logos and site images.
+- [x] Private R2 media storage with D1 metadata, published/reference checks, validation and safe object keys.
+- [x] Admin media library CRUD and product/page image assignment.
+- [x] Page content editor with live preview and direct gallery upload.
+- [x] Cloudflare Worker deployed with public and authenticated routes.
+- [x] Frontend build, typecheck and GitHub delivery verified.
+- [x] Public navigation consolidated without deleting important content: Products & Partners, Contact & Certifications, and News & Insights hubs.
+- [x] Public Careers page removed as requested.
+- [x] Homepage/location wording standardized to Faisalabad, Punjab, Pakistan; Khurrianwala remains only in physical address/map strings.
 
-## 2. Secure admin authentication
+## Current verification state
 
-- [ ] Keep the admin login page with username and password fields.
-- [ ] Authenticate only through Cloudflare Worker secrets; do not commit, print, or expose credentials.
-- [ ] Preserve secure HttpOnly, Secure, SameSite=None session cookies for the HTTPS Vercel-to-Cloudflare deployment.
-- [ ] Return generic authentication errors and reject disallowed origins.
+- Live D1 public API returned real products, categories and managed page records during the latest audit.
+- Live Worker health returned `ok: true` with database enabled.
+- Admin requires the configured connected account; credentials are not stored in this repository.
 
-## 3. Direct gallery media management
+## Safe next checks
 
-- [ ] Add an authenticated admin media library with direct file selection/upload rather than URL-only image assignment.
-- [ ] Store product images, certificates, brand logos, and other approved media in the private R2 bucket `bismillah-textiles-media`.
-- [ ] Add media metadata and references in D1, including media type, object key, MIME type, size, checksum/identifier, created time, and publish/use state.
-- [ ] Allow product image assignment and certificate/logo asset assignment from the gallery.
-- [ ] Add authenticated delete/unassign operations with safe object-key validation.
-- [ ] Enforce allowed image/document MIME types, bounded file size, generated server-side object keys, and no executable uploads.
-
-## 4. Public media delivery and content safety
-
-- [ ] Stream only referenced/published media through Worker routes; do not make the R2 bucket public.
-- [ ] Add safe cache and content-disposition/content-type headers for public media.
-- [ ] Keep public product data limited to published records and referenced media.
-- [ ] Keep the official custom domain and DNS untouched.
-
-## 5. Production delivery
-
-- [ ] Run typecheck/build and source hygiene checks.
-- [ ] Commit and push the completed implementation to GitHub.
-- [ ] Deploy the Cloudflare Worker and apply the D1 migration without deleting existing content.
-- [ ] Deploy the frontend through the existing Vercel GitHub integration.
-- [ ] Verify health, CORS, public products, admin unauthenticated behavior, upload rejection rules, route rendering, and the production deployment record.
+- Log in at `/admin/` with the connected admin account and confirm the dashboard shows live record counts.
+- Confirm the latest Vercel deployment has finished before reviewing public changes on the production URL.
+- Continue changes through the source repository and run `pnpm run build:vercel` before every push.
