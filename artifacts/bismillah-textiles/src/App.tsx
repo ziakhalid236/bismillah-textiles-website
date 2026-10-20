@@ -10,7 +10,6 @@ import { ArrowDown, ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Mail, M
 import {
   AboutPage,
   BrandsPage,
-  CareersPage,
   CertificationsPage,
   ContactPage,
   FacilitiesPage,
@@ -36,7 +35,6 @@ const sitePages = [
   { label: 'Manufacturing Facilities', path: '/manufacturing-facilities/' },
   { label: 'Brands and Retailers', path: '/brands-retailers/' },
   { label: 'Products', path: '/products/' },
-  { label: 'Careers', path: '/careers/' },
   { label: 'Contact Us', path: '/contact-us/' },
   { label: 'Certifications', path: '/certifications/' },
   { label: 'News & Insights', path: '/news/' },
@@ -289,7 +287,6 @@ function SiteFrame() {
           <Route path="/manufacturing-facilities/" component={FacilitiesPage} />
           <Route path="/brands-retailers/" component={BrandsPage} />
           <Route path="/products/" component={ProductsPage} />
-          <Route path="/careers/" component={CareersPage} />
           <Route path="/contact-us/" component={ContactPage} />
           <Route path="/certifications/" component={CertificationsPage} />
           <Route path="/news/" component={NewsPage} />
