@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, X } from "lucide-react";
 import "./product-catalog.css";
 
 type Category = "Home textiles" | "Fabric" | "Hospitality" | "Garments & apparel fabrics";
@@ -181,10 +181,38 @@ export function ProductCatalog() {
   const [activeFilter, setActiveFilter] = useState<Filter>("All");
   const [selected, setSelected] = useState<Product | null>(null);
   const [catalogProducts, setCatalogProducts] = useState<Product[]>(defaultProducts);
+  const [activeProductIndex, setActiveProductIndex] = useState(0);
+  const productGridRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const visibleProducts = activeFilter === "All" ? catalogProducts : catalogProducts.filter((product) => product.category === activeFilter);
   const tickerProducts = catalogProducts.map((product) => product.title);
+  const mobilePageCount = Math.min(6, visibleProducts.length);
+  const mobilePageIndex = mobilePageCount <= 1 ? 0 : Math.min(mobilePageCount - 1, Math.round((activeProductIndex / Math.max(visibleProducts.length - 1, 1)) * (mobilePageCount - 1)));
+
+  const scrollProducts = (direction: number) => {
+    const grid = productGridRef.current;
+    const firstCard = grid?.querySelector<HTMLElement>(".catalog-product-card");
+    if (!grid || !firstCard) return;
+    const gap = Number.parseFloat(getComputedStyle(grid).columnGap || getComputedStyle(grid).gap || "14") || 14;
+    grid.scrollBy({ left: direction * (firstCard.getBoundingClientRect().width + gap), behavior: "smooth" });
+  };
+
+  const handleProductScroll = () => {
+    const grid = productGridRef.current;
+    if (!grid) return;
+    const cards = [...grid.querySelectorAll<HTMLElement>(".catalog-product-card")];
+    if (!cards.length) return;
+    const nearest = cards.reduce((best, card, index) => Math.abs(card.offsetLeft - grid.scrollLeft) < Math.abs(cards[best].offsetLeft - grid.scrollLeft) ? index : best, 0);
+    setActiveProductIndex(nearest);
+  };
+
+  const jumpToProductPage = (page: number) => {
+    const targetIndex = mobilePageCount <= 1 ? 0 : Math.round((page / (mobilePageCount - 1)) * (visibleProducts.length - 1));
+    const grid = productGridRef.current;
+    const card = grid?.querySelectorAll<HTMLElement>(".catalog-product-card")[targetIndex];
+    card?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+  };
 
   useEffect(() => {
     let active = true;
@@ -197,6 +225,11 @@ export function ProductCatalog() {
       .catch(() => undefined);
     return () => { active = false; };
   }, []);
+
+  useEffect(() => {
+    setActiveProductIndex(0);
+    productGridRef.current?.scrollTo({ left: 0, behavior: "auto" });
+  }, [activeFilter, catalogProducts.length]);
 
   useEffect(() => {
     if (!selected) return;
@@ -288,7 +321,9 @@ export function ProductCatalog() {
           <p className="catalog-results" aria-live="polite">Showing {visibleProducts.length} of {catalogProducts.length}</p>
         </div>
 
-        <div className="catalog-product-grid">
+        <div className="catalog-product-rail">
+          <button className="catalog-product-control catalog-product-control--prev" type="button" onClick={() => scrollProducts(-1)} aria-label="Previous product"><ArrowLeft aria-hidden="true" size={18} /></button>
+          <div className="catalog-product-grid" ref={productGridRef} onScroll={handleProductScroll}>
           {visibleProducts.map((product) => {
             const photo = photos[product.photo];
             const managedImage = Boolean(product.imageSrc || productAssetPaths[product.id]);
@@ -310,7 +345,10 @@ export function ProductCatalog() {
               </article>
             );
           })}
+          </div>
+          <button className="catalog-product-control catalog-product-control--next" type="button" onClick={() => scrollProducts(1)} aria-label="Next product"><ArrowRight aria-hidden="true" size={18} /></button>
         </div>
+        {mobilePageCount > 1 && <div className="catalog-product-pagination" aria-label="Product carousel position">{Array.from({ length: mobilePageCount }, (_, index) => <button key={index} type="button" className={index === mobilePageIndex ? "is-active" : undefined} onClick={() => jumpToProductPage(index)} aria-label={`Show product group ${index + 1}`} aria-current={index === mobilePageIndex ? "true" : undefined} />)}</div>}
       </section>
 
       <section className="catalog-capacity" aria-labelledby="capacity-title">
