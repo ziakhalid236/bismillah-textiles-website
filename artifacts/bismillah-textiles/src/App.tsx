@@ -188,6 +188,16 @@ function Home() {
               <ProductMarquee />
               <p className="home-product-marquee-note"><ArrowRight size={14} /> Swipe, use the arrows, or choose a range below.</p>
             </div>
+            <section className="facility" id="facility">
+              <div className="facility-heading section-pad"><div className="section-kicker light-kicker"><span>02</span><span className="kicker-rule" /> A LOOK INSIDE</div><div className="facility-title-row"><h2>Work you can<br /><em>see for yourself.</em></h2><p>From wide-width weaving to finishing and stitching, explore the real spaces and equipment behind our work.</p></div></div>
+              <div className="gallery">
+                <figure className="gallery-large"><img src="/images/1791856251182_1791856385300.jpg" alt="Rows of textile machinery on the production floor" /><figcaption><span>01 / PRODUCTION FLOOR</span><span>Textile machinery in operation</span></figcaption></figure>
+                <figure className="gallery-small"><img src="/images/1791856226013_1791856385316.jpg" alt="Spools and equipment in the textile facility" /><figcaption><span>02 / THREAD & PREPARATION</span></figcaption></figure>
+                <figure className="gallery-small"><img src="/images/1791856048064_1791856385381.jpg" alt="Fabric on a textile machine" /><figcaption><span>03 / ON THE FLOOR</span></figcaption></figure>
+                <figure className="gallery-wide"><img src="/images/main-gate.jpg" alt="The main entrance gate at Bismillah Textiles" /><figcaption><span>04 / THE MAIN GATE</span><span>01 KM Jaranwala Road, Khurrianwala</span></figcaption></figure>
+              </div>
+              <div className="facility-bottom"><span>PHOTOGRAPHED AT BISMILLAH TEXTILES</span><Link href="/manufacturing-facilities/">See all facilities <ArrowUpRight size={15} /></Link></div>
+            </section>
             <div className="home-directory" aria-label="Explore all company pages">
               <div className="home-directory-intro"><span className="micro-label">THE BTL DIRECTORY</span><h3>Every page has a reason to visit.</h3><p>Follow the story from our people and process to the products, partnerships and signals shaping the industry.</p></div>
               <div className="home-directory-grid">{homepagePageTeasers.map((page) => <Link className="home-directory-card" href={page.href} key={page.href}><span className="home-directory-card-copy"><span className="micro-label">{page.label}</span><h4>{page.title}</h4><p>{page.detail}</p><span className="home-directory-link">Explore page <ArrowRight size={15} /></span></span><span className="home-directory-number">{page.number}</span><span className="home-directory-card-media"><img src={page.image} alt={page.imageAlt} loading="lazy" /></span></Link>)}</div>
@@ -204,18 +214,6 @@ function Home() {
             </section>
           </section>
         </section>
-
-        <section className="facility" id="facility">
-          <div className="facility-heading section-pad"><div className="section-kicker light-kicker"><span>02</span><span className="kicker-rule" /> A LOOK INSIDE</div><div className="facility-title-row"><h2>Work you can<br /><em>see for yourself.</em></h2><p>From wide-width weaving to finishing and stitching, explore the real spaces and equipment behind our work.</p></div></div>
-          <div className="gallery">
-            <figure className="gallery-large"><img src="/images/1791856251182_1791856385300.jpg" alt="Rows of textile machinery on the production floor" /><figcaption><span>01 / PRODUCTION FLOOR</span><span>Textile machinery in operation</span></figcaption></figure>
-            <figure className="gallery-small"><img src="/images/1791856226013_1791856385316.jpg" alt="Spools and equipment in the textile facility" /><figcaption><span>02 / THREAD & PREPARATION</span></figcaption></figure>
-            <figure className="gallery-small"><img src="/images/1791856048064_1791856385381.jpg" alt="Fabric on a textile machine" /><figcaption><span>03 / ON THE FLOOR</span></figcaption></figure>
-            <figure className="gallery-wide"><img src="/images/main-gate.jpg" alt="The main entrance gate at Bismillah Textiles" /><figcaption><span>04 / THE MAIN GATE</span><span>01 KM Jaranwala Road, Khurrianwala</span></figcaption></figure>
-          </div>
-          <div className="facility-bottom"><span>PHOTOGRAPHED AT BISMILLAH TEXTILES</span><Link href="/manufacturing-facilities/">See all facilities <ArrowUpRight size={15} /></Link></div>
-        </section>
-
 
         <section className="visit" id="visit">
           <div className="visit-info"><div className="section-kicker light-kicker"><span>03</span><span className="kicker-rule" /> FIND THE MILL</div><h2>Come see where<br /><em>the work happens.</em></h2><p className="visit-intro">Visit Bismillah Textiles in Khurrianwala. Call ahead or open directions to find your way to the facility.</p>
