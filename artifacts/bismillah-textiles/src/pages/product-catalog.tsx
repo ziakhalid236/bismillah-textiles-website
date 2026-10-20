@@ -117,6 +117,17 @@ const categoryCopy: { title: Category; number: string; description: string }[] =
   { title: "Garments & apparel fabrics", number: "04", description: "Apparel fabrics and cut-and-sew capability within the broader textile portfolio." },
 ];
 
+const productPagePartners = [
+  { name: "Disney", logo: "/images/brands/disney.png" },
+  { name: "Next", logo: "/images/brands/next-manufactured.png" },
+  { name: "DKNY", logo: "/images/brands/dkny.png" },
+  { name: "Pottery Barn", logo: "/images/brands/pottery-barn.png" },
+  { name: "Walmart", logo: "/images/brands/walmart.png" },
+  { name: "Target", logo: "/images/brands/target.png" },
+  { name: "Macy's", logo: "/images/brands/macys.png" },
+  { name: "Williams-Sonoma", logo: "/images/brands/williams-sonoma.png" },
+];
+
 const processNotes: Record<Category, string> = {
   "Home textiles": "Bismillah Textiles describes its production as vertically integrated, bringing weaving, processing and stitching together in-house, with published quilting, wadding and embroidery capabilities.",
   Fabric: "The official facilities page lists 136 wider-width air-jet looms, constructions from 120 to 600 thread count, in-house cone dyeing, bleaching, rotary printing and continuous dyeing.",
@@ -186,6 +197,7 @@ export function ProductCatalog() {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const visibleProducts = activeFilter === "All" ? catalogProducts : catalogProducts.filter((product) => product.category === activeFilter);
+  const tickerProducts = catalogProducts.map((product) => product.title);
   const mobilePageCount = Math.min(6, visibleProducts.length);
   const mobilePageIndex = mobilePageCount <= 1 ? 0 : Math.min(mobilePageCount - 1, Math.round((activeProductIndex / Math.max(visibleProducts.length - 1, 1)) * (mobilePageCount - 1)));
 
@@ -261,26 +273,70 @@ export function ProductCatalog() {
     <div className="product-catalog-page">
       <section className="catalog-hero" aria-labelledby="catalog-title">
         <div className="catalog-hero-copy">
-          <p className="catalog-kicker"><span /> Connected production</p>
-          <h2 id="catalog-title">Built from the yarn<br /><em>up.</em></h2>
-          <p className="catalog-lede">Weaving, processing and stitching work together at our Faisalabad facilities, giving every range a clear connection from first thread to finished textile.</p>
-          <a className="catalog-primary-link" href="/manufacturing-facilities/">Explore our facilities <ArrowUpRight aria-hidden="true" size={17} /></a>
-          <div className="catalog-hero-caption"><span>Made with care in Faisalabad</span><span>Production, connected</span></div>
+          <p className="catalog-kicker"><span /> Made in Faisalabad</p>
+          <h1 id="catalog-title">Quality textiles, <em>global partnerships.</em></h1>
+          <p className="catalog-lede">We offer a diverse range of high-quality textile products, crafted with care and precision. Our trusted partners help us deliver value, innovation and sustainable growth.</p>
+          <a className="catalog-primary-link" href="#product-range">Explore our products <ArrowUpRight aria-hidden="true" size={17} /></a>
+          <div className="catalog-hero-caption"><span>Made with care in Faisalabad</span><span>Faisalabad, Punjab, Pakistan</span></div>
         </div>
         <figure className="catalog-hero-visual">
-          <img src={imageUrl("looms", 1500)} alt="Industrial textile looms at work in a Bismillah Textiles facility" width="1500" height="1125" loading="lazy" decoding="async" />
-          <figcaption><span>In-house capability</span><span>From yarn to finished textile</span></figcaption>
+          <img src={imageUrl("looms", 1500)} alt="Illustrative view of industrial textile looms" width="1500" height="1125" fetchPriority="high" decoding="async" />
+          <figcaption><span>Production, connected</span><span>Illustrative photography</span></figcaption>
         </figure>
+      </section>
+
+      <div className="catalog-live-ticker" aria-label="Live product range">
+        <span className="catalog-live-label"><i aria-hidden="true" /> Live product range</span>
+        <div className="catalog-ticker-viewport">
+          <div className="catalog-ticker-track">
+            {[...tickerProducts, ...tickerProducts].map((title, index) => <span key={`${title}-${index}`}><b aria-hidden="true">＋</b>{title}</span>)}
+          </div>
+        </div>
+      </div>
+
+      <section className="catalog-section catalog-areas" aria-labelledby="areas-title">
+        <div className="catalog-section-heading">
+          <p className="catalog-kicker"><span /> Our products</p>
+          <h2 id="areas-title">Premium textiles for <em>everyday living.</em></h2>
+          <p>From home textiles to apparel fabrics, our products are designed to bring comfort, quality and style to every aspect of life.</p>
+        </div>
+        <div className="catalog-area-grid">
+          {categoryCopy.map((area) => (
+            <article className="catalog-area-card" key={area.title}>
+              <span className="catalog-area-number">{area.number} / {area.title === "Garments & apparel fabrics" ? "APPAREL" : area.title.toUpperCase()}</span>
+              <h3>{area.title}</h3>
+              <p>{area.description}</p>
+              <span className="catalog-area-count">{catalogProducts.filter((product) => product.category === area.title).length} products</span>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="catalog-partners" aria-labelledby="partners-title">
+        <div className="catalog-partners-copy">
+          <p className="catalog-kicker"><span /> Our valued partners</p>
+          <h2 id="partners-title">Trusted by <em>global brands.</em></h2>
+          <p>We work with leading brands and retail partners around the world, building long-term relationships based on trust, quality and shared values.</p>
+          <a className="catalog-primary-link" href="#partner-logos">Our partners <ArrowUpRight aria-hidden="true" size={17} /></a>
+        </div>
+        <div className="catalog-partner-grid" id="partner-logos">
+          {productPagePartners.map((partner) => <div className="catalog-partner-logo" key={partner.name}><img src={partner.logo} alt={`${partner.name} logo`} loading="lazy" /></div>)}
+        </div>
+      </section>
+
+      <section className="catalog-story" aria-labelledby="quality-title">
+        <img src="/images/1791856048064_1791856385381.jpg" alt="Textile production machinery inside the Bismillah Textiles facility" loading="lazy" />
+        <div className="catalog-story-copy"><p className="catalog-kicker"><span /> Why choose us</p><h2 id="quality-title">Quality, innovation <em>and long-term partnerships.</em></h2><p>We combine advanced technology with skilled craftsmanship to deliver textile solutions that meet the highest standards. Our commitment goes beyond products—we build lasting partnerships for mutual success.</p><div className="catalog-story-points"><span>Consistent quality</span><span>Advanced technology</span><span>Skilled workforce</span><span>Sustainable growth</span></div></div>
       </section>
 
       <section className="catalog-section catalog-products" id="product-range" aria-labelledby="products-title">
         <div className="catalog-section-heading catalog-product-heading">
           <div>
-            <p className="catalog-kicker"><span /> Explore the range</p>
-            <h2 id="products-title">Made for the<br /><em>way people live.</em></h2>
-            <p>From woven foundations to finished home textiles, each range is developed through connected in-house capabilities. Browse the lines below, then speak with our sales team about the right construction for your programme.</p>
+            <p className="catalog-kicker"><span /> Product range</p>
+            <h2 id="products-title">What we make</h2>
+            <p>Browse by category. For constructions, thread counts, sizes or custom programmes, contact our sales team.</p>
           </div>
-          <span className="catalog-total">{catalogProducts.length} product lines</span>
+            <span className="catalog-total">{catalogProducts.length} product lines</span>
         </div>
 
         <div className="catalog-filter-row" role="group" aria-label="Filter products by category">
