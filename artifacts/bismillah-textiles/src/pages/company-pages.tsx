@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { ArrowRight, ArrowUpRight, BedDouble, Hotel, Layers3, Scissors, Shirt } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Scissors } from 'lucide-react';
 import { Link, useLocation } from 'wouter';
 import { ProductCatalog } from './product-catalog';
 
@@ -177,19 +177,7 @@ export function BrandsPage() {
 }
 
 export function ProductsPage() {
-  return (
-    <PageFrame number="04" title={<>Textiles for<br /><em>everyday living.</em></>} lead="Our vertically integrated facilities produce and export home textiles for established brands and retailers around the world." image="/images/1791855918484_1791856385398.jpg" imageAlt="Fabric being inspected inside the Bismillah Textiles facility" caption="MADE WITH CARE IN FAISALABAD">
-      <section className="page-section"><SectionTitle number="01" title="Our product areas" intro="Our product range spans four broad categories." /><div className="product-grid">
-        <article><BedDouble /><span>01 / HOME</span><h3>Home textiles</h3><p>Textile products made for the home, produced through our integrated in-house processes.</p></article>
-        <article><Layers3 /><span>02 / FABRIC</span><h3>Fabric</h3><p>Woven, dyed, printed and finished fabrics developed across a range of constructions.</p></article>
-        <article><Hotel /><span>03 / HOSPITALITY</span><h3>Hospitality</h3><p>Textile products for hospitality customers, supported by our production capabilities.</p></article>
-        <article><Shirt /><span>04 / APPAREL</span><h3>Garments and apparel fabrics</h3><p>Apparel fabrics and related products within our broader textile portfolio.</p></article>
-      </div></section>
-      <ProductCatalog />
-      <section className="page-section product-partners"><SectionTitle number="02" title="Brands and retailers" intro="The products we make are developed for established brands and supplied through trusted retail partners." /><PartnerGroup title="Brands Manufactured" partners={manufacturedBrands} /><PartnerGroup title="Retailers" partners={retailPartners} /></section>
-      <section className="page-section product-capability"><div><span className="micro-label">DESIGN TO DELIVERY</span><h2>Connected production,<br /><em>consistent quality.</em></h2></div><p>We bring weaving, processing and stitching together at our own facilities. To discuss a product or sourcing requirement, contact our sales department.</p><a className="button button-red" href="mailto:sales@bismillah.com.pk">Enquire about products <ArrowUpRight size={15} /></a></section>
-    </PageFrame>
-  );
+  return <ProductCatalog />;
 }
 
 export function CareersPage() {
