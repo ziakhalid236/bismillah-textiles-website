@@ -173,6 +173,11 @@ function Home() {
             <div className="intro-text"><p>Founded in 1989, Bismillah Textiles has grown into a vertically integrated home textile manufacturer with more than 2,500 employees.</p><p>We weave, process and stitch our products in-house, serving brands and retailers across six continents.</p><Link className="inline-link" href="/manufacturing-facilities/">Explore our manufacturing <ArrowRight size={16} /></Link></div>
           </div>
           <div className="product-notes"><div><span className="note-number">A—</span><h4>Since 1989</h4><p>Built in Faisalabad, Pakistan.</p></div><div><span className="note-number">B—</span><h4>2,500+ people</h4><p>A skilled team across our operations.</p></div><div><span className="note-number">C—</span><h4>Six continents</h4><p>Serving brands and retailers worldwide.</p></div></div>
+          <Link className="quality-story-card" href="/manufacturing-facilities/" aria-label="Explore Bismillah Textiles integrated manufacturing process">
+            <div className="quality-story-card-image"><img src="/images/1791856251182_1791856385300.jpg" alt="Textile machinery operating inside the Bismillah Textiles facility" loading="lazy" /></div>
+            <div className="quality-story-card-copy"><span className="micro-label">THE BTL DIFFERENCE / INTEGRATED PRODUCTION</span><h3>One connected way<br /><em>of making.</em></h3><p>Weaving, processing and stitching work together under one roof, giving every finished textile a clear connection back to the people, machines and quality controls behind it.</p><span className="quality-story-card-link">Explore our manufacturing <ArrowRight size={16} /></span></div>
+            <span className="quality-story-card-index">BTL / 02</span>
+          </Link>
           <Link className="leader-card" href="/about-us/" aria-label="Meet our leadership and read about Abdul Hafeez Sheikh Pasha">
             <div className="leader-card-photo"><img src="/images/abdul-hafeez-sheikh-pasha.jpg" alt="Abdul Hafeez Sheikh Pasha" /></div>
             <div className="leader-card-copy"><span className="micro-label">A FAMILY BUSINESS / OUR LEADERSHIP</span><h3>Meet the people behind our work.</h3><p>Explore the story, values and leadership profile of Bismillah Textiles.</p><span className="leader-card-link">Meet our team <ArrowRight size={16} /></span></div>
@@ -188,16 +193,6 @@ function Home() {
               <ProductMarquee />
               <p className="home-product-marquee-note"><ArrowRight size={14} /> Swipe, use the arrows, or choose a range below.</p>
             </div>
-            <section className="facility" id="facility">
-              <div className="facility-heading section-pad"><div className="section-kicker light-kicker"><span>02</span><span className="kicker-rule" /> A LOOK INSIDE</div><div className="facility-title-row"><h2>Work you can<br /><em>see for yourself.</em></h2><p>From wide-width weaving to finishing and stitching, explore the real spaces and equipment behind our work.</p></div></div>
-              <div className="gallery">
-                <figure className="gallery-large"><img src="/images/1791856251182_1791856385300.jpg" alt="Rows of textile machinery on the production floor" /><figcaption><span>01 / PRODUCTION FLOOR</span><span>Textile machinery in operation</span></figcaption></figure>
-                <figure className="gallery-small"><img src="/images/1791856226013_1791856385316.jpg" alt="Spools and equipment in the textile facility" /><figcaption><span>02 / THREAD & PREPARATION</span></figcaption></figure>
-                <figure className="gallery-small"><img src="/images/1791856048064_1791856385381.jpg" alt="Fabric on a textile machine" /><figcaption><span>03 / ON THE FLOOR</span></figcaption></figure>
-                <figure className="gallery-wide"><img src="/images/main-gate.jpg" alt="The main entrance gate at Bismillah Textiles" /><figcaption><span>04 / THE MAIN GATE</span><span>01 KM Jaranwala Road, Khurrianwala</span></figcaption></figure>
-              </div>
-              <div className="facility-bottom"><span>PHOTOGRAPHED AT BISMILLAH TEXTILES</span><Link href="/manufacturing-facilities/">See all facilities <ArrowUpRight size={15} /></Link></div>
-            </section>
             <div className="home-directory" aria-label="Explore all company pages">
               <div className="home-directory-intro"><span className="micro-label">THE BTL DIRECTORY</span><h3>Every page has a reason to visit.</h3><p>Follow the story from our people and process to the products, partnerships and signals shaping the industry.</p></div>
               <div className="home-directory-grid">{homepagePageTeasers.map((page) => <Link className="home-directory-card" href={page.href} key={page.href}><span className="home-directory-card-copy"><span className="micro-label">{page.label}</span><h4>{page.title}</h4><p>{page.detail}</p><span className="home-directory-link">Explore page <ArrowRight size={15} /></span></span><span className="home-directory-number">{page.number}</span><span className="home-directory-card-media"><img src={page.image} alt={page.imageAlt} loading="lazy" /></span></Link>)}</div>
