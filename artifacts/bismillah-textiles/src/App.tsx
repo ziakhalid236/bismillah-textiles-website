@@ -172,11 +172,6 @@ function Home() {
             <h2>Made for the<br /><em>spaces we live in.</em></h2>
             <div className="intro-text"><p>Founded in 1989, Bismillah Textiles has grown into a vertically integrated home textile manufacturer with more than 2,500 employees.</p><p>We weave, process and stitch our products in-house, serving brands and retailers across six continents.</p><Link className="inline-link" href="/manufacturing-facilities/">Explore our manufacturing <ArrowRight size={16} /></Link></div>
           </div>
-          <div className="work-banner">
-            <div className="work-banner-image"><img src="/images/1791855918484_1791856385398.jpg" alt="Textile inspection floor at Bismillah Textiles" /></div>
-            <div className="work-banner-copy"><span className="micro-label">HOME TEXTILES / MADE WITH CARE</span><h3>Comfort begins<br />with the cloth.</h3><p>From fabric development to finished home textiles, our teams bring each stage together under one roof.</p><Link className="light-link" href="/products/">Explore our products <ArrowUpRight size={15} /></Link></div>
-            <div className="banner-index">BTL<br />02</div>
-          </div>
           <div className="product-notes"><div><span className="note-number">A—</span><h4>Since 1989</h4><p>Built in Faisalabad, Pakistan.</p></div><div><span className="note-number">B—</span><h4>2,500+ people</h4><p>A skilled team across our operations.</p></div><div><span className="note-number">C—</span><h4>Six continents</h4><p>Serving brands and retailers worldwide.</p></div></div>
           <Link className="leader-card" href="/about-us/" aria-label="Meet our leadership and read about Abdul Hafeez Sheikh Pasha">
             <div className="leader-card-photo"><img src="/images/abdul-hafeez-sheikh-pasha.jpg" alt="Abdul Hafeez Sheikh Pasha" /></div>
