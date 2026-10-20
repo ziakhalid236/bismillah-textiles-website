@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
@@ -50,8 +50,29 @@ const homepageProductSpotlight = [
 function ProductMarquee() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [carouselMetrics, setCarouselMetrics] = useState({ viewport: 0, card: 0, gap: 0 });
+  const viewportRef = useRef<HTMLDivElement>(null);
   const total = homepageProductSpotlight.length;
   const move = (direction: number) => setActiveIndex((current) => (current + direction + total) % total);
+
+  useLayoutEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return undefined;
+
+    const measure = () => {
+      const firstCard = viewport.querySelector<HTMLElement>('.home-product-card');
+      const track = viewport.querySelector<HTMLElement>('.home-product-track');
+      if (!firstCard || !track) return;
+      const styles = window.getComputedStyle(track);
+      const gap = Number.parseFloat(styles.columnGap || styles.gap) || 0;
+      setCarouselMetrics({ viewport: viewport.clientWidth, card: firstCard.offsetWidth, gap });
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(viewport);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (paused) return undefined;
@@ -61,8 +82,8 @@ function ProductMarquee() {
 
   return (
     <div className="home-product-carousel" role="group" aria-roledescription="carousel" aria-label="Featured product range" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setPaused(false); }}>
-      <div className="home-product-carousel-viewport">
-        <div className="home-product-track" style={{ transform: `translateX(calc((100vw - var(--home-product-card-width)) / 2 - ${activeIndex} * (var(--home-product-card-width) + var(--home-product-gap)))` }}>
+      <div className="home-product-carousel-viewport" ref={viewportRef}>
+        <div className="home-product-track" style={{ transform: carouselMetrics.card ? `translate3d(${Math.max(0, (carouselMetrics.viewport - carouselMetrics.card) / 2) - activeIndex * (carouselMetrics.card + carouselMetrics.gap)}px, 0, 0)` : undefined }}>
           {homepageProductSpotlight.map((product, index) => (
             <article className={index === activeIndex ? 'home-product-card is-active' : 'home-product-card'} key={product.title} aria-hidden={index !== activeIndex}>
               <Link className="home-product-card-image" href="/products/" tabIndex={index === activeIndex ? undefined : -1} aria-label={`Explore ${product.title}`}>
