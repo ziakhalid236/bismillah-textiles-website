@@ -25,3 +25,57 @@
 @media(min-width:851px){.home-product-carousel{--home-product-card-width:min(62vw,560px)}.home-product-card-copy{min-height:205px;padding:26px 30px 28px}.home-product-control--prev{left:12px}.home-product-control--next{right:12px}}
 @media(max-width:640px){.home-product-carousel{--home-product-card-width:calc(100vw - 82px);--home-product-gap:12px;padding-bottom:34px}.home-product-carousel-viewport{margin:0 -1px}.home-product-card-copy{min-height:185px;padding:19px 20px 22px}.home-product-card-chip{top:14px;left:14px;padding:8px 11px}.home-product-card-cta{right:14px;bottom:14px}.home-product-control{top:38%;width:38px;height:38px}.home-product-control--prev{left:4px}.home-product-control--next{right:4px}.home-product-marquee-note{font-size:8px;letter-spacing:.08em}}
 @media(prefers-reduced-motion:reduce){.home-product-track{transition:none!important}.home-product-card{transition:none!important}.home-product-control,.home-product-pagination button{transition:none!important}}
+
+/* Homepage editorial card system: restored for story, directory, partner and certification sections. */
+.quality-story-card,.leader-card,.home-directory-card,.home-certification-card{isolation:isolate}
+.quality-story-card{display:grid;grid-template-columns:1.08fr .92fr;min-height:360px;margin-top:52px;position:relative;overflow:hidden;background:#302522;color:#fff5e8;transition:transform .3s ease,box-shadow .3s ease}
+.quality-story-card:hover{transform:translateY(-3px);box-shadow:0 18px 35px rgba(53,39,27,.16)}
+.quality-story-card-image{min-height:360px;overflow:hidden;grid-column:2;grid-row:1}
+.quality-story-card-image img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.72);transition:transform .6s ease,filter .4s ease}
+.quality-story-card:hover .quality-story-card-image img{transform:scale(1.04);filter:saturate(.9)}
+.quality-story-card-copy{grid-column:1;grid-row:1;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:48px 14% 48px 12%;background:#302522}
+.quality-story-card-copy .micro-label{color:#e7c8a6}
+.quality-story-card-copy h3{margin:20px 0 13px;font:600 clamp(29px,3.3vw,46px)/1.1 'Manrope',sans-serif;letter-spacing:-.065em}
+.quality-story-card-copy h3 em{color:#d9b776;font-family:Georgia,serif;font-weight:400;letter-spacing:-.06em}
+.quality-story-card-copy p{max-width:360px;margin:0 0 22px;color:#d1c4b6;font-size:12px;line-height:1.8}
+.quality-story-card-link,.leader-card-link,.home-directory-link{display:inline-flex;align-items:center;gap:8px;color:#e3c482;font-size:10px;font-weight:700}
+.quality-story-card-index{position:absolute;right:4%;bottom:20px;color:#d4b79f;font-size:8px;letter-spacing:.13em}
+.leader-card{margin-top:16px}
+.home-discovery{margin-top:94px}
+.home-discovery-heading,.home-brand-heading,.home-certification-heading{display:grid;grid-template-columns:1fr .72fr;gap:8%;align-items:end;margin-bottom:38px}
+.home-discovery-heading h2,.home-brand-heading h2,.home-certification-heading h2{margin:20px 0 0;font:600 clamp(38px,4.6vw,62px)/1.08 'Manrope',sans-serif;letter-spacing:-.07em}
+.home-discovery-heading h2 em,.home-brand-heading h2 em,.home-certification-heading h2 em{color:var(--red);font-family:Georgia,serif;font-weight:400;letter-spacing:-.06em}
+.home-discovery-heading>p,.home-brand-heading>p,.home-certification-heading>p{max-width:390px;margin:0;color:#75695e;font-size:12px;line-height:1.85}
+.home-product-marquee-wrap{margin-top:36px}
+.home-product-marquee-note{display:flex;align-items:center;justify-content:center;gap:7px;margin:13px 0 0;color:#897d70;font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+.home-directory{margin-top:88px}
+.home-directory-intro{max-width:760px;margin-bottom:30px}
+.home-directory-intro h3{margin:18px 0 12px;font:600 clamp(31px,4vw,54px)/1.08 'Manrope',sans-serif;letter-spacing:-.065em}
+.home-directory-intro p{max-width:630px;margin:0;color:#75695e;font-size:13px;line-height:1.8}
+.home-directory-grid{display:grid;gap:20px}
+.home-directory-card{display:grid;grid-template-columns:minmax(0,1fr) 42%;min-height:292px;position:relative;overflow:hidden;border:1px solid #d9d0c5;border-radius:18px;background:#eee8de;box-shadow:0 12px 24px rgba(53,39,27,.06);transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease}
+.home-directory-card:nth-child(even){background:#eae2d6}
+.home-directory-card:hover{transform:translateY(-4px);border-color:#b99b73;box-shadow:0 22px 38px rgba(53,39,27,.14)}
+.home-directory-card-copy{display:flex;min-width:0;flex-direction:column;align-items:flex-start;padding:34px 38px}
+.home-directory-card-copy .micro-label{color:#7a5a1f}
+.home-directory-card h4{max-width:480px;margin:18px 0 12px;font:600 clamp(25px,3.2vw,43px)/1.08 'Manrope',sans-serif;letter-spacing:-.065em}
+.home-directory-card p{max-width:440px;margin:0;color:#75695e;font-size:12px;line-height:1.75}
+.home-directory-link{margin-top:auto;color:var(--red)}
+.home-directory-number{position:absolute;top:28px;right:calc(42% + 24px);color:#897d70;font-size:10px;letter-spacing:.13em}
+.home-directory-card-media{position:relative;min-height:292px;overflow:hidden;border-radius:0 17px 17px 0;background:#d8cdbf;clip-path:ellipse(86% 83% at 100% 50%)}
+.home-directory-card-media::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(48,37,34,.16),transparent 45%),linear-gradient(0deg,rgba(48,37,34,.23),transparent 45%);pointer-events:none}
+.home-directory-card-media img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.82);transition:transform .65s ease,filter .4s ease}
+.home-directory-card:hover .home-directory-card-media img{transform:scale(1.06);filter:saturate(1)}
+.home-brand-showcase,.home-certification-showcase{margin-top:96px}
+.home-brand-logo-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid #d9d0c5;border-left:1px solid #d9d0c5}
+.home-brand-logo{display:flex;min-height:112px;align-items:center;justify-content:center;padding:19px;border-right:1px solid #d9d0c5;border-bottom:1px solid #d9d0c5;background:#fffdf8}
+.home-brand-logo img{display:block;max-width:100%;max-height:52px;object-fit:contain}
+.home-brand-showcase>.inline-link,.home-certification-showcase>.inline-link{margin-top:25px}
+.home-certification-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.home-certification-card{display:flex;min-height:130px;align-items:center;gap:20px;padding:15px;border:1px solid #d9d0c5;background:#fffdf8;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.home-certification-card:hover{transform:translateY(-3px);border-color:#b99b73;box-shadow:0 14px 25px rgba(53,39,27,.1)}
+.home-certification-card img{display:block;width:105px;height:98px;object-fit:contain;background:#f4eee4}
+.home-certification-card span{display:flex;align-items:center;gap:7px;color:var(--red);font-size:10px;font-weight:700;line-height:1.5}
+@media(max-width:850px){.quality-story-card{grid-template-columns:1fr;min-height:0}.quality-story-card-image{grid-column:1;grid-row:1;height:250px;min-height:250px}.quality-story-card-copy{grid-column:1;grid-row:2;padding:32px 8% 42px}.quality-story-card-index{bottom:16px}.home-discovery-heading,.home-brand-heading,.home-certification-heading{grid-template-columns:1fr;gap:20px}.home-directory-card{grid-template-columns:minmax(0,1fr) 40%}.home-directory-number{right:calc(40% + 20px)}}
+@media(max-width:640px){.home-product-marquee-note{font-size:8px;letter-spacing:.08em}.home-discovery{margin-top:68px}.home-directory{margin-top:62px}.home-directory-card{display:flex;min-height:0;flex-direction:column-reverse;border-radius:14px}.home-directory-card-media{height:190px;min-height:190px;border-radius:0 0 14px 14px;clip-path:ellipse(88% 82% at 50% 0)}.home-directory-card-copy{min-height:240px;padding:25px 22px 28px}.home-directory-card h4{font-size:29px}.home-directory-card p{font-size:11px}.home-directory-number{top:21px;right:22px}.home-brand-showcase,.home-certification-showcase{margin-top:68px}.home-brand-logo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.home-brand-logo{min-height:92px;padding:14px}.home-certification-grid{grid-template-columns:1fr}.home-certification-card{min-height:110px}.home-certification-card img{width:86px;height:82px}}
+@media(prefers-reduced-motion:reduce){.home-directory-card,.home-certification-card,.quality-story-card{transition:none!important}}
