@@ -9,7 +9,6 @@ import pageMetadata from './page-metadata.json';
 import { ArrowDown, ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Mail, MapPin, Menu, Phone, X } from 'lucide-react';
 import {
   AboutPage,
-  CertificationsPage,
   ContactPage,
   FacilitiesPage,
   MapEmbed,
@@ -33,8 +32,7 @@ const sitePages = [
   { label: 'About Us', path: '/about-us/' },
   { label: 'Manufacturing Facilities', path: '/manufacturing-facilities/' },
   { label: 'Products & Partners', path: '/products/' },
-  { label: 'Contact Us', path: '/contact-us/' },
-  { label: 'Certifications', path: '/certifications/' },
+  { label: 'Contact & Certifications', path: '/contact-us/' },
   { label: 'News & Insights', path: '/news/' },
 ];
 
@@ -286,7 +284,7 @@ function SiteFrame() {
           <Route path="/brands-retailers/" component={ProductsPage} />
           <Route path="/products/" component={ProductsPage} />
           <Route path="/contact-us/" component={ContactPage} />
-          <Route path="/certifications/" component={CertificationsPage} />
+          <Route path="/certifications/" component={ContactPage} />
           <Route path="/news/" component={NewsPage} />
           <Route path="/markets-industry-insights/" component={MarketInsightsPage} />
           <Route path="/international-news/" component={InternationalNewsPage} />

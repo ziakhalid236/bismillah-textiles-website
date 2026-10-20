@@ -216,6 +216,7 @@ export function ContactPage() {
         <article className="contact-card"><span className="micro-label">CAREERS</span><h3>Join the team</h3><a href="mailto:jobs@bismillah.com.pk">jobs@bismillah.com.pk</a></article>
       </div></section>
       <figure className="contact-map"><MapEmbed /><figcaption><span>01 KM JARANWALA ROAD · KHURRIANWALA, FAISALABAD</span><a href={mapsUrl} target="_blank" rel="noreferrer">Open directions <ArrowUpRight size={14} /></a></figcaption></figure>
+      <section className="page-section contact-certifications"><SectionTitle number="02" title="Quality and certifications" intro="Current certification documents and sustainability records connected to our production and quality systems." /><div className="certification-preview-grid">{certificationPreviews.map((item) => <a className="certification-preview-card" href={item.href} target="_blank" rel="noopener noreferrer" key={item.name}><img src={item.image} alt={`${item.name} certificate preview`} /><span>{item.name}<ArrowUpRight size={14} /></span></a>)}</div><Link className="inline-link" href="/products/">Explore products and partners <ArrowRight size={15} /></Link></section>
     </PageFrame>
   );
 }
