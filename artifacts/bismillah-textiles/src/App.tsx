@@ -39,9 +39,7 @@ const sitePages = [
   { label: 'Careers', path: '/careers/' },
   { label: 'Contact Us', path: '/contact-us/' },
   { label: 'Certifications', path: '/certifications/' },
-  { label: 'News', path: '/news/' },
-  { label: 'Markets & Industry Insights', path: '/markets-industry-insights/' },
-  { label: 'International News', path: '/international-news/' },
+  { label: 'News & Insights', path: '/news/' },
 ];
 
 const PUBLIC_API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? 'https://bismillah-textiles-admin-api.ziakhalid236.workers.dev').replace(/\/$/, '');
