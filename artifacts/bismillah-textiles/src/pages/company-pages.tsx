@@ -186,6 +186,7 @@ export function ProductsPage() {
         <article><Shirt /><span>04 / APPAREL</span><h3>Garments and apparel fabrics</h3><p>Apparel fabrics and related products within our broader textile portfolio.</p></article>
       </div></section>
       <ProductCatalog />
+      <section className="page-section product-partners"><SectionTitle number="02" title="Brands and retailers" intro="The products we make are developed for established brands and supplied through trusted retail partners." /><PartnerGroup title="Brands Manufactured" partners={manufacturedBrands} /><PartnerGroup title="Retailers" partners={retailPartners} /></section>
       <section className="page-section product-capability"><div><span className="micro-label">DESIGN TO DELIVERY</span><h2>Connected production,<br /><em>consistent quality.</em></h2></div><p>We bring weaving, processing and stitching together at our own facilities. To discuss a product or sourcing requirement, contact our sales department.</p><a className="button button-red" href="mailto:sales@bismillah.com.pk">Enquire about products <ArrowUpRight size={15} /></a></section>
     </PageFrame>
   );
